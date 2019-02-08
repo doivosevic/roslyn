@@ -163,10 +163,6 @@ namespace Microsoft.VisualStudio.LanguageServices.Setup
             await new CSharpResetInteractiveMenuCommand(menuCommandService, monitorSelectionService, ComponentModel)
                 .InitializeResetInteractiveFromProjectCommandAsync(cancellationToken)
                 .ConfigureAwait(true);
-
-            await new VisualBasicResetInteractiveMenuCommand(menuCommandService, monitorSelectionService, ComponentModel)
-                .InitializeResetInteractiveFromProjectCommandAsync(cancellationToken)
-                .ConfigureAwait(true);
         }
 
         internal IComponentModel ComponentModel

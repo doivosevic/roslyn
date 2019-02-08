@@ -472,7 +472,7 @@ namespace Microsoft.CodeAnalysis.Editor.Tagging
             private bool ShouldSkipTagProduction()
             {
                 var options = _dataSource.Options ?? SpecializedCollections.EmptyEnumerable<Option<bool>>();
-                var perLanguageOptions = _dataSource.PerLanguageOptions ?? SpecializedCollections.EmptyEnumerable<PerLanguageOption<bool>>();
+                var perLanguageOptions = SpecializedCollections.EmptyEnumerable<PerLanguageOption<bool>>();
 
                 return options.Any(option => !_subjectBuffer.GetFeatureOnOffOption(option)) ||
                        perLanguageOptions.Any(option => !_subjectBuffer.GetFeatureOnOffOption(option));

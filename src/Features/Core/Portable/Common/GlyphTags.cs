@@ -12,8 +12,6 @@ namespace Microsoft.CodeAnalysis
             switch (glyph)
             {
                 case Glyph.Assembly: return WellKnownTagArrays.Assembly;
-                case Glyph.BasicFile: return WellKnownTagArrays.VisualBasicFile;
-                case Glyph.BasicProject: return WellKnownTagArrays.VisualBasicProject;
                 case Glyph.ClassPublic: return WellKnownTagArrays.ClassPublic;
                 case Glyph.ClassProtected: return WellKnownTagArrays.ClassProtected;
                 case Glyph.ClassPrivate: return WellKnownTagArrays.ClassPrivate;

@@ -117,22 +117,7 @@ namespace Microsoft.CodeAnalysis.Editor.Implementation.InlineRename
                 return new FailureInlineRenameInfo(EditorFeaturesResources.You_cannot_rename_this_element);
             }
 
-            // Cannot rename constructors in VB.  TODO: this logic should be in the VB subclass of this type.
             var workspace = document.Project.Solution.Workspace;
-            if (symbol != null &&
-                symbol.Kind == SymbolKind.NamedType &&
-                symbol.Language == LanguageNames.VisualBasic &&
-                triggerToken.ToString().Equals("New", StringComparison.OrdinalIgnoreCase))
-            {
-                var originalSymbol = SymbolFinder.FindSymbolAtPositionAsync(semanticModel, triggerToken.SpanStart, workspace, cancellationToken: cancellationToken)
-                    .WaitAndGetResult(cancellationToken);
-
-                if (originalSymbol != null && originalSymbol.IsConstructor())
-                {
-                    return new FailureInlineRenameInfo(EditorFeaturesResources.You_cannot_rename_this_element);
-                }
-            }
-
             if (syntaxFactsService.IsTypeNamedDynamic(triggerToken, triggerToken.Parent))
             {
                 if (symbol.Kind == SymbolKind.DynamicType)

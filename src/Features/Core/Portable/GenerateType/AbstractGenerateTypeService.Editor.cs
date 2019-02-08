@@ -25,8 +25,6 @@ namespace Microsoft.CodeAnalysis.GenerateType
         private partial class Editor
         {
             private readonly TService _service;
-            private TargetProjectChangeInLanguage _targetProjectChangeInLanguage = TargetProjectChangeInLanguage.NoChange;
-            private IGenerateTypeService _targetLanguageService;
 
             private readonly SemanticDocument _semanticDocument;
             private readonly State _state;
@@ -67,14 +65,7 @@ namespace Microsoft.CodeAnalysis.GenerateType
                 _generateTypeOptionsResult = generateTypeOptionsResult;
                 _cancellationToken = cancellationToken;
             }
-
-            private enum TargetProjectChangeInLanguage
-            {
-                NoChange,
-                CSharpToVisualBasic,
-                VisualBasicToCSharp
-            }
-
+            
             internal async Task<IEnumerable<CodeActionOperation>> GetOperationsAsync()
             {
                 // Check to see if it is from GFU Dialog
@@ -113,21 +104,7 @@ namespace Microsoft.CodeAnalysis.GenerateType
                 else
                 {
                     var namedType = GenerateNamedType(_generateTypeOptionsResult);
-
-                    // Honor the options from the dialog
-                    // Check to see if the type is requested to be generated in cross language Project
-                    // e.g.: C# -> VB or VB -> C#
-                    if (_semanticDocument.Project.Language != _generateTypeOptionsResult.Project.Language)
-                    {
-                        _targetProjectChangeInLanguage =
-                            _generateTypeOptionsResult.Project.Language == LanguageNames.CSharp
-                            ? TargetProjectChangeInLanguage.VisualBasicToCSharp
-                            : TargetProjectChangeInLanguage.CSharpToVisualBasic;
-
-                        // Get the cross language service
-                        _targetLanguageService = _generateTypeOptionsResult.Project.LanguageServices.GetService<IGenerateTypeService>();
-                    }
-
+                    
                     if (_generateTypeOptionsResult.IsNewFile)
                     {
                         return await GetGenerateInNewFileOperationsAsync(
@@ -170,51 +147,6 @@ namespace Microsoft.CodeAnalysis.GenerateType
             private string GetNamespaceToGenerateIntoForUsageWithNamespace(Project targetProject, Project triggeringProject)
             {
                 var namespaceToGenerateInto = _state.NamespaceToGenerateInOpt.Trim();
-
-                if (targetProject.Language == LanguageNames.CSharp ||
-                    targetProject == triggeringProject)
-                {
-                    // If the target project is C# project then we don't have to make any modification to the namespace
-                    // or
-                    // This is a VB project generation into itself which requires no change as well
-                    return namespaceToGenerateInto;
-                }
-
-                // If the target Project is VB then we have to check if the RootNamespace of the VB project is the parent most namespace of the type being generated
-                // True, Remove the RootNamespace
-                // False, Add Global to the Namespace
-                Debug.Assert(targetProject.Language == LanguageNames.VisualBasic);
-                IGenerateTypeService targetLanguageService = null;
-                if (_semanticDocument.Project.Language == LanguageNames.VisualBasic)
-                {
-                    targetLanguageService = _service;
-                }
-                else
-                {
-                    Debug.Assert(_targetLanguageService != null);
-                    targetLanguageService = _targetLanguageService;
-                }
-
-                var rootNamespace = targetLanguageService.GetRootNamespace(targetProject.CompilationOptions).Trim();
-                if (!string.IsNullOrWhiteSpace(rootNamespace))
-                {
-                    var rootNamespaceLength = CheckIfRootNamespacePresentInNamespace(namespaceToGenerateInto, rootNamespace);
-                    if (rootNamespaceLength > -1)
-                    {
-                        // True, Remove the RootNamespace
-                        namespaceToGenerateInto = namespaceToGenerateInto.Substring(rootNamespaceLength);
-                    }
-                    else
-                    {
-                        // False, Add Global to the Namespace
-                        namespaceToGenerateInto = AddGlobalDotToTheNamespace(namespaceToGenerateInto);
-                    }
-                }
-                else
-                {
-                    // False, Add Global to the Namespace
-                    namespaceToGenerateInto = AddGlobalDotToTheNamespace(namespaceToGenerateInto);
-                }
 
                 return namespaceToGenerateInto;
             }
@@ -403,24 +335,12 @@ namespace Microsoft.CodeAnalysis.GenerateType
                 var includeUsingsOrImports = namespaceContainersAndUsings.usingOrImport;
 
                 Tuple<INamespaceSymbol, INamespaceOrTypeSymbol, Location> enclosingNamespaceGeneratedTypeToAddAndLocation = null;
-                if (_targetProjectChangeInLanguage == TargetProjectChangeInLanguage.NoChange)
-                {
                     enclosingNamespaceGeneratedTypeToAddAndLocation = await _service.GetOrGenerateEnclosingNamespaceSymbolAsync(
                      namedType,
                      containers,
                      generateTypeOptionsResult.ExistingDocument,
                      root,
                      _cancellationToken).ConfigureAwait(false);
-                }
-                else
-                {
-                    enclosingNamespaceGeneratedTypeToAddAndLocation = await _targetLanguageService.GetOrGenerateEnclosingNamespaceSymbolAsync(
-                     namedType,
-                     containers,
-                     generateTypeOptionsResult.ExistingDocument,
-                     root,
-                     _cancellationToken).ConfigureAwait(false);
-                }
 
                 var solution = _semanticDocument.Project.Solution;
                 var codeGenResult = await CodeGenerator.AddNamespaceOrTypeDeclarationAsync(
@@ -482,21 +402,14 @@ namespace Microsoft.CodeAnalysis.GenerateType
                     // Generated from the Dialog
                     var containerList = new List<string>();
 
-                    var rootNamespaceOfTheProjectGeneratedInto =
-                        _targetProjectChangeInLanguage == TargetProjectChangeInLanguage.NoChange
-                            ? _service.GetRootNamespace(_generateTypeOptionsResult.Project.CompilationOptions).Trim()
-                            : _targetLanguageService.GetRootNamespace(_generateTypeOptionsResult.Project.CompilationOptions).Trim();
+                    var rootNamespaceOfTheProjectGeneratedInto = _service.GetRootNamespace(_generateTypeOptionsResult.Project.CompilationOptions).Trim();
 
                     var projectManagementService = _semanticDocument.Project.Solution.Workspace.Services.GetService<IProjectManagementService>();
                     var defaultNamespace = _generateTypeOptionsResult.DefaultNamespace;
 
                     // Case 1 : If the type is generated into the same C# project or
-                    // Case 2 : If the type is generated from a C# project to a C# Project
-                    // Case 3 : If the Type is generated from a VB Project to a C# Project
                     // Using and Namespace will be the DefaultNamespace + Folder Structure
-                    if ((_semanticDocument.Project == _generateTypeOptionsResult.Project && _semanticDocument.Project.Language == LanguageNames.CSharp) ||
-                        (_targetProjectChangeInLanguage == TargetProjectChangeInLanguage.NoChange && _generateTypeOptionsResult.Project.Language == LanguageNames.CSharp) ||
-                        _targetProjectChangeInLanguage == TargetProjectChangeInLanguage.VisualBasicToCSharp)
+                    if (_generateTypeOptionsResult.Project.Language == LanguageNames.CSharp)
                     {
                         if (!string.IsNullOrWhiteSpace(defaultNamespace))
                         {
@@ -508,26 +421,6 @@ namespace Microsoft.CodeAnalysis.GenerateType
 
                         containers = containerList.ToArray();
                         includeUsingsOrImports = string.Join(".", containerList.ToArray());
-                    }
-
-                    // Case 4 : If the type is generated into the same VB project or
-                    // Case 5 : If Type is generated from a VB Project to VB Project
-                    // Case 6 : If Type is generated from a C# Project to VB Project 
-                    // Namespace will be Folder Structure and Import will have the RootNamespace of the project generated into as part of the Imports
-                    if ((_semanticDocument.Project == _generateTypeOptionsResult.Project && _semanticDocument.Project.Language == LanguageNames.VisualBasic) ||
-                        (_semanticDocument.Project != _generateTypeOptionsResult.Project && _targetProjectChangeInLanguage == TargetProjectChangeInLanguage.NoChange && _generateTypeOptionsResult.Project.Language == LanguageNames.VisualBasic) ||
-                        _targetProjectChangeInLanguage == TargetProjectChangeInLanguage.CSharpToVisualBasic)
-                    {
-                        // Populate the ContainerList
-                        AddFoldersToNamespaceContainers(containerList, folders);
-                        containers = containerList.ToArray();
-                        includeUsingsOrImports = string.Join(".", containerList.ToArray());
-                        if (!string.IsNullOrWhiteSpace(rootNamespaceOfTheProjectGeneratedInto))
-                        {
-                            includeUsingsOrImports = string.IsNullOrEmpty(includeUsingsOrImports) ?
-                                                     rootNamespaceOfTheProjectGeneratedInto :
-                                                     rootNamespaceOfTheProjectGeneratedInto + "." + includeUsingsOrImports;
-                        }
                     }
 
                     Debug.Assert(includeUsingsOrImports != null);

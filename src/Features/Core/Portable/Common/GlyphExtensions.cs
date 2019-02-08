@@ -40,10 +40,10 @@ namespace Microsoft.CodeAnalysis
                     return Glyph.Assembly;
 
                 case WellKnownTags.File:
-                    return allTags.Contains(LanguageNames.VisualBasic) ? Glyph.BasicFile : Glyph.CSharpFile;
+                    return Glyph.CSharpFile;
 
                 case WellKnownTags.Project:
-                    return allTags.Contains(LanguageNames.VisualBasic) ? Glyph.BasicProject : Glyph.CSharpProject;
+                    return Glyph.CSharpProject;
 
                 case WellKnownTags.Class:
                     switch (GetAccessibility(allTags))

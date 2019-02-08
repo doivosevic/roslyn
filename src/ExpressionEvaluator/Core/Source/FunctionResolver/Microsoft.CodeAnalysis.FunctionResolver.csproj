@@ -35,7 +35,6 @@
       <Link>ExpressionCompiler\DkmExceptionUtilities.cs</Link>
     </Compile>
     <VsdConfigXml Include="CSharp\FunctionResolver.vsdconfigxml" />
-    <VsdConfigXml Include="VisualBasic\FunctionResolver.vsdconfigxml" />
   </ItemGroup>
   <ItemGroup>
     <InternalsVisibleTo Include="Microsoft.CodeAnalysis.ExpressionEvaluator.FunctionResolver.UnitTests" />

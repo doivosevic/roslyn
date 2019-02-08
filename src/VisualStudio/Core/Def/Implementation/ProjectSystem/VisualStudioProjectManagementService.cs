@@ -28,12 +28,7 @@ namespace Roslyn.VisualStudio.Services.Implementation.ProjectSystem
         public string GetDefaultNamespace(Microsoft.CodeAnalysis.Project project, Workspace workspace)
         {
             this.AssertIsForeground();
-
-            if (project.Language == LanguageNames.VisualBasic)
-            {
-                return "";
-            }
-
+            
             var folders = new List<string>();
             var defaultNamespace = "";
 

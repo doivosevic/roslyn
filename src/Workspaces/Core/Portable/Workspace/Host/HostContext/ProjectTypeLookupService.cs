@@ -9,7 +9,6 @@ namespace Microsoft.CodeAnalysis.Host.HostContext
     internal class ProjectTypeLookupService : IProjectTypeLookupService
     {
         private const string CSharpProjectType = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}";
-        private const string VisualBasicProjectType = "{F184B08F-C81C-45F6-A57F-5ABD9991F28F}";
 
         public string GetProjectType(Workspace workspace, ProjectId projectId)
         {
@@ -25,8 +24,6 @@ namespace Microsoft.CodeAnalysis.Host.HostContext
             {
                 case LanguageNames.CSharp:
                     return CSharpProjectType;
-                case LanguageNames.VisualBasic:
-                    return VisualBasicProjectType;
                 default:
                     return string.Empty;
             }

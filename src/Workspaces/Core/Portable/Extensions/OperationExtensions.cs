@@ -95,14 +95,6 @@ namespace Microsoft.CodeAnalysis
             {
                 return ValueUsageInfo.ReadWrite;
             }
-            else if (operation.Parent is IParenthesizedOperation parenthesizedOperation)
-            {
-                // Note: IParenthesizedOperation is specific to VB, where the parens cause a copy, so this cannot be classified as a write.
-                Debug.Assert(parenthesizedOperation.Language == LanguageNames.VisualBasic);
-
-                return parenthesizedOperation.GetValueUsageInfo() &
-                    ~(ValueUsageInfo.Write | ValueUsageInfo.Reference);
-            }
             else if (operation.Parent is INameOfOperation ||
                      operation.Parent is ITypeOfOperation ||
                      operation.Parent is ISizeOfOperation)

@@ -135,9 +135,6 @@ namespace Microsoft.CodeAnalysis.Editor.Implementation.Suggestions
                     case LanguageNames.CSharp:
                         telemetryId = s_CSharpSourceGuid;
                         return true;
-                    case LanguageNames.VisualBasic:
-                        telemetryId = s_visualBasicSourceGuid;
-                        return true;
                     case "Xaml":
                         telemetryId = s_xamlSourceGuid;
                         return true;

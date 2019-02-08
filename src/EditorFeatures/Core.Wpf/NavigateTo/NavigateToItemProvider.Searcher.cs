@@ -251,8 +251,6 @@ namespace Microsoft.CodeAnalysis.Editor.Implementation.NavigateTo
                 {
                     case LanguageNames.CSharp:
                         return "csharp";
-                    case LanguageNames.VisualBasic:
-                        return "vb";
                     default:
                         return languageName;
                 }

@@ -130,9 +130,6 @@ namespace Microsoft.CodeAnalysis.Tags
         internal static readonly ImmutableArray<string> NuGet = ImmutableArray.Create(WellKnownTags.NuGet);
 
         internal static readonly ImmutableArray<string> CSharpFile = ImmutableArray.Create(WellKnownTags.File, LanguageNames.CSharp);
-        internal static readonly ImmutableArray<string> VisualBasicFile = ImmutableArray.Create(WellKnownTags.File, LanguageNames.VisualBasic);
-
         internal static readonly ImmutableArray<string> CSharpProject = ImmutableArray.Create(WellKnownTags.Project, LanguageNames.CSharp);
-        internal static readonly ImmutableArray<string> VisualBasicProject = ImmutableArray.Create(WellKnownTags.Project, LanguageNames.VisualBasic);
     }
 }

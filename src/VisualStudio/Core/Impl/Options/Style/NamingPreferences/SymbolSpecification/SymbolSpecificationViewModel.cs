@@ -80,46 +80,6 @@ namespace Microsoft.VisualStudio.LanguageServices.Implementation.Options.Style.N
                     new ModifierViewModel(DeclarationModifiers.Static, "static", specification)
                 };
             }
-            else if (languageName == LanguageNames.VisualBasic)
-            {
-                SymbolKindList = new List<SymbolKindViewModel>
-                {
-                    new SymbolKindViewModel(SymbolKind.Namespace, "Namespace", specification),
-                    new SymbolKindViewModel(TypeKind.Class, "Class", specification),
-                    new SymbolKindViewModel(TypeKind.Struct, "Structure", specification),
-                    new SymbolKindViewModel(TypeKind.Interface, "Interface", specification),
-                    new SymbolKindViewModel(TypeKind.Enum, "Enum", specification),
-                    new SymbolKindViewModel(TypeKind.Module, "Module", specification),
-                    new SymbolKindViewModel(SymbolKind.Property, "Property", specification),
-                    new SymbolKindViewModel(SymbolKind.Method, "Method", specification),
-                    new SymbolKindViewModel(SymbolKind.Field, "Field", specification),
-                    new SymbolKindViewModel(SymbolKind.Event, "Event", specification),
-                    new SymbolKindViewModel(TypeKind.Delegate, "Delegate", specification),
-                    new SymbolKindViewModel(SymbolKind.Parameter, "Parameter", specification),
-                    new SymbolKindViewModel(SymbolKind.TypeParameter, "Type Parameter", specification),
-                    new SymbolKindViewModel(SymbolKind.Local, "Local", specification)
-                };
-
-                AccessibilityList = new List<AccessibilityViewModel>
-                {
-                    new AccessibilityViewModel(Accessibility.Public, "Public", specification),
-                    new AccessibilityViewModel(Accessibility.Friend, "Friend", specification),
-                    new AccessibilityViewModel(Accessibility.Private, "Private", specification),
-                    new AccessibilityViewModel(Accessibility.Protected , "Protected", specification),
-                    new AccessibilityViewModel(Accessibility.ProtectedOrInternal, "Protected Friend", specification),
-                    new AccessibilityViewModel(Accessibility.ProtectedAndInternal, "Private Protected", specification),
-                    new AccessibilityViewModel(Accessibility.NotApplicable, "Local", specification),
-                };
-
-                ModifierList = new List<ModifierViewModel>
-                {
-                    new ModifierViewModel(DeclarationModifiers.Abstract, "MustInherit", specification),
-                    new ModifierViewModel(DeclarationModifiers.Async, "Async", specification),
-                    new ModifierViewModel(DeclarationModifiers.Const, "Const", specification),
-                    new ModifierViewModel(DeclarationModifiers.ReadOnly, "ReadOnly", specification),
-                    new ModifierViewModel(DeclarationModifiers.Static, "Shared", specification)
-                };
-            }
             else
             {
                 throw new ArgumentException(string.Format("Unexpected language name: {0}", languageName), nameof(languageName));

@@ -104,31 +104,17 @@ namespace Microsoft.CodeAnalysis.ExpressionEvaluator
                 ImmutableArray<ExternAliasRecord> externAliasRecords;
                 string defaultNamespaceName;
 
-                if (isVisualBasicMethod)
-                {
-                    ReadVisualBasicImportsDebugInfo(
-                        symReader,
-                        methodToken,
-                        methodVersion,
-                        out importRecordGroups,
-                        out defaultNamespaceName);
+                Debug.Assert(symbolProviderOpt != null);
 
-                    externAliasRecords = ImmutableArray<ExternAliasRecord>.Empty;
-                }
-                else
-                {
-                    Debug.Assert(symbolProviderOpt != null);
+                ReadCSharpNativeImportsInfo(
+                    symReader,
+                    symbolProviderOpt,
+                    methodToken,
+                    methodVersion,
+                    out importRecordGroups,
+                    out externAliasRecords);
 
-                    ReadCSharpNativeImportsInfo(
-                        symReader,
-                        symbolProviderOpt,
-                        methodToken,
-                        methodVersion,
-                        out importRecordGroups,
-                        out externAliasRecords);
-
-                    defaultNamespaceName = "";
-                }
+                defaultNamespaceName = "";
 
                 // VB should read hoisted scope information from local variables:
                 var hoistedLocalScopeRecords = isVisualBasicMethod ?
@@ -519,114 +505,6 @@ namespace Microsoft.CodeAnalysis.ExpressionEvaluator
             {
                 tupleLocalConstantMap = constantBuilder.ToImmutable();
             }
-        }
-
-        private static void ReadVisualBasicImportsDebugInfo(
-            ISymUnmanagedReader reader,
-            int methodToken,
-            int methodVersion,
-            out ImmutableArray<ImmutableArray<ImportRecord>> importRecordGroups,
-            out string defaultNamespaceName)
-        {
-            importRecordGroups = ImmutableArray<ImmutableArray<ImportRecord>>.Empty;
-
-            var importStrings = CustomDebugInfoReader.GetVisualBasicImportStrings(
-                methodToken,
-                KeyValuePairUtil.Create(reader, methodVersion),
-                (token, arg) => GetImportStrings(arg.Key, token, arg.Value));
-
-            if (importStrings.IsDefault)
-            {
-                defaultNamespaceName = "";
-                return;
-            }
-
-            defaultNamespaceName = null;
-            var projectLevelImportRecords = ArrayBuilder<ImportRecord>.GetInstance();
-            var fileLevelImportRecords = ArrayBuilder<ImportRecord>.GetInstance();
-
-            foreach (string importString in importStrings)
-            {
-                Debug.Assert(importString != null);
-
-                if (importString.Length > 0 && importString[0] == '*')
-                {
-                    string alias = null;
-                    string target = null;
-                    ImportTargetKind kind = 0;
-                    VBImportScopeKind scope = 0;
-
-                    if (!CustomDebugInfoReader.TryParseVisualBasicImportString(importString, out alias, out target, out kind, out scope))
-                    {
-                        Debug.WriteLine($"Unable to parse import string '{importString}'");
-                        continue;
-                    }
-                    else if (kind == ImportTargetKind.Defunct)
-                    {
-                        continue;
-                    }
-
-                    Debug.Assert(alias == null); // The default namespace is never aliased.
-                    Debug.Assert(target != null);
-                    Debug.Assert(kind == ImportTargetKind.DefaultNamespace);
-
-                    // We only expect to see one of these, but it looks like ProcedureContext::LoadImportsAndDefaultNamespaceNormal
-                    // implicitly uses the last one if there are multiple.
-                    Debug.Assert(defaultNamespaceName == null);
-
-                    defaultNamespaceName = target;
-                }
-                else
-                {
-                    ImportRecord importRecord;
-                    VBImportScopeKind scope = 0;
-
-                    if (TryCreateImportRecordFromVisualBasicImportString(importString, out importRecord, out scope))
-                    {
-                        if (scope == VBImportScopeKind.Project)
-                        {
-                            projectLevelImportRecords.Add(importRecord);
-                        }
-                        else
-                        {
-                            Debug.Assert(scope == VBImportScopeKind.File || scope == VBImportScopeKind.Unspecified);
-                            fileLevelImportRecords.Add(importRecord);
-                        }
-                    }
-                    else
-                    {
-                        Debug.WriteLine($"Failed to parse import string {importString}");
-                    }
-                }
-            }
-
-            importRecordGroups = ImmutableArray.Create(
-                fileLevelImportRecords.ToImmutableAndFree(),
-                projectLevelImportRecords.ToImmutableAndFree());
-
-            defaultNamespaceName = defaultNamespaceName ?? "";
-        }
-
-        private static bool TryCreateImportRecordFromVisualBasicImportString(string importString, out ImportRecord record, out VBImportScopeKind scope)
-        {
-            ImportTargetKind targetKind;
-            string alias;
-            string targetString;
-            if (CustomDebugInfoReader.TryParseVisualBasicImportString(importString, out alias, out targetString, out targetKind, out scope))
-            {
-                record = new ImportRecord(
-                    targetKind: targetKind,
-                    alias: alias,
-                    targetType: null,
-                    targetString: targetString,
-                    targetAssembly: null,
-                    targetAssemblyAlias: null);
-
-                return true;
-            }
-
-            record = default(ImportRecord);
-            return false;
         }
 
         private static ILSpan GetReuseSpan(ArrayBuilder<ISymUnmanagedScope> scopes, int ilOffset, bool isEndInclusive)

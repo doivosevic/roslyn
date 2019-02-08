@@ -978,32 +978,7 @@ namespace Microsoft.VisualStudio.LanguageServices.Implementation.Venus
                             }
                         }
                     }
-
-                    // same as C#, but different text is in the buffer
-                    if (_project.Language == LanguageNames.VisualBasic)
-                    {
-                        var textSpan = GetVisibleTextSpan(text, span);
-                        var subjectSnapshot = SubjectBuffer.CurrentSnapshot;
-                        var end = textSpan.End - 1;
-                        if (end >= 0)
-                        {
-                            var ch = subjectSnapshot[end];
-                            if (CheckCode(subjectSnapshot, textSpan.End, ch, VBRazorBlock, checkAt: false) ||
-                                CheckCode(subjectSnapshot, textSpan.End, ch, FunctionsRazor, checkAt: false))
-                            {
-                                var token = root.FindToken(end, findInsideTrivia: true);
-                                var syntaxFact = _workspace.Services.GetLanguageServices(_project.Language).GetService<ISyntaxFactsService>();
-                                if (token.Span.End == textSpan.End && syntaxFact != null)
-                                {
-                                    if (syntaxFact.IsSkippedTokensTrivia(token.Parent))
-                                    {
-                                        return 0;
-                                    }
-                                }
-                            }
-                        }
-                    }
-
+                    
                     return _workspace.Options.GetOption(FormattingOptions.IndentationSize, _project.Language);
                 }
             }
@@ -1054,13 +1029,7 @@ namespace Microsoft.VisualStudio.LanguageServices.Implementation.Venus
                 return CheckCode(surfaceSnapshot, position, ch, CSharpRazorBlock) ||
                        CheckCode(surfaceSnapshot, position, ch, FunctionsRazor, CSharpRazorBlock);
             }
-
-            if (_project.Language == LanguageNames.VisualBasic)
-            {
-                return CheckCode(surfaceSnapshot, position, ch, VBRazorBlock) ||
-                       CheckCode(surfaceSnapshot, position, ch, FunctionsRazor);
-            }
-
+            
             return false;
         }
 

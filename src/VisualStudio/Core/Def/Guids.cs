@@ -52,39 +52,6 @@ namespace Microsoft.VisualStudio.LanguageServices
         public const string CSharpOptionPageFormattingSpacingIdString = "234FB566-73DD-4612-8DE4-29031FF27052";
         public const string CSharpOptionPageFormattingWrappingIdString = "8E334D9C-B7DC-4CF3-B7B7-014B831FE76B";
 
-        public const string VisualBasicPackageIdString = "574fc912-f74f-4b4e-92c3-f695c208a2bb";
-
-        public const string VisualBasicReplPackageIdString = "F5C61C13-7037-4C50-98E6-ACC313359A34";
-
-        public const string VbCompilerProjectIdString = "12C8A7D2-4681-11D2-B48A-0000F87572EB";
-
-        public const string VisualBasicProjectIdString = "F184B08F-C81C-45F6-A57F-5ABD9991F28F";
-
-        public const string VisualBasicCompilerServiceIdString = "019971d6-4685-11d2-b48a-0000f87572eb";
-        public const string VisualBasicLanguageServiceIdString = "e34acdc0-baae-11d0-88bf-00a0c9110049";
-        public const string VisualBasicEditorFactoryIdString = "2c015c70-c72c-11d0-88c3-00a0c9110049";
-        public const string VisualBasicCodePageEditorFactoryIdString = "6c33e1aa-1401-4536-ab67-0e21e6e569da";
-        public const string VisualBasicDebuggerLanguageIdString = "3a12d0b8-c26c-11d0-b442-00a0244a1dd2";
-        public const string VisualBasicLibraryIdString = "414AC972-9829-4b6a-A8D7-A08152FEB8AA";
-        public const string VisualBasicOptionPageCodeStyleIdString = "10C168E1-3470-448A-A1AC-73D6BC070750";
-
-        public static readonly Guid VisualBasicPackageId = new Guid(VisualBasicPackageIdString);
-        public static readonly Guid VisualBasicCompilerServiceId = new Guid(VisualBasicCompilerServiceIdString);
-        public static readonly Guid VisualBasicLanguageServiceId = new Guid(VisualBasicLanguageServiceIdString);
-        public static readonly Guid VisualBasicEditorFactoryId = new Guid(VisualBasicEditorFactoryIdString);
-        public static readonly Guid VisualBasicCodePageEditorFactoryId = new Guid(VisualBasicCodePageEditorFactoryIdString);
-        public static readonly Guid VisualBasicLibraryId = new Guid(VisualBasicLibraryIdString);
-
-        public static readonly Guid VisualBasicProjectId = new Guid(VisualBasicProjectIdString);
-
-        // from debugger\idl\makeapi\guid.c  
-        public static readonly Guid VisualBasicDebuggerLanguageId = new Guid(VisualBasicDebuggerLanguageIdString);
-
-        // option page guid from setupauthoring\vb\components\vblanguageservice.pkgdef
-        public const string VisualBasicOptionPageVBSpecificIdString = "F1E1021E-A781-4862-9F4B-88746A288A67";
-        public const string VisualBasicOptionPageNamingStyleIdString = "BCA454E0-95E4-4877-B4CB-B1D642B7BAFA";
-        public const string VisualBasicOptionPageIntelliSenseIdString = "04460A3B-1B5F-4402-BC6D-89A4F6F0A8D7";
-
         public const string FSharpPackageIdString = "871D2A70-12A2-4e42-9440-425DD92A4116";
 
         public static readonly Guid FSharpPackageId = new Guid(FSharpPackageIdString);

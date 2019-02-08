@@ -11,7 +11,7 @@ namespace Microsoft.CodeAnalysis.IntroduceVariable
     [ExtensionOrder(After = PredefinedCodeRefactoringProviderNames.ConvertAnonymousTypeToClass)]
     [ExtensionOrder(After = PredefinedCodeRefactoringProviderNames.InvertConditional)]
     [ExtensionOrder(After = PredefinedCodeRefactoringProviderNames.InvertLogical)]
-    [ExportCodeRefactoringProvider(LanguageNames.CSharp, LanguageNames.VisualBasic,
+    [ExportCodeRefactoringProvider(LanguageNames.CSharp,
         Name = PredefinedCodeRefactoringProviderNames.IntroduceVariable), Shared]
     internal class IntroduceVariableCodeRefactoringProvider : CodeRefactoringProvider
     {

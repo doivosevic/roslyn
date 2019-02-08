@@ -44,12 +44,6 @@ namespace Microsoft.VisualStudio.LanguageServices.CSharp.Options
             set { }
         }
 
-        public int AutoComment
-        {
-            get { return GetBooleanOption(FeatureOnOffOptions.AutoXmlDocCommentGeneration); }
-            set { SetBooleanOption(FeatureOnOffOptions.AutoXmlDocCommentGeneration, value); }
-        }
-
         public int AutoInsertAsteriskForNewLinesOfBlockComments
         {
             get { return GetBooleanOption(FeatureOnOffOptions.AutoInsertBlockCommentStartString); }
@@ -94,19 +88,7 @@ namespace Microsoft.VisualStudio.LanguageServices.CSharp.Options
             get { return GetBooleanOption(ServiceFeatureOnOffOptions.ClosedFileDiagnostic); }
             set { SetBooleanOption(ServiceFeatureOnOffOptions.ClosedFileDiagnostic, value); }
         }
-
-        public int DisplayLineSeparators
-        {
-            get { return GetBooleanOption(FeatureOnOffOptions.LineSeparator); }
-            set { SetBooleanOption(FeatureOnOffOptions.LineSeparator, value); }
-        }
-
-        public int EnableHighlightRelatedKeywords
-        {
-            get { return GetBooleanOption(FeatureOnOffOptions.KeywordHighlighting); }
-            set { SetBooleanOption(FeatureOnOffOptions.KeywordHighlighting, value); }
-        }
-
+        
         public int EnterOutliningModeOnOpen
         {
             get { return GetBooleanOption(FeatureOnOffOptions.Outlining); }
@@ -142,13 +124,7 @@ namespace Microsoft.VisualStudio.LanguageServices.CSharp.Options
             get { return GetBooleanOption(FeatureOnOffOptions.AutoFormattingOnSemicolon); }
             set { SetBooleanOption(FeatureOnOffOptions.AutoFormattingOnSemicolon, value); }
         }
-
-        public int HighlightReferences
-        {
-            get { return GetBooleanOption(FeatureOnOffOptions.ReferenceHighlighting); }
-            set { SetBooleanOption(FeatureOnOffOptions.ReferenceHighlighting, value); }
-        }
-
+        
         public int Indent_BlockContents
         {
             get { return GetBooleanOption(CSharpFormattingOptions.IndentBlock); }
@@ -324,12 +300,6 @@ namespace Microsoft.VisualStudio.LanguageServices.CSharp.Options
         {
             get { return GetBooleanOption(FeatureOnOffOptions.RenameTracking); }
             set { SetBooleanOption(FeatureOnOffOptions.RenameTracking, value); }
-        }
-
-        public int RenameTrackingPreview
-        {
-            get { return GetBooleanOption(FeatureOnOffOptions.RenameTrackingPreview); }
-            set { SetBooleanOption(FeatureOnOffOptions.RenameTrackingPreview, value); }
         }
 
         public int ShowKeywords

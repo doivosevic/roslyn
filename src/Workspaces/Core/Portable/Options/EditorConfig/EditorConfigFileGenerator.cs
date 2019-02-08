@@ -26,11 +26,6 @@ namespace Microsoft.CodeAnalysis.Options
                 editorconfig.AppendLine($"# {WorkspacesResources.CSharp_files}");
                 editorconfig.AppendLine("[*.cs]");
             }
-            else if (language == LanguageNames.VisualBasic)
-            {
-                editorconfig.AppendLine($"# {WorkspacesResources.Visual_Basic_files}");
-                editorconfig.AppendLine("[*.vb]");
-            }
             editorconfig.AppendLine();
 
             foreach ((var feature, var options) in groupedOptions)

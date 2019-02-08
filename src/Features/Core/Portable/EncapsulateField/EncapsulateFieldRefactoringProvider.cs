@@ -7,7 +7,7 @@ using Microsoft.CodeAnalysis.Shared.Extensions;
 
 namespace Microsoft.CodeAnalysis.EncapsulateField
 {
-    [ExportCodeRefactoringProvider(LanguageNames.CSharp, LanguageNames.VisualBasic,
+    [ExportCodeRefactoringProvider(LanguageNames.CSharp,
         Name = PredefinedCodeRefactoringProviderNames.EncapsulateField), Shared]
     internal class EncapsulateFieldRefactoringProvider : CodeRefactoringProvider
     {

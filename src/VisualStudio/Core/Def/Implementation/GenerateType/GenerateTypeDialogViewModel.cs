@@ -33,13 +33,8 @@ namespace Microsoft.VisualStudio.LanguageServices.Implementation.GenerateType
         private Dictionary<string, Accessibility> _accessListMap;
         private Dictionary<string, TypeKind> _typeKindMap;
         private List<string> _csharpAccessList;
-        private List<string> _visualBasicAccessList;
         private List<string> _csharpTypeKindList;
-        private List<string> _visualBasicTypeKindList;
-
-        private string _csharpExtension = ".cs";
-        private string _visualBasicExtension = ".vb";
-
+        
         // reserved names that cannot be a folder name or filename
         private string[] _reservedKeywords = new string[]
                                                 {
@@ -144,13 +139,11 @@ namespace Microsoft.VisualStudio.LanguageServices.Implementation.GenerateType
             _typeKindMap.Add(csharpKey, typeKind);
 
             _csharpTypeKindList.Add(csharpKey);
-            _visualBasicTypeKindList.Add(visualBasicKey);
         }
 
         private void PopulateTypeKind(TypeKind typeKind, string visualBasicKey)
         {
             _typeKindMap.Add(visualBasicKey, typeKind);
-            _visualBasicTypeKindList.Add(visualBasicKey);
         }
 
         private void PopulateAccessList(string key, Accessibility accessibility, string languageName = null)
@@ -158,16 +151,10 @@ namespace Microsoft.VisualStudio.LanguageServices.Implementation.GenerateType
             if (languageName == null)
             {
                 _csharpAccessList.Add(key);
-                _visualBasicAccessList.Add(key);
             }
             else if (languageName == LanguageNames.CSharp)
             {
                 _csharpAccessList.Add(key);
-            }
-            else
-            {
-                Debug.Assert(languageName == LanguageNames.VisualBasic, "Currently only C# and VB are supported");
-                _visualBasicAccessList.Add(key);
             }
 
             _accessListMap.Add(key, accessibility);
@@ -178,20 +165,16 @@ namespace Microsoft.VisualStudio.LanguageServices.Implementation.GenerateType
             _accessListMap = new Dictionary<string, Accessibility>();
             _typeKindMap = new Dictionary<string, TypeKind>();
             _csharpAccessList = new List<string>();
-            _visualBasicAccessList = new List<string>();
             _csharpTypeKindList = new List<string>();
-            _visualBasicTypeKindList = new List<string>();
 
             // Populate the AccessListMap
             if (!_generateTypeDialogOptions.IsPublicOnlyAccessibility)
             {
                 PopulateAccessList("Default", Accessibility.NotApplicable);
                 PopulateAccessList("internal", Accessibility.Internal, LanguageNames.CSharp);
-                PopulateAccessList("Friend", Accessibility.Internal, LanguageNames.VisualBasic);
             }
 
             PopulateAccessList("public", Accessibility.Public, LanguageNames.CSharp);
-            PopulateAccessList("Public", Accessibility.Public, LanguageNames.VisualBasic);
 
             // Populate the TypeKind
             PopulateTypeKind();
@@ -441,8 +424,6 @@ namespace Microsoft.VisualStudio.LanguageServices.Implementation.GenerateType
                     // Update the TypeKindList if required
                     if (previousProject != null && previousProject.Language != _selectedProject.Language)
                     {
-                        if (_selectedProject.Language == LanguageNames.CSharp)
-                        {
                             var previousSelectedIndex = _kindSelectIndex;
                             this.KindList = _csharpTypeKindList;
                             if (_shouldChangeTypeKindListSelectedIndex)
@@ -453,20 +434,6 @@ namespace Microsoft.VisualStudio.LanguageServices.Implementation.GenerateType
                             {
                                 this.KindSelectIndex = previousSelectedIndex;
                             }
-                        }
-                        else
-                        {
-                            var previousSelectedIndex = _kindSelectIndex;
-                            this.KindList = _visualBasicTypeKindList;
-                            if (_shouldChangeTypeKindListSelectedIndex)
-                            {
-                                this.KindSelectIndex = 0;
-                            }
-                            else
-                            {
-                                this.KindSelectIndex = previousSelectedIndex;
-                            }
-                        }
                     }
 
                     // Update File Extension
@@ -673,19 +640,6 @@ namespace Microsoft.VisualStudio.LanguageServices.Implementation.GenerateType
         internal void UpdateFileNameExtension()
         {
             var currentFileName = this.FileName.Trim();
-            if (!string.IsNullOrWhiteSpace(currentFileName) && !currentFileName.EndsWith("\\", StringComparison.Ordinal))
-            {
-                if (this.SelectedProject.Language == LanguageNames.CSharp)
-                {
-                    // For CSharp
-                    currentFileName = UpdateExtension(currentFileName, _csharpExtension, _visualBasicExtension);
-                }
-                else
-                {
-                    // For Visual Basic
-                    currentFileName = UpdateExtension(currentFileName, _visualBasicExtension, _csharpExtension);
-                }
-            }
 
             this.FileName = currentFileName;
         }
@@ -749,16 +703,12 @@ namespace Microsoft.VisualStudio.LanguageServices.Implementation.GenerateType
             this.SelectedDocument = document;
             _notificationService = notificationService;
 
-            this.AccessList = document.Project.Language == LanguageNames.CSharp
-                ? _csharpAccessList
-                : _visualBasicAccessList;
+            this.AccessList = _csharpAccessList;
             this.AccessSelectIndex = this.AccessList.Contains(accessSelectString)
                 ? this.AccessList.IndexOf(accessSelectString) : 0;
             this.IsAccessListEnabled = true;
 
-            this.KindList = document.Project.Language == LanguageNames.CSharp
-                ? _csharpTypeKindList
-                : _visualBasicTypeKindList;
+            this.KindList = _csharpTypeKindList;
             this.KindSelectIndex = this.KindList.Contains(typeKindSelectString)
                 ? this.KindList.IndexOf(typeKindSelectString) : 0;
 

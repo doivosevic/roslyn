@@ -93,10 +93,6 @@ namespace Microsoft.CodeAnalysis
                     }
 
                     var node = declaringLocation.GetSyntax(cancellationToken);
-                    if (node.Language == LanguageNames.VisualBasic)
-                    {
-                        node = node.Parent;
-                    }
 
                     var semanticModel = compilation.GetSemanticModel(node.SyntaxTree);
 

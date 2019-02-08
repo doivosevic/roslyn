@@ -330,7 +330,6 @@ namespace Microsoft.CodeAnalysis.RemoveUnusedParametersAndValues
                 switch (preference)
                 {
                     case UnusedValuePreference.DiscardVariable:
-                        Debug.Assert(semanticModel.Language != LanguageNames.VisualBasic);
                         var discardAssignmentExpression = (TExpressionSyntax)editor.Generator.AssignmentStatement(
                                                                 left: editor.Generator.IdentifierName(AbstractRemoveUnusedParametersAndValuesDiagnosticAnalyzer.DiscardVariableName),
                                                                 right: expression.WithoutTrivia())

@@ -27,7 +27,6 @@ namespace Microsoft.VisualStudio.LanguageServices.Implementation.ProjectSystem.C
             ImmutableDictionary.CreateRange(StringComparer.OrdinalIgnoreCase, new[]
             {
                 new KeyValuePair<string, string> (LanguageNames.CSharp, "CS"),
-                new KeyValuePair<string, string> (LanguageNames.VisualBasic, "BC"),
                 new KeyValuePair<string, string> (LanguageNames.FSharp, "FS"),
             });
 

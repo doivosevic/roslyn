@@ -103,21 +103,7 @@ namespace Microsoft.CodeAnalysis.Emit
         /// followed by types forwarded to another assembly.
         /// </summary>
         public abstract ImmutableArray<Cci.ExportedType> GetExportedTypes(DiagnosticBag diagnostics);
-
-        /// <summary>
-        /// Used to distinguish which style to pick while writing native PDB information.
-        /// </summary>
-        /// <remarks>
-        /// The PDB content for custom debug information is different between Visual Basic and CSharp.
-        /// E.g. C# always includes a CustomMetadata Header (MD2) that contains the namespace scope counts, where 
-        /// as VB only outputs namespace imports into the namespace scopes. 
-        /// C# defines forwards in that header, VB includes them into the scopes list.
-        /// 
-        /// Currently the compiler doesn't allow mixing C# and VB method bodies. Thus this flag can be per module.
-        /// It is possible to move this flag to per-method basis but native PDB CDI forwarding would need to be adjusted accordingly.
-        /// </remarks>
-        public abstract bool GenerateVisualBasicStylePdb { get; }
-
+        
         /// <summary>
         /// Linked assembly names to be stored to native PDB (VB only).
         /// </summary>

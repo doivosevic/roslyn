@@ -21,7 +21,6 @@ namespace Microsoft.CodeAnalysis.ExpressionEvaluator
         internal static readonly AssemblyIdentity SystemLinqIdentity = new AssemblyIdentity("System.Linq");
         internal static readonly AssemblyIdentity SystemXmlIdentity = new AssemblyIdentity("System.Xml");
         internal static readonly AssemblyIdentity SystemXmlLinqIdentity = new AssemblyIdentity("System.Xml.Linq");
-        internal static readonly AssemblyIdentity MicrosoftVisualBasicIdentity = new AssemblyIdentity("Microsoft.VisualBasic");
 
         internal abstract CompileResult CompileExpression(
             string expr,

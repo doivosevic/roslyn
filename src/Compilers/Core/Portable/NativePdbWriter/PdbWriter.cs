@@ -148,7 +148,7 @@ namespace Microsoft.Cci
         private void DefineNamespaceScopes(IMethodBody methodBody)
         {
             var module = Module;
-            bool isVisualBasic = module.GenerateVisualBasicStylePdb;
+            bool isVisualBasic = false;
 
             IMethodDefinition method = methodBody.MethodDefinition;
 
@@ -235,7 +235,7 @@ namespace Microsoft.Cci
             // NOTE: Dev12 has related cases "I" and "O" in EMITTER::ComputeDebugNamespace,
             // but they were probably implementation details that do not affect Roslyn.
 
-            if (Module.GenerateVisualBasicStylePdb)
+            if (false)
             {
                 // VB doesn't support extern aliases
                 Debug.Assert(import.TargetAssemblyOpt == null);
@@ -338,73 +338,14 @@ namespace Microsoft.Cci
             string result;
             if (!_qualifiedNameCache.TryGetValue(typeReference, out result))
             {
-                if (Module.GenerateVisualBasicStylePdb)
-                {
-                    result = SerializeVisualBasicImportTypeReference(typeReference);
-                }
-                else
-                {
-                    result = typeReference.GetSerializedTypeName(Context);
-                }
+                result = typeReference.GetSerializedTypeName(Context);
 
                 _qualifiedNameCache.Add(typeReference, result);
             }
 
             return result;
         }
-
-        private string SerializeVisualBasicImportTypeReference(ITypeReference typeReference)
-        {
-            Debug.Assert(!(typeReference is IArrayTypeReference));
-            Debug.Assert(!(typeReference is IPointerTypeReference));
-            Debug.Assert(!typeReference.IsTypeSpecification());
-
-            var result = PooledStringBuilder.GetInstance();
-            ArrayBuilder<string> nestedNamesReversed;
-
-            INestedTypeReference nestedType = typeReference.AsNestedTypeReference;
-            if (nestedType != null)
-            {
-                nestedNamesReversed = ArrayBuilder<string>.GetInstance();
-
-                while (nestedType != null)
-                {
-                    nestedNamesReversed.Add(nestedType.Name);
-                    typeReference = nestedType.GetContainingType(_metadataWriter.Context);
-                    nestedType = typeReference.AsNestedTypeReference;
-                }
-            }
-            else
-            {
-                nestedNamesReversed = null;
-            }
-
-            INamespaceTypeReference namespaceType = typeReference.AsNamespaceTypeReference;
-            Debug.Assert(namespaceType != null);
-
-            string namespaceName = namespaceType.NamespaceName;
-            if (namespaceName.Length != 0)
-            {
-                result.Builder.Append(namespaceName);
-                result.Builder.Append('.');
-            }
-
-            result.Builder.Append(namespaceType.Name);
-
-            if (nestedNamesReversed != null)
-            {
-                for (int i = nestedNamesReversed.Count - 1; i >= 0; i--)
-                {
-                    result.Builder.Append('.');
-                    result.Builder.Append(nestedNamesReversed[i]);
-                }
-
-                nestedNamesReversed.Free();
-            }
-
-            return result.ToStringAndFree();
-        }
-
+        
         private string GetAssemblyReferenceAlias(IAssemblyReference assembly, HashSet<string> declaredExternAliases)
         {
             // no extern alias defined in scope at all -> error in compiler
@@ -438,7 +379,7 @@ namespace Microsoft.Cci
         private void DefineLocalScopes(ImmutableArray<LocalScope> scopes, StandaloneSignatureHandle localSignatureHandleOpt)
         {
             // VB scope ranges are end-inclusive
-            bool endInclusive = this.Module.GenerateVisualBasicStylePdb;
+            bool endInclusive = false;
 
             // The order of OpenScope and CloseScope calls must follow the scope nesting.
             var scopeStack = ArrayBuilder<LocalScope>.GetInstance();

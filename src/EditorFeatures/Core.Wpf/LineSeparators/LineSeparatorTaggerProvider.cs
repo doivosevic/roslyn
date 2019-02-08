@@ -31,12 +31,9 @@ namespace Microsoft.CodeAnalysis.Editor.Implementation.LineSeparators
     [Export(typeof(ITaggerProvider))]
     [TagType(typeof(LineSeparatorTag))]
     [ContentType(ContentTypeNames.CSharpContentType)]
-    [ContentType(ContentTypeNames.VisualBasicContentType)]
     internal partial class LineSeparatorTaggerProvider : AsynchronousTaggerProvider<LineSeparatorTag>
     {
         private readonly IEditorFormatMap _editorFormatMap;
-
-        protected override IEnumerable<PerLanguageOption<bool>> PerLanguageOptions => SpecializedCollections.SingletonEnumerable(FeatureOnOffOptions.LineSeparator);
 
         private readonly object _lineSeperatorTagGate = new object();
         private LineSeparatorTag _lineSeparatorTag;
@@ -73,38 +70,7 @@ namespace Microsoft.CodeAnalysis.Editor.Implementation.LineSeparators
 
         protected override async Task ProduceTagsAsync(TaggerContext<LineSeparatorTag> context, DocumentSnapshotSpan documentSnapshotSpan, int? caretPosition)
         {
-            var cancellationToken = context.CancellationToken;
-            var document = documentSnapshotSpan.Document;
-            if (document == null)
-            {
-                return;
-            }
-
-            var documentOptions = await document.GetOptionsAsync(cancellationToken).ConfigureAwait(false);
-
-            if (!documentOptions.GetOption(FeatureOnOffOptions.LineSeparator))
-            {
-                return;
-            }
-
-            LineSeparatorTag tag;
-            lock (_lineSeperatorTagGate)
-            {
-                tag = _lineSeparatorTag;
-            }
-
-            using (Logger.LogBlock(FunctionId.Tagger_LineSeparator_TagProducer_ProduceTags, cancellationToken))
-            {
-                var snapshotSpan = documentSnapshotSpan.SnapshotSpan;
-                var lineSeparatorService = document.GetLanguageService<ILineSeparatorService>();
-                var lineSeparatorSpans = await lineSeparatorService.GetLineSeparatorsAsync(document, snapshotSpan.Span.ToTextSpan(), cancellationToken).ConfigureAwait(false);
-                cancellationToken.ThrowIfCancellationRequested();
-
-                foreach (var span in lineSeparatorSpans)
-                {
-                    context.AddTag(new TagSpan<LineSeparatorTag>(span.ToSnapshotSpan(snapshotSpan.Snapshot), tag));
-                }
-            }
+            return;
         }
     }
 }

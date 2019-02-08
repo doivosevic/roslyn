@@ -20,7 +20,7 @@ namespace Microsoft.CodeAnalysis.GenerateDefaultConstructors
     /// for a type based on the fields/properties of that type. Both of those are handled by other 
     /// services.
     /// </summary>
-    [ExportCodeRefactoringProvider(LanguageNames.CSharp, LanguageNames.VisualBasic,
+    [ExportCodeRefactoringProvider(LanguageNames.CSharp,
         Name = PredefinedCodeRefactoringProviderNames.GenerateDefaultConstructors), Shared]
     internal class GenerateDefaultConstructorsCodeRefactoringProvider : CodeRefactoringProvider
     {

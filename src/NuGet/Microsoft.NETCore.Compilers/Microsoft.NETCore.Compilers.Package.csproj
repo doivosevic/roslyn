@@ -15,19 +15,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Compilers\CSharp\csc\csc.csproj"/>
-    <ProjectReference Include="..\..\Compilers\VisualBasic\vbc\vbc.csproj"/>
-    <ProjectReference Include="..\..\Interactive\csi\csi.csproj"/>
-    <ProjectReference Include="..\..\Compilers\Core\MSBuildTask\Microsoft.Build.Tasks.CodeAnalysis.csproj"/>
-    <ProjectReference Include="..\..\Compilers\Server\VBCSCompiler\VBCSCompiler.csproj"/>
+    <ProjectReference Include="..\..\Compilers\CSharp\csc\csc.csproj" />
+    <ProjectReference Include="..\..\Interactive\csi\csi.csproj" />
+    <ProjectReference Include="..\..\Compilers\Core\MSBuildTask\Microsoft.Build.Tasks.CodeAnalysis.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Update="@(ProjectReference)"
-                      Targets="Publish"
-                      ReferenceOutputAssembly="false"
-                      SkipGetTargetFrameworkProperties="true"
-                      SetTargetFramework="TargetFramework=$(TargetFramework)" />
+    <ProjectReference Update="@(ProjectReference)" Targets="Publish" ReferenceOutputAssembly="false" SkipGetTargetFrameworkProperties="true" SetTargetFramework="TargetFramework=$(TargetFramework)" />
   </ItemGroup>
 
   <Target Name="_GetFilesToPackage">
@@ -67,7 +61,7 @@
       <_File Include="$(ArtifactsBinDir)csc\$(Configuration)\netcoreapp2.1\publish\System.*.dll" TargetDir="tools\bincore" />
       <_File Include="$(ArtifactsBinDir)csc\$(Configuration)\netcoreapp2.1\publish\runtimes\**" TargetDir="tools\bincore\runtimes" />
 
-      <TfmSpecificPackageFile Include="@(_File)" PackagePath="%(_File.TargetDir)\%(_File.RecursiveDir)%(_File.FileName)%(_File.Extension)"/>
+      <TfmSpecificPackageFile Include="@(_File)" PackagePath="%(_File.TargetDir)\%(_File.RecursiveDir)%(_File.FileName)%(_File.Extension)" />
 
       <!-- If PackagePath doesn't have an extension NuGet considers it a directory name, so we need to handle these file explicitly -->
       <TfmSpecificPackageFile Include="$(MSBuildProjectDirectory)\tools\bincore\RunCsc" PackagePath="tools\bincore\" />

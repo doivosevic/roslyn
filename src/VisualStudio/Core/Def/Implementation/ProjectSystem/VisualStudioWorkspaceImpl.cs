@@ -501,9 +501,6 @@ namespace Microsoft.VisualStudio.LanguageServices.Implementation.ProjectSystem
                             csharpProperties.LanguageVersion = newVersion;
                         }
                         break;
-
-                    case LanguageNames.VisualBasic:
-                        throw new InvalidOperationException(ServicesVSResources.This_workspace_does_not_support_updating_Visual_Basic_parse_options);
                 }
             }
         }
@@ -1077,10 +1074,6 @@ namespace Microsoft.VisualStudio.LanguageServices.Implementation.ProjectSystem
                     // TODO: uncomment when fixing https://github.com/dotnet/roslyn/issues/5325
                     //return sourceCodeKind == SourceCodeKind.Regular ? ".cs" : ".csx";
                     return ".cs";
-                case LanguageNames.VisualBasic:
-                    // TODO: uncomment when fixing https://github.com/dotnet/roslyn/issues/5325
-                    //return sourceCodeKind == SourceCodeKind.Regular ? ".vb" : ".vbx";
-                    return ".vb";
                 default:
                     throw new InvalidOperationException();
             }

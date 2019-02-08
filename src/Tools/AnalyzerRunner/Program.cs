@@ -86,7 +86,7 @@ namespace AnalyzerRunner
 
                 if (options.ShowStats)
                 {
-                    List<Project> projects = solution.Projects.Where(project => project.Language == LanguageNames.CSharp || project.Language == LanguageNames.VisualBasic).ToList();
+                    List<Project> projects = solution.Projects.Where(project => project.Language == LanguageNames.CSharp).ToList();
 
                     Console.WriteLine("Number of projects:\t\t" + projects.Count);
                     Console.WriteLine("Number of documents:\t\t" + projects.Sum(x => x.DocumentIds.Count));
@@ -116,7 +116,7 @@ namespace AnalyzerRunner
                     foreach (var projectId in solution.ProjectIds)
                     {
                         var project = solution.GetProject(projectId);
-                        if (project.Language != LanguageNames.CSharp && project.Language != LanguageNames.VisualBasic)
+                        if (project.Language != LanguageNames.CSharp)
                         {
                             continue;
                         }
@@ -341,10 +341,8 @@ namespace AnalyzerRunner
         {
             var analyzerReference = new AnalyzerFileReference(path, AssemblyLoader.Instance);
             var csharpAnalyzers = analyzerReference.GetAnalyzers(LanguageNames.CSharp);
-            var basicAnalyzers = analyzerReference.GetAnalyzers(LanguageNames.VisualBasic);
             return ImmutableDictionary<string, ImmutableArray<DiagnosticAnalyzer>>.Empty
-                .Add(LanguageNames.CSharp, csharpAnalyzers)
-                .Add(LanguageNames.VisualBasic, basicAnalyzers);
+                .Add(LanguageNames.CSharp, csharpAnalyzers);
         }
 
         private static async Task<ImmutableDictionary<ProjectId, AnalysisResult>> GetAnalysisResultAsync(
@@ -362,7 +360,7 @@ namespace AnalyzerRunner
                 // Make sure we analyze the projects in parallel
                 foreach (var project in solution.Projects)
                 {
-                    if (project.Language != LanguageNames.CSharp && project.Language != LanguageNames.VisualBasic)
+                    if (project.Language != LanguageNames.CSharp)
                     {
                         continue;
                     }

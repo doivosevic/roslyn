@@ -113,7 +113,6 @@ namespace Microsoft.VisualStudio.LanguageServices.Implementation.Options
                 else
                 {
                     AddPerLanguageOption(panel, option, LanguageNames.CSharp);
-                    AddPerLanguageOption(panel, option, LanguageNames.VisualBasic);
                 }
             }
         }

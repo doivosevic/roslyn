@@ -22,7 +22,6 @@ namespace Microsoft.CodeAnalysis.Editor.Implementation.Highlighting
     [Export(typeof(IViewTaggerProvider))]
     [TagType(typeof(KeywordHighlightTag))]
     [ContentType(ContentTypeNames.CSharpContentType)]
-    [ContentType(ContentTypeNames.VisualBasicContentType)]
     [TextViewRole(PredefinedTextViewRoles.Interactive)]
     internal class HighlighterViewTaggerProvider : AsynchronousViewTaggerProvider<KeywordHighlightTag>
     {
@@ -32,7 +31,6 @@ namespace Microsoft.CodeAnalysis.Editor.Implementation.Highlighting
         // highlights if the caret stays within an existing tag.
         protected override TaggerCaretChangeBehavior CaretChangeBehavior => TaggerCaretChangeBehavior.RemoveAllTagsOnCaretMoveOutsideOfTag;
         protected override TaggerTextChangeBehavior TextChangeBehavior => TaggerTextChangeBehavior.RemoveAllTags;
-        protected override IEnumerable<PerLanguageOption<bool>> PerLanguageOptions => SpecializedCollections.SingletonEnumerable(FeatureOnOffOptions.KeywordHighlighting);
 
         [ImportingConstructor]
         public HighlighterViewTaggerProvider(
@@ -63,10 +61,6 @@ namespace Microsoft.CodeAnalysis.Editor.Implementation.Highlighting
             }
 
             var documentOptions = await document.GetOptionsAsync(cancellationToken).ConfigureAwait(false);
-            if (!documentOptions.GetOption(FeatureOnOffOptions.KeywordHighlighting))
-            {
-                return;
-            }
 
             if (!caretPosition.HasValue)
             {

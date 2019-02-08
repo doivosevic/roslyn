@@ -40,7 +40,6 @@ namespace Microsoft.CodeAnalysis.Editor.ReferenceHighlighting
         // highlights if the caret stays within an existing tag.
         protected override TaggerCaretChangeBehavior CaretChangeBehavior => TaggerCaretChangeBehavior.RemoveAllTagsOnCaretMoveOutsideOfTag;
         protected override TaggerTextChangeBehavior TextChangeBehavior => TaggerTextChangeBehavior.RemoveAllTags;
-        protected override IEnumerable<PerLanguageOption<bool>> PerLanguageOptions => SpecializedCollections.SingletonEnumerable(FeatureOnOffOptions.ReferenceHighlighting);
 
         [ImportingConstructor]
         public ReferenceHighlightingViewTaggerProvider(
@@ -101,25 +100,7 @@ namespace Microsoft.CodeAnalysis.Editor.ReferenceHighlighting
                 return Task.CompletedTask;
             }
 
-            // Don't produce tags if the feature is not enabled.
-            if (!workspace.Options.GetOption(FeatureOnOffOptions.ReferenceHighlighting, document.Project.Language))
-            {
-                return Task.CompletedTask;
-            }
-
-            // See if the user is just moving their caret around in an existing tag.  If so, we don't
-            // want to actually go recompute things.  Note: this only works for containment.  If the
-            // user moves their caret to the end of a highlighted reference, we do want to recompute
-            // as they may now be at the start of some other reference that should be highlighted instead.
-            var existingTags = context.GetExistingContainingTags(caretPosition);
-            if (!existingTags.IsEmpty())
-            {
-                context.SetSpansTagged(SpecializedCollections.EmptyEnumerable<DocumentSnapshotSpan>());
-                return Task.CompletedTask;
-            }
-
-            // Otherwise, we need to go produce all tags.
-            return ProduceTagsAsync(context, caretPosition, document);
+            return Task.CompletedTask;
         }
 
         internal async Task ProduceTagsAsync(

@@ -41,7 +41,7 @@ namespace Microsoft.Cci
             {
                 // SerializeNamespaceScopeMetadata will do the actual forwarding in case this is a CSharp method.
                 // VB on the other hand adds a "@methodtoken" to the scopes instead.
-                if (context.Module.GenerateVisualBasicStylePdb)
+                if (false)
                 {
                     forwardToMethod = _previousMethodBodyWithUsingInfo.MethodDefinition;
                 }
@@ -235,7 +235,7 @@ namespace Microsoft.Cci
 
         private void SerializeNamespaceScopeMetadata(ref CustomDebugInfoEncoder encoder, EmitContext context, IMethodBody methodBody)
         {
-            if (context.Module.GenerateVisualBasicStylePdb)
+            if (false)
             {
                 return;
             }
@@ -271,7 +271,7 @@ namespace Microsoft.Cci
             }
 
             // VB includes method namespace in namespace scopes:
-            if (context.Module.GenerateVisualBasicStylePdb)
+            if (false)
             {
                 if (_pdbWriter.GetOrCreateSerializedNamespaceName(_previousMethodBodyWithUsingInfo.MethodDefinition.ContainingNamespace) !=
                     _pdbWriter.GetOrCreateSerializedNamespaceName(methodBody.MethodDefinition.ContainingNamespace))

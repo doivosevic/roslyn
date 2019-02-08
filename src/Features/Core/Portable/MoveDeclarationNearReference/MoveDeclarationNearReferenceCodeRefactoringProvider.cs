@@ -13,7 +13,7 @@ using Microsoft.CodeAnalysis.Text;
 
 namespace Microsoft.CodeAnalysis.MoveDeclarationNearReference
 {
-    [ExportCodeRefactoringProvider(LanguageNames.CSharp, LanguageNames.VisualBasic, Name = PredefinedCodeRefactoringProviderNames.MoveDeclarationNearReference), Shared]
+    [ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = PredefinedCodeRefactoringProviderNames.MoveDeclarationNearReference), Shared]
     [ExtensionOrder(After = PredefinedCodeRefactoringProviderNames.InlineTemporary)]
     internal sealed class MoveDeclarationNearReferenceCodeRefactoringProvider : CodeRefactoringProvider
     {

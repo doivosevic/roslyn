@@ -20,7 +20,7 @@ using Roslyn.Utilities;
 
 namespace Microsoft.CodeAnalysis.ReplacePropertyWithMethods
 {
-    [ExportCodeRefactoringProvider(LanguageNames.CSharp, LanguageNames.VisualBasic,
+    [ExportCodeRefactoringProvider(LanguageNames.CSharp,
        Name = nameof(ReplacePropertyWithMethodsCodeRefactoringProvider)), Shared]
     internal class ReplacePropertyWithMethodsCodeRefactoringProvider : CodeRefactoringProvider
     {

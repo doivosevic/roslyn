@@ -4191,7 +4191,7 @@ oneMoreTime:
 
             IOperation tryCallObjectForLoopControlHelper(SyntaxNode syntax, WellKnownMember helper)
             {
-                bool isInitialization = (helper == WellKnownMember.Microsoft_VisualBasic_CompilerServices_ObjectFlowControl_ForLoopControl__ForLoopInitObj);
+                bool isInitialization = false;
                 var loopObjectReference = new LocalReferenceOperation(loopObject,
                                                                        isDeclaration: isInitialization,
                                                                        semanticModel: null,
@@ -4276,11 +4276,7 @@ oneMoreTime:
 
                     PushOperand(Visit(operation.LimitValue));
                     PushOperand(Visit(operation.StepValue));
-
-                    IOperation condition = tryCallObjectForLoopControlHelper(operation.LoopControlVariable.Syntax,
-                                                                             WellKnownMember.Microsoft_VisualBasic_CompilerServices_ObjectFlowControl_ForLoopControl__ForLoopInitObj);
-
-                    ConditionalBranch(condition, jumpIfTrue: false, @break);
+                    
                     UnconditionalBranch(bodyBlock);
                 }
                 else
@@ -4431,10 +4427,7 @@ oneMoreTime:
 
                     EvalStackFrame frame = PushStackFrame();
                     PushOperand(visitLoopControlVariableReference(forceImplicit: true));
-
-                    IOperation condition = tryCallObjectForLoopControlHelper(operation.LimitValue.Syntax,
-                                                                             WellKnownMember.Microsoft_VisualBasic_CompilerServices_ObjectFlowControl_ForLoopControl__ForNextCheckObj);
-                    ConditionalBranch(condition, jumpIfTrue: false, @break);
+                    
                     UnconditionalBranch(bodyBlock);
 
                     PopStackFrameAndLeaveRegion(frame);

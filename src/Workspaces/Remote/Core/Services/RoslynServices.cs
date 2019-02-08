@@ -35,8 +35,7 @@ namespace Microsoft.CodeAnalysis.Remote
                 // This adds the exported MEF services from the RemoteWorkspaces assembly.
                 .Add(typeof(RoslynServices).Assembly)
                 .Add(typeof(ICodingConventionsManager).Assembly)
-                .Add(typeof(CSharp.CodeLens.CSharpCodeLensDisplayInfoService).Assembly)
-                .Add(typeof(VisualBasic.CodeLens.VisualBasicDisplayInfoService).Assembly);
+                .Add(typeof(CSharp.CodeLens.CSharpCodeLensDisplayInfoService).Assembly);
 
         public static HostServices HostServices
         {

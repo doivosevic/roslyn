@@ -460,8 +460,6 @@ namespace Microsoft.VisualStudio.LanguageServices.Implementation.ChangeSignature
                     {
                         case LanguageNames.CSharp:
                             return ModifierText("out", "ref", "in", "params", "this");
-                        case LanguageNames.VisualBasic:
-                            return ModifierText(@ref: "ByRef", @params: "ParamArray", @this: "Me");
                         default:
                             return string.Empty;
                     }
@@ -509,8 +507,6 @@ namespace Microsoft.VisualStudio.LanguageServices.Implementation.ChangeSignature
                     {
                         case LanguageNames.CSharp:
                             return NullText("null");
-                        case LanguageNames.VisualBasic:
-                            return NullText("Nothing");
                     }
                     return string.Empty;
 

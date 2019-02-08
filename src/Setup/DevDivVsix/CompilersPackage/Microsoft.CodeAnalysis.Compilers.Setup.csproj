@@ -11,11 +11,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Compilers\CSharp\csc\csc.csproj" PrivateAssets="All"/>
-    <ProjectReference Include="..\..\..\Compilers\VisualBasic\vbc\vbc.csproj" PrivateAssets="All"/>
-    <ProjectReference Include="..\..\..\Interactive\csi\csi.csproj" PrivateAssets="All"/>
-    <ProjectReference Include="..\..\..\Compilers\Core\MSBuildTask\Microsoft.Build.Tasks.CodeAnalysis.csproj" PrivateAssets="All"/>
-    <ProjectReference Include="..\..\..\Compilers\Server\VBCSCompiler\VBCSCompiler.csproj" PrivateAssets="All"/>
+    <ProjectReference Include="..\..\..\Compilers\CSharp\csc\csc.csproj" PrivateAssets="All" />
+    <ProjectReference Include="..\..\..\Interactive\csi\csi.csproj" PrivateAssets="All" />
+    <ProjectReference Include="..\..\..\Compilers\Core\MSBuildTask\Microsoft.Build.Tasks.CodeAnalysis.csproj" PrivateAssets="All" />
   </ItemGroup>
 
   <Target Name="_SetSwrFilePath">
@@ -27,8 +25,7 @@
   <!-- 
     Calculates which external dependencies included in the target VSIX need to be updated with optimization data.
   -->
-  <Target Name="_CalculateCompilerArtifactsToOptimize"
-          DependsOnTargets="InitializeCompilerArtifacts">
+  <Target Name="_CalculateCompilerArtifactsToOptimize" DependsOnTargets="InitializeCompilerArtifacts">
 
     <ItemGroup>
       <CompilerArtifact Condition="'%(CompilerArtifact.OverwriteNgenOptimizationData)' == 'true' and '$(ApplyPartialNgenOptimization)' == 'true'">
@@ -42,22 +39,14 @@
   <!-- 
     Copies the artifacts that need optimization data to an intermediate output dir.
   -->
-  <Target Name="_PrepareCompilerArtifactsForOptimization"
-          DependsOnTargets="_CalculateCompilerArtifactsToOptimize"
-          Inputs="@(CompilerArtifact)"
-          Outputs="@(CompilerArtifact->'%(_OptimizeAssembly)')"
-          Condition="'$(Configuration)' == 'Release' and '$(ContinuousIntegrationBuild)' == 'true' and '$(ApplyPartialNgenOptimization)' == 'true'">
+  <Target Name="_PrepareCompilerArtifactsForOptimization" DependsOnTargets="_CalculateCompilerArtifactsToOptimize" Inputs="@(CompilerArtifact)" Outputs="@(CompilerArtifact->'%(_OptimizeAssembly)')" Condition="'$(Configuration)' == 'Release' and '$(ContinuousIntegrationBuild)' == 'true' and '$(ApplyPartialNgenOptimization)' == 'true'">
 
     <Copy SourceFiles="%(CompilerArtifact.Identity)" DestinationFiles="%(CompilerArtifact._OptimizeAssembly)" Condition="'%(CompilerArtifact._OptimizeAssembly)' != ''">
-      <Output TaskParameter="CopiedFiles" ItemName="FileWrites"/>
+      <Output TaskParameter="CopiedFiles" ItemName="FileWrites" />
     </Copy>
   </Target>
   
-  <Target Name="_GenerateSwrFile" 
-          AfterTargets="Build"
-          BeforeTargets="SwixBuild"
-          DependsOnTargets="_SetSwrFilePath;InitializeCompilerArtifacts;_PrepareCompilerArtifactsForOptimization;ApplyOptimizations"
-          Outputs="$(_SwrFilePath)">
+  <Target Name="_GenerateSwrFile" AfterTargets="Build" BeforeTargets="SwixBuild" DependsOnTargets="_SetSwrFilePath;InitializeCompilerArtifacts;_PrepareCompilerArtifactsForOptimization;ApplyOptimizations" Outputs="$(_SwrFilePath)">
 
     <ItemGroup>
       <_File Include="@(CompilerArtifact)">
@@ -68,15 +57,15 @@
         <NGenApplicationString Condition="'%(CompilerArtifact.NGenApplication)' != ''"> vs.file.ngenApplication="[installDir]\MSBuild\15.0\Bin\Roslyn\%(CompilerArtifact.NGenApplication)"</NGenApplicationString>
       </_File>
 
-      <_FileEntries Include='file source="%(_File.Path)"%(_File.NGenArchitectureString)%(_File.NGenPriorityString)%(_File.NGenApplicationString)'/>
+      <_FileEntries Include="file source=&quot;%(_File.Path)&quot;%(_File.NGenArchitectureString)%(_File.NGenPriorityString)%(_File.NGenApplicationString)" />
 
       <!-- Satellite assemblies -->
-      <_SatelliteAssembly Include="$(ArtifactsBinDir)Microsoft.CodeAnalysis\$(Configuration)\netstandard2.0\**\*.resources.dll"/>
-      <_SatelliteAssembly Include="$(ArtifactsBinDir)Microsoft.CodeAnalysis.CSharp\$(Configuration)\netstandard2.0\**\*.resources.dll"/>
-      <_SatelliteAssembly Include="$(ArtifactsBinDir)Microsoft.CodeAnalysis.Scripting\$(Configuration)\netstandard2.0\**\*.resources.dll"/>
-      <_SatelliteAssembly Include="$(ArtifactsBinDir)Microsoft.CodeAnalysis.CSharp.Scripting\$(Configuration)\netstandard2.0\**\*.resources.dll"/>
-      <_SatelliteAssembly Include="$(ArtifactsBinDir)Microsoft.CodeAnalysis.VisualBasic\$(Configuration)\netstandard2.0\**\*.resources.dll"/>
-      <_SatelliteAssembly Include="$(ArtifactsBinDir)Microsoft.Build.Tasks.CodeAnalysis\$(Configuration)\net472\**\*.resources.dll"/>
+      <_SatelliteAssembly Include="$(ArtifactsBinDir)Microsoft.CodeAnalysis\$(Configuration)\netstandard2.0\**\*.resources.dll" />
+      <_SatelliteAssembly Include="$(ArtifactsBinDir)Microsoft.CodeAnalysis.CSharp\$(Configuration)\netstandard2.0\**\*.resources.dll" />
+      <_SatelliteAssembly Include="$(ArtifactsBinDir)Microsoft.CodeAnalysis.Scripting\$(Configuration)\netstandard2.0\**\*.resources.dll" />
+      <_SatelliteAssembly Include="$(ArtifactsBinDir)Microsoft.CodeAnalysis.CSharp.Scripting\$(Configuration)\netstandard2.0\**\*.resources.dll" />
+      <_SatelliteAssembly Include="$(ArtifactsBinDir)Microsoft.CodeAnalysis.VisualBasic\$(Configuration)\netstandard2.0\**\*.resources.dll" />
+      <_SatelliteAssembly Include="$(ArtifactsBinDir)Microsoft.Build.Tasks.CodeAnalysis\$(Configuration)\net472\**\*.resources.dll" />
 
       <_CsSatellite Include="@(_SatelliteAssembly)" Condition="'%(_SatelliteAssembly.RecursiveDir)' == 'cs\'">
         <_FileEntries>file source=%(Identity)</_FileEntries>
@@ -192,13 +181,13 @@ folder InstallDir:\MSBuild\15.0\Bin\Roslyn\zh-Hant
       </_Lines>
     </PropertyGroup>
     
-    <WriteLinesToFile File="$(_SwrFilePath)" Lines="$(_Lines)" Overwrite="true"/>
+    <WriteLinesToFile File="$(_SwrFilePath)" Lines="$(_Lines)" Overwrite="true" />
 
     <ItemGroup>
-      <FileWrites Include="$(_SwrFilePath)"/>
-      <SwrFile Include="$(_SwrFilePath)"/>
+      <FileWrites Include="$(_SwrFilePath)" />
+      <SwrFile Include="$(_SwrFilePath)" />
     </ItemGroup>
   </Target>
 
-  <Import Project="..\..\..\NuGet\Microsoft.Net.Compilers\CompilerArtifacts.targets"/>
+  <Import Project="..\..\..\NuGet\Microsoft.Net.Compilers\CompilerArtifacts.targets" />
 </Project>

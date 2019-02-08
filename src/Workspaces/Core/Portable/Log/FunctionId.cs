@@ -176,7 +176,6 @@ namespace Microsoft.CodeAnalysis.Internal.Log
         Refactoring_IntroduceVariable,
         Refactoring_GenerateType,
         Refactoring_RemoveUnnecessaryImports_CSharp,
-        Refactoring_RemoveUnnecessaryImports_VisualBasic,
 
         Snippet_OnBeforeInsertion,
         Snippet_OnAfterInsertion,
@@ -319,7 +318,6 @@ namespace Microsoft.CodeAnalysis.Internal.Log
         WorkCoordinator_WaitForHigherPriorityOperationsAsync,
 
         CSharp_Interactive_Window,
-        VisualBasic_Interactive_Window,
 
         NonFatalWatson,
         GlobalOperationRegistration,

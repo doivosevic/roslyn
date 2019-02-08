@@ -110,7 +110,7 @@ namespace Microsoft.CodeAnalysis.Tools.CodeFormatter
                     continue;
                 }
 
-                if (project.Language != LanguageNames.CSharp && project.Language != LanguageNames.VisualBasic)
+                if (project.Language != LanguageNames.CSharp)
                 {
                     logger.LogWarning(Resources.Could_not_format_0_Format_currently_supports_only_CSharp_and_Visual_Basic_projects, project.FilePath);
                     continue;
@@ -133,9 +133,7 @@ namespace Microsoft.CodeAnalysis.Tools.CodeFormatter
 
         private static async Task<(Solution solution, int filesFormatted)> FormatFilesInProjectAsync(ILogger logger, Project project, ICodingConventionsManager codingConventionsManager, EditorConfigOptionsApplier optionsApplier, CancellationToken cancellationToken)
         {
-            var isCommentTrivia = project.Language == LanguageNames.CSharp
-                ? IsCSharpCommentTrivia
-                : IsVisualBasicCommentTrivia;
+            var isCommentTrivia = IsCSharpCommentTrivia;
 
             var formattedDocuments = new List<(DocumentId documentId, Task<SourceText> formatTask)>();
             foreach (var documentId in project.DocumentIds)
@@ -200,9 +198,5 @@ namespace Microsoft.CodeAnalysis.Tools.CodeFormatter
                 || syntaxTrivia.IsKind(CSharp.SyntaxKind.MultiLineCommentTrivia)
                 || syntaxTrivia.IsKind(CSharp.SyntaxKind.SingleLineDocumentationCommentTrivia)
                 || syntaxTrivia.IsKind(CSharp.SyntaxKind.MultiLineDocumentationCommentTrivia);
-
-        private static Func<SyntaxTrivia, bool> IsVisualBasicCommentTrivia =
-            (syntaxTrivia) => syntaxTrivia.IsKind(VisualBasic.SyntaxKind.CommentTrivia)
-                || syntaxTrivia.IsKind(VisualBasic.SyntaxKind.DocumentationCommentTrivia);
     }
 }

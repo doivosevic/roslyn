@@ -22,7 +22,6 @@ namespace Microsoft.CodeAnalysis.Options
             else
             {
                 string substituteLanguageName = languageName == LanguageNames.CSharp ? "CSharp" :
-                                                languageName == LanguageNames.VisualBasic ? "VisualBasic" :
                                                 languageName;
 
                 return unsubstitutedKeyName.Replace("%LANGUAGE%", substituteLanguageName);

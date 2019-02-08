@@ -139,72 +139,7 @@ namespace Microsoft.CodeAnalysis.Editor.Implementation.DocumentationComments
             DocumentOptionSet options,
             CancellationToken cancellationToken)
         {
-            if (!subjectBuffer.GetFeatureOnOffOption(FeatureOnOffOptions.AutoXmlDocCommentGeneration))
-            {
-                return false;
-            }
-
-            // Only generate if the position is immediately after '///', 
-            // and that is the only documentation comment on the target member.
-
-            var token = syntaxTree.GetRoot(cancellationToken).FindToken(position, findInsideTrivia: true);
-            if (position != token.SpanStart)
-            {
-                return false;
-            }
-
-            var documentationComment = token.GetAncestor<TDocumentationComment>();
-            if (!IsSingleExteriorTrivia(documentationComment))
-            {
-                return false;
-            }
-
-            var targetMember = GetTargetMember(documentationComment);
-            if (targetMember == null)
-            {
-                return false;
-            }
-
-            // Ensure that the target member is only preceded by a single documentation comment (i.e. our ///).
-            if (GetPrecedingDocumentationCommentCount(targetMember) != 1)
-            {
-                return false;
-            }
-
-            var line = text.Lines.GetLineFromPosition(documentationComment.FullSpan.Start);
-            if (line.IsEmptyOrWhitespace())
-            {
-                return false;
-            }
-
-            var lines = GetDocumentationCommentStubLines(targetMember);
-            Debug.Assert(lines.Count > 2);
-
-            var newLine = options.GetOption(FormattingOptions.NewLine);
-            AddLineBreaks(text, lines, newLine);
-
-            // Shave off initial three slashes
-            lines[0] = lines[0].Substring(3);
-
-            // Add indents
-            var lineOffset = line.GetColumnOfFirstNonWhitespaceCharacterOrEndOfLine(options.GetOption(FormattingOptions.TabSize));
-            var indentText = lineOffset.CreateIndentationString(options.GetOption(FormattingOptions.UseTabs), options.GetOption(FormattingOptions.TabSize));
-            for (int i = 1; i < lines.Count - 1; i++)
-            {
-                lines[i] = indentText + lines[i];
-            }
-
-            var lastLine = lines[lines.Count - 1];
-            lastLine = indentText + lastLine.Substring(0, lastLine.Length - newLine.Length);
-            lines[lines.Count - 1] = lastLine;
-
-            var newText = string.Join(string.Empty, lines);
-            var offset = lines[0].Length + lines[1].Length - newLine.Length;
-
-            subjectBuffer.Insert(position, newText);
-            textView.TryMoveCaretToAndEnsureVisible(subjectBuffer.CurrentSnapshot.GetPoint(position + offset));
-
-            return true;
+            return false;
         }
 
         private bool InsertOnEnterTyped(
@@ -220,14 +155,6 @@ namespace Microsoft.CodeAnalysis.Editor.Implementation.DocumentationComments
             // Don't attempt to generate a new XML doc comment on ENTER if the option to auto-generate
             // them isn't set. Regardless of the option, we should generate exterior trivia (i.e. /// or ''')
             // on ENTER inside an existing XML doc comment.
-
-            if (subjectBuffer.GetFeatureOnOffOption(FeatureOnOffOptions.AutoXmlDocCommentGeneration))
-            {
-                if (TryGenerateDocumentationCommentAfterEnter(syntaxTree, text, position, originalPosition, subjectBuffer, textView, options, cancellationToken))
-                {
-                    return true;
-                }
-            }
 
             if (TryGenerateExteriorTriviaAfterEnter(syntaxTree, text, position, originalPosition, subjectBuffer, textView, options, cancellationToken))
             {

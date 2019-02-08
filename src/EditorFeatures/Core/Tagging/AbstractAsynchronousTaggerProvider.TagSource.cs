@@ -153,7 +153,7 @@ namespace Microsoft.CodeAnalysis.Editor.Tagging
                 // If there are any options specified for this tagger, then also hook up event
                 // notifications for when those options change.
                 var optionChangedEventSources =
-                    _dataSource.Options.Concat<IOption>(_dataSource.PerLanguageOptions)
+                    _dataSource.Options
                         .Select(o => TaggerEventSources.OnOptionChanged(_subjectBuffer, o, TaggerDelay.NearImmediate)).ToList();
 
                 if (optionChangedEventSources.Count == 0)

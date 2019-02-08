@@ -19,16 +19,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Compilers\CSharp\csc\csc.csproj" PrivateAssets="All"/>
-    <ProjectReference Include="..\..\Compilers\VisualBasic\vbc\vbc.csproj" PrivateAssets="All"/>
-    <ProjectReference Include="..\..\Interactive\csi\csi.csproj" PrivateAssets="All"/>
-    <ProjectReference Include="..\..\Compilers\Core\MSBuildTask\Microsoft.Build.Tasks.CodeAnalysis.csproj" PrivateAssets="All"/>
-    <ProjectReference Include="..\..\Compilers\Server\VBCSCompiler\VBCSCompiler.csproj" PrivateAssets="All"/>
+    <ProjectReference Include="..\..\Compilers\CSharp\csc\csc.csproj" PrivateAssets="All" />
+    <ProjectReference Include="..\..\Interactive\csi\csi.csproj" PrivateAssets="All" />
+    <ProjectReference Include="..\..\Compilers\Core\MSBuildTask\Microsoft.Build.Tasks.CodeAnalysis.csproj" PrivateAssets="All" />
   </ItemGroup>
 
   <Target Name="_GetFilesToPackage" DependsOnTargets="InitializeCompilerArtifacts">
     <ItemGroup>
-      <_File Include="@(CompilerArtifact)" TargetDir="tools"/>
+      <_File Include="@(CompilerArtifact)" TargetDir="tools" />
      
       <_File Include="$(MSBuildProjectDirectory)\build\**\*.*" TargetDir="build" />
      
@@ -44,5 +42,5 @@
     </ItemGroup>
   </Target>
 
-  <Import Project="CompilerArtifacts.targets"/>
+  <Import Project="CompilerArtifacts.targets" />
 </Project>

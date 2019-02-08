@@ -144,20 +144,12 @@ namespace Microsoft.VisualStudio.LanguageServices.Implementation.PreviewPane
                 {
                     return Guid.Parse(Guids.CSharpOptionPageNamingStyleIdString);
                 }
-                else if (optionLanguage == LanguageNames.VisualBasic)
-                {
-                    return Guid.Parse(Guids.VisualBasicOptionPageNamingStyleIdString);
-                }
             }
             else if (optionName == nameof(CodeStyleOptions.PreferIntrinsicPredefinedTypeKeywordInDeclaration))
             {
                 if (optionLanguage == LanguageNames.CSharp)
                 {
                     return Guid.Parse(Guids.CSharpOptionPageCodeStyleIdString);
-                }
-                else if (optionLanguage == LanguageNames.VisualBasic)
-                {
-                    return Guid.Parse(Guids.VisualBasicOptionPageVBSpecificIdString);
                 }
             }
 

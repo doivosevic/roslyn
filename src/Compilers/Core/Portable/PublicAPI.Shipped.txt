@@ -168,7 +168,6 @@ abstract Microsoft.CodeAnalysis.XmlReferenceResolver.OpenRead(string resolvedPat
 abstract Microsoft.CodeAnalysis.XmlReferenceResolver.ResolveReference(string path, string baseFilePath) -> string
 const Microsoft.CodeAnalysis.LanguageNames.CSharp = "C#" -> string
 const Microsoft.CodeAnalysis.LanguageNames.FSharp = "F#" -> string
-const Microsoft.CodeAnalysis.LanguageNames.VisualBasic = "Visual Basic" -> string
 const Microsoft.CodeAnalysis.WellKnownDiagnosticTags.AnalyzerException = "AnalyzerException" -> string
 const Microsoft.CodeAnalysis.WellKnownDiagnosticTags.Build = "Build" -> string
 const Microsoft.CodeAnalysis.WellKnownDiagnosticTags.Compiler = "Compiler" -> string
@@ -2766,8 +2765,6 @@ static Microsoft.CodeAnalysis.SymbolDisplayFormat.CSharpErrorMessageFormat.get -
 static Microsoft.CodeAnalysis.SymbolDisplayFormat.CSharpShortErrorMessageFormat.get -> Microsoft.CodeAnalysis.SymbolDisplayFormat
 static Microsoft.CodeAnalysis.SymbolDisplayFormat.FullyQualifiedFormat.get -> Microsoft.CodeAnalysis.SymbolDisplayFormat
 static Microsoft.CodeAnalysis.SymbolDisplayFormat.MinimallyQualifiedFormat.get -> Microsoft.CodeAnalysis.SymbolDisplayFormat
-static Microsoft.CodeAnalysis.SymbolDisplayFormat.VisualBasicErrorMessageFormat.get -> Microsoft.CodeAnalysis.SymbolDisplayFormat
-static Microsoft.CodeAnalysis.SymbolDisplayFormat.VisualBasicShortErrorMessageFormat.get -> Microsoft.CodeAnalysis.SymbolDisplayFormat
 static Microsoft.CodeAnalysis.SyntaxAnnotation.ElasticAnnotation.get -> Microsoft.CodeAnalysis.SyntaxAnnotation
 static Microsoft.CodeAnalysis.SyntaxAnnotation.operator !=(Microsoft.CodeAnalysis.SyntaxAnnotation left, Microsoft.CodeAnalysis.SyntaxAnnotation right) -> bool
 static Microsoft.CodeAnalysis.SyntaxAnnotation.operator ==(Microsoft.CodeAnalysis.SyntaxAnnotation left, Microsoft.CodeAnalysis.SyntaxAnnotation right) -> bool

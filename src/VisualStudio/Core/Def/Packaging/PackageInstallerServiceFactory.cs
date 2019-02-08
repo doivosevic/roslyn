@@ -466,8 +466,7 @@ namespace Microsoft.VisualStudio.LanguageServices.Packaging
             // Also, the NuGet APIs may throw on some projects that don't implement the 
             // full set of DTE APIs they expect.  So we filter down to just C# and VB here
             // as we know these languages are safe to build up this index for.
-            if (project.Language != LanguageNames.CSharp &&
-                project.Language != LanguageNames.VisualBasic)
+            if (project.Language != LanguageNames.CSharp)
             {
                 return;
             }

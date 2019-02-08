@@ -76,30 +76,6 @@ namespace Microsoft.CodeAnalysis
         Microsoft_CSharp_RuntimeBinder_CSharpArgumentInfo,
         Microsoft_CSharp_RuntimeBinder_CSharpArgumentInfoFlags,
         Microsoft_CSharp_RuntimeBinder_CSharpBinderFlags,
-        Microsoft_VisualBasic_CallType,
-        Microsoft_VisualBasic_Embedded,
-        Microsoft_VisualBasic_CompilerServices_Conversions,
-        Microsoft_VisualBasic_CompilerServices_Operators,
-        Microsoft_VisualBasic_CompilerServices_NewLateBinding,
-        Microsoft_VisualBasic_CompilerServices_EmbeddedOperators,
-        Microsoft_VisualBasic_CompilerServices_StandardModuleAttribute,
-        Microsoft_VisualBasic_CompilerServices_Utils,
-        Microsoft_VisualBasic_CompilerServices_LikeOperator,
-        Microsoft_VisualBasic_CompilerServices_ProjectData,
-        Microsoft_VisualBasic_CompilerServices_ObjectFlowControl,
-        Microsoft_VisualBasic_CompilerServices_ObjectFlowControl_ForLoopControl,
-        Microsoft_VisualBasic_CompilerServices_StaticLocalInitFlag,
-        Microsoft_VisualBasic_CompilerServices_StringType,
-        Microsoft_VisualBasic_CompilerServices_IncompleteInitialization,
-        Microsoft_VisualBasic_CompilerServices_Versioned,
-        Microsoft_VisualBasic_CompareMethod,
-        Microsoft_VisualBasic_Strings,
-        Microsoft_VisualBasic_ErrObject,
-        Microsoft_VisualBasic_FileSystem,
-        Microsoft_VisualBasic_ApplicationServices_ApplicationBase,
-        Microsoft_VisualBasic_ApplicationServices_WindowsFormsApplicationBase,
-        Microsoft_VisualBasic_Information,
-        Microsoft_VisualBasic_Interaction,
 
         // standard Func delegates - must be ordered by arity
         System_Func_T,
@@ -275,7 +251,6 @@ namespace Microsoft.CodeAnalysis
         System_Runtime_InteropServices_UnmanagedType,
         System_Runtime_CompilerServices_IsUnmanagedAttribute,
 
-        Microsoft_VisualBasic_Conversion,
         System_Runtime_CompilerServices_NonNullTypesAttribute,
         System_AttributeTargets,
         Microsoft_CodeAnalysis_EmbeddedAttribute,
@@ -626,9 +601,6 @@ namespace Microsoft.CodeAnalysis
                 {
                     case WellKnownType.First:
                         typeIdName = "System.Math";
-                        break;
-                    case WellKnownType.Microsoft_VisualBasic_CompilerServices_ObjectFlowControl_ForLoopControl:
-                        typeIdName = "Microsoft.VisualBasic.CompilerServices.ObjectFlowControl+ForLoopControl";
                         break;
                     case WellKnownType.CSharp7Sentinel:
                         typeIdName = "System.IFormatProvider";

@@ -18,7 +18,6 @@ namespace Microsoft.CodeAnalysis.Editor.Implementation.CallHierarchy
 {
     [Export(typeof(VSCommanding.ICommandHandler))]
     [ContentType(ContentTypeNames.CSharpContentType)]
-    [ContentType(ContentTypeNames.VisualBasicContentType)]
     [Name("CallHierarchy")]
     [Order(After = PredefinedCommandHandlerNames.DocumentationComments)]
     internal class CallHierarchyCommandHandler : VSCommanding.ICommandHandler<ViewCallHierarchyCommandArgs>

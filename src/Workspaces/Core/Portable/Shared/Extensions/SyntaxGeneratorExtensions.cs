@@ -330,49 +330,20 @@ namespace Microsoft.CodeAnalysis.Shared.Extensions
             }
             else if (overriddenProperty.GetParameters().Any())
             {
-                // Call accessors directly if C# overriding VB
-                if (document.Project.Language == LanguageNames.CSharp
-                    && (await SymbolFinder.FindSourceDefinitionAsync(overriddenProperty, document.Project.Solution, cancellationToken).ConfigureAwait(false))
-                        .Language == LanguageNames.VisualBasic)
-                {
-                    var getName = overriddenProperty.GetMethod?.Name;
-                    var setName = overriddenProperty.SetMethod?.Name;
-
-                    getBody = getName == null
-                        ? null
-                        : codeFactory.ReturnStatement(
-                    codeFactory.InvocationExpression(
-                        codeFactory.MemberAccessExpression(
-                            codeFactory.BaseExpression(),
-                            codeFactory.IdentifierName(getName)),
-                        codeFactory.CreateArguments(overriddenProperty.Parameters)));
-
-                    setBody = setName == null
-                        ? null
-                        : codeFactory.ExpressionStatement(
+                getBody = codeFactory.ReturnStatement(
+                    WrapWithRefIfNecessary(codeFactory, overriddenProperty,
                         codeFactory.InvocationExpression(
                             codeFactory.MemberAccessExpression(
                                 codeFactory.BaseExpression(),
-                                codeFactory.IdentifierName(setName)),
-                            codeFactory.CreateArguments(overriddenProperty.SetMethod.GetParameters())));
-                }
-                else
-                {
-                    getBody = codeFactory.ReturnStatement(
-                        WrapWithRefIfNecessary(codeFactory, overriddenProperty,
-                            codeFactory.InvocationExpression(
-                                codeFactory.MemberAccessExpression(
-                                    codeFactory.BaseExpression(),
-                                    codeFactory.IdentifierName(overriddenProperty.Name)), codeFactory.CreateArguments(overriddenProperty.Parameters))));
+                                codeFactory.IdentifierName(overriddenProperty.Name)), codeFactory.CreateArguments(overriddenProperty.Parameters))));
 
-                    setBody = codeFactory.ExpressionStatement(
-                        codeFactory.AssignmentStatement(
-                            codeFactory.InvocationExpression(
-                            codeFactory.MemberAccessExpression(
-                            codeFactory.BaseExpression(),
-                        codeFactory.IdentifierName(overriddenProperty.Name)), codeFactory.CreateArguments(overriddenProperty.Parameters)),
-                        codeFactory.IdentifierName("value")));
-                }
+                setBody = codeFactory.ExpressionStatement(
+                    codeFactory.AssignmentStatement(
+                        codeFactory.InvocationExpression(
+                        codeFactory.MemberAccessExpression(
+                        codeFactory.BaseExpression(),
+                    codeFactory.IdentifierName(overriddenProperty.Name)), codeFactory.CreateArguments(overriddenProperty.Parameters)),
+                    codeFactory.IdentifierName("value")));
             }
             else
             {
