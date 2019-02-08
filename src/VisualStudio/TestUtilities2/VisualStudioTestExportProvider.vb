@@ -4,13 +4,11 @@ Imports Microsoft.CodeAnalysis.Editor.UnitTests
 Imports Microsoft.CodeAnalysis.Test.Utilities
 Imports Microsoft.VisualStudio.Composition
 Imports Microsoft.VisualStudio.LanguageServices.CSharp.CodeModel
-Imports Microsoft.VisualStudio.LanguageServices.VisualBasic.CodeModel
 
 Namespace Microsoft.VisualStudio.LanguageServices.UnitTests
     Public Module VisualStudioTestExportProvider
         Sub New()
-            Dim additionalAssemblies = {GetType(CSharpCodeModelService).Assembly,
-                                        GetType(VisualBasicCodeModelService).Assembly}
+            Dim additionalAssemblies = {GetType(CSharpCodeModelService).Assembly}
 
             Factory = ExportProviderCache.GetOrCreateExportProviderFactory(TestExportProvider.EntireAssemblyCatalogWithCSharpAndVisualBasic.WithParts(ExportProviderCache.GetOrCreateAssemblyCatalog(additionalAssemblies)))
         End Sub

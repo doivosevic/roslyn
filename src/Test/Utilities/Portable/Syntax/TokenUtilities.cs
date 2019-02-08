@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using CS = Microsoft.CodeAnalysis.CSharp;
-using VB = Microsoft.CodeAnalysis.VisualBasic;
 
 namespace Roslyn.Test.Utilities
 {
@@ -55,11 +54,6 @@ namespace Roslyn.Test.Utilities
             }
         }
 
-        private static bool SkipVisualBasicToken(SyntaxToken token)
-        {
-            return token.RawKind == (int)VB.SyntaxKind.StatementTerminatorToken;
-        }
-
         private static bool SkipCSharpToken(SyntaxToken token)
         {
             return token.RawKind == (int)CS.SyntaxKind.OmittedArraySizeExpressionToken;
@@ -67,38 +61,17 @@ namespace Roslyn.Test.Utilities
 
         public static IList<SyntaxToken> GetTokens(string text, string language)
         {
-            if (language == LanguageNames.CSharp)
-            {
-                return CS.SyntaxFactory.ParseTokens(text).Select(t => (SyntaxToken)t).Where(t => !SkipCSharpToken(t)).ToList();
-            }
-            else
-            {
-                return VB.SyntaxFactory.ParseTokens(text).Select(t => (SyntaxToken)t).Where(t => !SkipVisualBasicToken(t)).ToList();
-            }
+            return CS.SyntaxFactory.ParseTokens(text).Select(t => (SyntaxToken)t).Where(t => !SkipCSharpToken(t)).ToList();
         }
 
         public static IList<SyntaxToken> GetTokens(SyntaxNode node)
         {
-            if (node.Language == LanguageNames.CSharp)
-            {
-                return node.DescendantTokens().Where(t => !SkipCSharpToken(t)).ToList();
-            }
-            else
-            {
-                return node.DescendantTokens().Where(t => !SkipVisualBasicToken(t)).ToList();
-            }
+            return node.DescendantTokens().Where(t => !SkipCSharpToken(t)).ToList();
         }
 
         internal static SyntaxNode GetSyntaxRoot(string expectedText, string language, ParseOptions options = null)
         {
-            if (language == LanguageNames.CSharp)
-            {
-                return CS.SyntaxFactory.ParseCompilationUnit(expectedText, options: (CS.CSharpParseOptions)options);
-            }
-            else
-            {
-                return VB.SyntaxFactory.ParseCompilationUnit(expectedText, options: (VB.VisualBasicParseOptions)options);
-            }
+            return CS.SyntaxFactory.ParseCompilationUnit(expectedText, options: (CS.CSharpParseOptions)options);
         }
     }
 }

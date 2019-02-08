@@ -147,7 +147,6 @@ namespace Microsoft.CodeAnalysis.Editor.UnitTests.DocumentationComments
                 var options = workspace.Options;
 
                 options = options.WithChangedOption(FormattingOptions.UseTabs, testDocument.Project.Language, useTabs);
-                options = options.WithChangedOption(FeatureOnOffOptions.AutoXmlDocCommentGeneration, testDocument.Project.Language, autoGenerateXmlDocComments);
                 options = options.WithChangedOption(FormattingOptions.NewLine, testDocument.Project.Language, newLine);
 
                 workspace.Options = options;

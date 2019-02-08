@@ -5875,68 +5875,7 @@ class C
             Assert.All(tupleWithoutNames.GetMembers().OfType<IFieldSymbol>().Select(f => f.Locations.FirstOrDefault()),
                 loc => Assert.Equal(loc, null));
         }
-
-        [Fact, WorkItem(13277, "https://github.com/dotnet/roslyn/issues/13277")]
-        [WorkItem(14365, "https://github.com/dotnet/roslyn/issues/14365")]
-        public void CreateTupleTypeSymbol_UnderlyingTypeIsError()
-        {
-            var comp = CSharpCompilation.Create("test", references: new[] { MscorlibRef, TestReferences.SymbolsTests.netModule.netModule1 });
-
-            TypeSymbol intType = comp.GetSpecialType(SpecialType.System_Int32);
-            var vt2 = comp.CreateErrorTypeSymbol(null, "ValueTuple", 2).Construct(intType, intType);
-
-            Assert.Throws<ArgumentException>(() => comp.CreateTupleTypeSymbol(underlyingType: vt2));
-
-            var vbComp = CreateVisualBasicCompilation("");
-            Assert.Throws<ArgumentNullException>(() => comp.CreateErrorTypeSymbol(null, null, 2));
-            Assert.Throws<ArgumentException>(() => comp.CreateErrorTypeSymbol(null, "a", -1));
-            Assert.Throws<ArgumentException>(() => comp.CreateErrorTypeSymbol(vbComp.GlobalNamespace, "a", 1));
-
-            Assert.Throws<ArgumentNullException>(() => comp.CreateErrorNamespaceSymbol(null, "a"));
-            Assert.Throws<ArgumentNullException>(() => comp.CreateErrorNamespaceSymbol(vbComp.GlobalNamespace, null));
-            Assert.Throws<ArgumentException>(() => comp.CreateErrorNamespaceSymbol(vbComp.GlobalNamespace, "a"));
-
-            var ns = comp.CreateErrorNamespaceSymbol(comp.GlobalNamespace, "a");
-            Assert.Equal("a", ns.ToTestDisplayString());
-            Assert.False(ns.IsGlobalNamespace);
-            Assert.Equal(NamespaceKind.Compilation, ns.NamespaceKind);
-            Assert.Same(comp.GlobalNamespace, ns.ContainingSymbol);
-            Assert.Same(comp.GlobalNamespace.ContainingAssembly, ns.ContainingAssembly);
-            Assert.Same(comp.GlobalNamespace.ContainingModule, ns.ContainingModule);
-
-            ns = comp.CreateErrorNamespaceSymbol(comp.Assembly.GlobalNamespace, "a");
-            Assert.Equal("a", ns.ToTestDisplayString());
-            Assert.False(ns.IsGlobalNamespace);
-            Assert.Equal(NamespaceKind.Assembly, ns.NamespaceKind);
-            Assert.Same(comp.Assembly.GlobalNamespace, ns.ContainingSymbol);
-            Assert.Same(comp.Assembly.GlobalNamespace.ContainingAssembly, ns.ContainingAssembly);
-            Assert.Same(comp.Assembly.GlobalNamespace.ContainingModule, ns.ContainingModule);
-
-            ns = comp.CreateErrorNamespaceSymbol(comp.SourceModule.GlobalNamespace, "a");
-            Assert.Equal("a", ns.ToTestDisplayString());
-            Assert.False(ns.IsGlobalNamespace);
-            Assert.Equal(NamespaceKind.Module, ns.NamespaceKind);
-            Assert.Same(comp.SourceModule.GlobalNamespace, ns.ContainingSymbol);
-            Assert.Same(comp.SourceModule.GlobalNamespace.ContainingAssembly, ns.ContainingAssembly);
-            Assert.Same(comp.SourceModule.GlobalNamespace.ContainingModule, ns.ContainingModule);
-
-            ns = comp.CreateErrorNamespaceSymbol(comp.CreateErrorNamespaceSymbol(comp.GlobalNamespace, "a"), "b");
-            Assert.Equal("a.b", ns.ToTestDisplayString());
-
-            ns = comp.CreateErrorNamespaceSymbol(comp.GlobalNamespace, "");
-            Assert.Equal("", ns.ToTestDisplayString());
-            Assert.False(ns.IsGlobalNamespace);
-
-            vt2 = comp.CreateErrorTypeSymbol(comp.CreateErrorNamespaceSymbol(comp.GlobalNamespace, "System"), "ValueTuple", 2).Construct(intType, intType);
-            Assert.Equal("(System.Int32, System.Int32)", comp.CreateTupleTypeSymbol(underlyingType: vt2).ToTestDisplayString());
-
-            vt2 = comp.CreateErrorTypeSymbol(comp.CreateErrorNamespaceSymbol(comp.Assembly.GlobalNamespace, "System"), "ValueTuple", 2).Construct(intType, intType);
-            Assert.Equal("(System.Int32, System.Int32)", comp.CreateTupleTypeSymbol(underlyingType: vt2).ToTestDisplayString());
-
-            vt2 = comp.CreateErrorTypeSymbol(comp.CreateErrorNamespaceSymbol(comp.SourceModule.GlobalNamespace, "System"), "ValueTuple", 2).Construct(intType, intType);
-            Assert.Equal("(System.Int32, System.Int32)", comp.CreateTupleTypeSymbol(underlyingType: vt2).ToTestDisplayString());
-        }
-
+        
         [Fact]
         public void CreateTupleTypeSymbol_BadNames()
         {
@@ -5984,54 +5923,6 @@ class C
             {
                 Assert.Contains(CodeAnalysisResources.TupleElementNameEmpty, e.Message);
                 Assert.Contains("elementNames[1]", e.Message);
-            }
-        }
-
-        [Fact]
-        public void CreateTupleTypeSymbol_VisualBasicElements()
-        {
-            var vbSource = @"Public Class C
-End Class";
-
-            var vbComp = CreateVisualBasicCompilation("VB", vbSource,
-                                compilationOptions: new VisualBasic.VisualBasicCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
-
-            vbComp.VerifyDiagnostics();
-            INamedTypeSymbol vbType = (INamedTypeSymbol)vbComp.GlobalNamespace.GetMembers("C").Single();
-
-            var comp = CSharpCompilation.Create("test", references: new[] { MscorlibRef });
-            try
-            {
-                comp.CreateTupleTypeSymbol(vbType, default(ImmutableArray<string>));
-                Assert.True(false);
-            }
-            catch (ArgumentException e)
-            {
-                Assert.Contains(CSharpResources.NotACSharpSymbol, e.Message);
-            }
-        }
-
-        [Fact]
-        public void CreateAnonymousTypeSymbol_VisualBasicElements()
-        {
-            var vbSource = @"Public Class C
-End Class";
-
-            var vbComp = CreateVisualBasicCompilation("VB", vbSource,
-                                compilationOptions: new VisualBasic.VisualBasicCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
-
-            vbComp.VerifyDiagnostics();
-            var vbType = (ITypeSymbol)vbComp.GlobalNamespace.GetMembers("C").Single();
-
-            var comp = CSharpCompilation.Create("test", references: new[] { MscorlibRef });
-            try
-            {
-                comp.CreateAnonymousTypeSymbol(ImmutableArray.Create(vbType), ImmutableArray.Create("m1"));
-                Assert.True(false);
-            }
-            catch (ArgumentException e)
-            {
-                Assert.Contains(CSharpResources.NotACSharpSymbol, e.Message);
             }
         }
 
@@ -6267,25 +6158,7 @@ End Class";
             var tuple3 = comp.CreateTupleTypeSymbol(ImmutableArray.Create(intType, intType), ImmutableArray.Create("return", "class"));
             Assert.Equal(new[] { "return", "class" }, GetTupleElementNames(tuple3));
         }
-
-        [Fact]
-        public void CreateTupleTypeSymbol2_VisualBasicElements()
-        {
-            var vbSource = @"Public Class C
-End Class";
-
-            var vbComp = CreateVisualBasicCompilation("VB", vbSource,
-                                compilationOptions: new VisualBasic.VisualBasicCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
-
-            vbComp.VerifyDiagnostics();
-            ITypeSymbol vbType = (ITypeSymbol)vbComp.GlobalNamespace.GetMembers("C").Single();
-
-            var comp = CSharpCompilation.Create("test", references: new[] { MscorlibRef });
-            INamedTypeSymbol intType = comp.GetSpecialType(SpecialType.System_String);
-
-            Assert.Throws<ArgumentException>(() => comp.CreateTupleTypeSymbol(ImmutableArray.Create(intType, vbType), default(ImmutableArray<string>)));
-        }
-
+        
         [Fact]
         public void CreateTupleTypeSymbol_ComparingSymbols()
         {

@@ -29,24 +29,6 @@ namespace Roslyn.VisualStudio.IntegrationTests.Workspace
             VisualStudio.Workspace.SetFullSolutionAnalysis(true);
         }
 
-        public virtual void OpenCSharpThenVBSolution()
-        {
-            VisualStudio.Editor.SetText(@"using System; class Program { Exception e; }");
-            VisualStudio.Editor.PlaceCaret("Exception");
-            VisualStudio.Editor.Verify.CurrentTokenType(tokenType: "class name");
-            VisualStudio.SolutionExplorer.CloseSolution();
-            VisualStudio.SolutionExplorer.CreateSolution(nameof(WorkspacesDesktop));
-            var testProj = new ProjectUtils.Project("TestProj");
-            VisualStudio.SolutionExplorer.AddProject(testProj, WellKnownProjectTemplates.ClassLibrary, languageName: LanguageNames.VisualBasic);
-            VisualStudio.SolutionExplorer.RestoreNuGetPackages(testProj);
-            VisualStudio.Editor.SetText(@"Imports System
-Class Program
-    Private e As Exception
-End Class");
-            VisualStudio.Editor.PlaceCaret("Exception");
-            VisualStudio.Editor.Verify.CurrentTokenType(tokenType: "class name");
-        }
-
         public virtual void MetadataReference()
         {
             var windowsBase = new ProjectUtils.AssemblyReference("WindowsBase");

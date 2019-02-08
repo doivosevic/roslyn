@@ -2145,18 +2145,6 @@ namespace Microsoft.CodeAnalysis.UnitTests.Diagnostics
                     }
                 },
                 Microsoft.CodeAnalysis.CSharp.SyntaxKind.NumericLiteralExpression);
-
-            context.RegisterSyntaxNodeAction(
-                (syntaxContext) =>
-                {
-                    var node = syntaxContext.Node;
-                    var model = syntaxContext.SemanticModel;
-                    if (model.GetOperation(node) != null)
-                    {
-                        syntaxContext.ReportDiagnostic(Diagnostic.Create(GetOperationDescriptor, node.GetLocation()));
-                    }
-                },
-                Microsoft.CodeAnalysis.VisualBasic.SyntaxKind.NumericLiteralExpression);
         }
     }
 }

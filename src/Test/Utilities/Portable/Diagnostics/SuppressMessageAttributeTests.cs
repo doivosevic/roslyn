@@ -256,20 +256,6 @@ public class C
         }
 
         [Fact]
-        public async Task GlobalSuppressionOnBasicModule()
-        {
-            await VerifyBasicAsync(@"
-<assembly: System.Diagnostics.CodeAnalysis.SuppressMessage(""Test"", ""Declaration"", Scope=""type"", Target=""M"")>
-
-Module M
-    Class C
-    End Class
-End Module
-",
-                new[] { new WarningOnNamePrefixDeclarationAnalyzer("M") });
-        }
-
-        [Fact]
         public async Task GlobalSuppressionOnMembers()
         {
             await VerifyCSharpAsync(@"
@@ -335,14 +321,6 @@ public class E
         }
 
         [Fact]
-        public async Task WarningOnCommentAnalyzerBasic()
-        {
-            await VerifyBasicAsync("' Comment",
-                new[] { new WarningOnCommentAnalyzer() },
-                Diagnostic("Comment", "' Comment"));
-        }
-
-        [Fact]
         public async Task GloballySuppressSyntaxDiagnosticsCSharp()
         {
             await VerifyCSharpAsync(@"
@@ -358,24 +336,6 @@ public class C
     }
 }
 // after class
-",
-                new[] { new WarningOnCommentAnalyzer() });
-        }
-
-        [Fact]
-        public async Task GloballySuppressSyntaxDiagnosticsBasic()
-        {
-            await VerifyBasicAsync(@"
-' before module attributes
-<Module: System.Diagnostics.CodeAnalysis.SuppressMessage(""Test"", ""Comment"")>
-' before class
-Public Class C
-    ' before sub
-    Public Sub Goo() ' after sub statement
-        ' inside sub
-    End Sub
-End Class
-' after class
 ",
                 new[] { new WarningOnCommentAnalyzer() });
         }
@@ -401,27 +361,6 @@ public class C
                 Diagnostic("Comment", "// before module attributes"),
                 Diagnostic("Comment", "// before class"),
                 Diagnostic("Comment", "// after class"));
-        }
-
-        [Fact]
-        public async Task GloballySuppressSyntaxDiagnosticsOnTargetBasic()
-        {
-            await VerifyBasicAsync(@"
-' before module attributes
-<Module: System.Diagnostics.CodeAnalysis.SuppressMessage(""Test"", ""Comment"", Scope:=""Member"", Target:=""C.Goo():System.Void"")>
-' before class
-Public Class C
-    ' before sub
-    Public Sub Goo() ' after sub statement
-        ' inside sub
-    End Sub
-End Class
-' after class
-",
-                new[] { new WarningOnCommentAnalyzer() },
-                Diagnostic("Comment", "' before module attributes"),
-                Diagnostic("Comment", "' before class"),
-                Diagnostic("Comment", "' after class"));
         }
 
         [Fact]
@@ -463,56 +402,6 @@ namespace A
         }
 
         [Fact]
-        public async Task SuppressSyntaxDiagnosticsOnNamespaceDeclarationBasic()
-        {
-            await VerifyTokenDiagnosticsBasicAsync(@"
-<assembly: System.Diagnostics.CodeAnalysis.SuppressMessage(""Test"", ""Token"", Scope:=""Namespace"", Target:=""A.B"")>
-Namespace [|A
-    Namespace B 
-        Class C
-        End Class
-    End Namespace
-End|] Namespace
-",
-                Diagnostic("Token", "A").WithLocation(3, 11),
-                Diagnostic("Token", "Class").WithLocation(5, 9),
-                Diagnostic("Token", "C").WithLocation(5, 15),
-                Diagnostic("Token", "End").WithLocation(6, 9),
-                Diagnostic("Token", "Class").WithLocation(6, 13),
-                Diagnostic("Token", "End").WithLocation(8, 1));
-        }
-
-        [Fact, WorkItem(486, "https://github.com/dotnet/roslyn/issues/486")]
-        public async Task SuppressSyntaxDiagnosticsOnNamespaceAndDescendantsDeclarationBasic()
-        {
-            await VerifyTokenDiagnosticsBasicAsync(@"
-<assembly: System.Diagnostics.CodeAnalysis.SuppressMessage(""Test"", ""Token"", Scope:=""NamespaceAndDescendants"", Target:=""A.B"")>
-Namespace [|A
-    Namespace B 
-        Class C
-        End Class
-    End Namespace
-End|] Namespace
-",
-                Diagnostic("Token", "A").WithLocation(3, 11),
-                Diagnostic("Token", "End").WithLocation(8, 1));
-        }
-
-        [Theory, WorkItem(486, "https://github.com/dotnet/roslyn/issues/486")]
-        [InlineData("Namespace")]
-        [InlineData("NamespaceAndDescendants")]
-        public async Task DontSuppressSyntaxDiagnosticsInRootNamespaceBasic(string scope)
-        {
-            await VerifyBasicAsync($@"
-<module: System.Diagnostics.SuppressMessage(""Test"", ""Comment"", Scope:=""{scope}"", Target:=""RootNamespace"")>
-' In root namespace
-",
-                rootNamespace: "RootNamespace",
-                analyzers: new[] { new WarningOnCommentAnalyzer() },
-                diagnostics: Diagnostic("Comment", "' In root namespace").WithLocation(3, 1));
-        }
-
-        [Fact]
         public async Task SuppressSyntaxDiagnosticsOnTypesCSharp()
         {
             await VerifyTokenDiagnosticsCSharpAsync(@"
@@ -538,42 +427,6 @@ namespace N
 ",
                 Diagnostic("Token", "{").WithLocation(5, 1),
                 Diagnostic("Token", "}").WithLocation(20, 1));
-        }
-
-        [Fact]
-        public async Task SuppressSyntaxDiagnosticsOnTypesBasic()
-        {
-            await VerifyTokenDiagnosticsBasicAsync(@"
-Imports System.Diagnostics.CodeAnalysis
-
-Namespace [|N
-    <SuppressMessage(""Test"", ""Token"")>
-    Module M
-    End Module
-
-    <SuppressMessage(""Test"", ""Token"")>
-    Class C
-    End Class
-
-    <SuppressMessage(""Test"", ""Token"")>
-    Structure S
-    End Structure
-
-    <SuppressMessage(""Test"", ""Token"")>
-    Interface I
-    End Interface
-
-    <SuppressMessage(""Test"", ""Token"")>
-    Enum E
-        None
-    End Enum
-
-    <SuppressMessage(""Test"", ""Token"")>
-    Delegate Sub D()
-End|] Namespace
-",
-                Diagnostic("Token", "N").WithLocation(4, 11),
-                Diagnostic("Token", "End").WithLocation(28, 1));
         }
 
         [Fact]
@@ -620,25 +473,6 @@ public enum E
         }
 
         [Fact]
-        public async Task SuppressSyntaxDiagnosticsOnFieldsBasic()
-        {
-            await VerifyTokenDiagnosticsBasicAsync(@"
-Imports System.Diagnostics.CodeAnalysis
-
-Class [|C
-    <SuppressMessage(""Test"", ""Token"")>
-    Public field1 As Integer = 1,
-           field2 As Double = 2.0
-
-    <SuppressMessage(""Test"", ""Token"")>
-    Public field3 As Integer = 3
-End|] Class
-",
-                Diagnostic("Token", "C"),
-                Diagnostic("Token", "End"));
-        }
-
-        [Fact]
         public async Task SuppressSyntaxDiagnosticsOnEventsCSharp()
         {
             await VerifyTokenDiagnosticsCSharpAsync(@"
@@ -653,24 +487,6 @@ class C
 ",
                 Diagnostic("Token", "{"),
                 Diagnostic("Token", "}"));
-        }
-
-        [Fact]
-        public async Task SuppressSyntaxDiagnosticsOnEventsBasic()
-        {
-            await VerifyTokenDiagnosticsBasicAsync(@"
-Imports System.Diagnostics.CodeAnalysis
-
-Class [|C
-    <SuppressMessage(""Test"", ""Token"")>
-    Public Event E1 As System.Action(Of Integer)
-
-    <SuppressMessage(""Test"", ""Token"")>
-    Public Event E2(ByVal arg As Integer)
-End|] Class
-",
-                Diagnostic("Token", "C"),
-                Diagnostic("Token", "End"));
         }
 
         [Fact]
@@ -692,26 +508,6 @@ class C
         }
 
         [Fact]
-        public async Task SuppressSyntaxDiagnosticsOnEventAddAccessorBasic()
-        {
-            await VerifyTokenDiagnosticsBasicAsync(@"
-Class C
-    Public Custom Event E As System.Action(Of Integer[|)
-        <System.Diagnostics.CodeAnalysis.SuppressMessage(""Test"", ""Token"")>
-        AddHandler(value As Action(Of Integer))
-        End AddHandler
-        RemoveHandler|](value As Action(Of Integer))
-        End RemoveHandler
-        RaiseEvent(obj As Integer)
-        End RaiseEvent
-    End Event
-End Class
-",
-                Diagnostic("Token", ")"),
-                Diagnostic("Token", "RemoveHandler"));
-        }
-
-        [Fact]
         public async Task SuppressSyntaxDiagnosticsOnEventRemoveAccessorCSharp()
         {
             await VerifyTokenDiagnosticsCSharpAsync(@"
@@ -727,47 +523,6 @@ class C
 ",
                 Diagnostic("Token", "}").WithLocation(6, 14),
                 Diagnostic("Token", "}").WithLocation(9, 5));
-        }
-
-        [Fact]
-        public async Task SuppressSyntaxDiagnosticsOnEventRemoveAccessorBasic()
-        {
-            await VerifyTokenDiagnosticsBasicAsync(@"
-Class C
-    Public Custom Event E As System.Action(Of Integer)
-        AddHandler(value As Action(Of Integer))
-        End [|AddHandler
-        <System.Diagnostics.CodeAnalysis.SuppressMessage(""Test"", ""Token"")>
-        RemoveHandler(value As Action(Of Integer))
-        End RemoveHandler
-        RaiseEvent|](obj As Integer)
-        End RaiseEvent
-    End Event
-End Class
-",
-                Diagnostic("Token", "AddHandler"),
-                Diagnostic("Token", "RaiseEvent"));
-        }
-
-        [WorkItem(1103442, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/1103442")]
-        [Fact]
-        public async Task SuppressSyntaxDiagnosticsOnRaiseEventAccessorBasic()
-        {
-            await VerifyTokenDiagnosticsBasicAsync(@"
-Class C
-    Public Custom Event E As System.Action(Of Integer)
-        AddHandler(value As Action(Of Integer))
-        End AddHandler
-        RemoveHandler(value As Action(Of Integer))
-        End [|RemoveHandler
-        <System.Diagnostics.CodeAnalysis.SuppressMessage(""Test"", ""Token"")>
-        RaiseEvent(obj As Integer)
-        End RaiseEvent
-    End|] Event
-End Class
-",
-                Diagnostic("Token", "RemoveHandler"),
-                Diagnostic("Token", "End"));
         }
 
         [Fact]
@@ -794,31 +549,6 @@ class C
         }
 
         [Fact]
-        public async Task SuppressSyntaxDiagnosticsOnPropertyBasic()
-        {
-            await VerifyTokenDiagnosticsBasicAsync(@"
-Imports System.Diagnostics.CodeAnalysis
-
-Class [|C
-    <SuppressMessage(""Test"", ""Token"")>
-    Property Property1 As Integer
-
-    <SuppressMessage(""Test"", ""Token"")>
-    Property Property2 As Integer
-        Get
-            Return 2
-        End Get
-        Set(value As Integer)
-            Property1 = value
-        End Set
-    End Property
-End|] Class
-",
-                Diagnostic("Token", "C").WithLocation(4, 7),
-                Diagnostic("Token", "End").WithLocation(17, 1));
-        }
-
-        [Fact]
         public async Task SuppressSyntaxDiagnosticsOnPropertyGetterCSharp()
         {
             await VerifyTokenDiagnosticsCSharpAsync(@"
@@ -838,27 +568,6 @@ class C
         }
 
         [Fact]
-        public async Task SuppressSyntaxDiagnosticsOnPropertyGetterBasic()
-        {
-            await VerifyTokenDiagnosticsBasicAsync(@"
-Class C
-    Private x As Integer
-    Property [Property] As [|Integer
-        <System.Diagnostics.CodeAnalysis.SuppressMessage(""Test"", ""Token"")>
-        Get
-            Return 2
-        End Get
-        Set|](value As Integer)
-            x = value
-        End Set
-    End Property
-End Class
-",
-                Diagnostic("Token", "Integer").WithLocation(4, 28),
-                Diagnostic("Token", "Set").WithLocation(9, 9));
-        }
-
-        [Fact]
         public async Task SuppressSyntaxDiagnosticsOnPropertySetterCSharp()
         {
             await VerifyTokenDiagnosticsCSharpAsync(@"
@@ -875,27 +584,6 @@ class C
 ",
                 Diagnostic("Token", "{").WithLocation(6, 5),
                 Diagnostic("Token", "set").WithLocation(9, 9));
-        }
-
-        [Fact]
-        public async Task SuppressSyntaxDiagnosticsOnPropertySetterBasic()
-        {
-            await VerifyTokenDiagnosticsBasicAsync(@"
-Class C
-    Private x As Integer
-    Property [Property] As Integer
-        Get
-            Return 2
-        End [|Get
-        <System.Diagnostics.CodeAnalysis.SuppressMessage(""Test"", ""Token"")>
-        Set(value As Integer)
-            x = value
-        End Set
-    End|] Property
-End Class
-",
-                Diagnostic("Token", "Get").WithLocation(7, 13),
-                Diagnostic("Token", "End").WithLocation(12, 5));
         }
 
         [Fact]
@@ -975,26 +663,6 @@ abstract class C
         }
 
         [Fact]
-        public async Task SuppressSyntaxDiagnosticsOnMethodBasic()
-        {
-            await VerifyTokenDiagnosticsBasicAsync(@"
-Imports System.Diagnostics.CodeAnalysis
-
-Public MustInherit Class [|C
-    <SuppressMessage(""Test"", ""Token"")> 
-    Public Function M2(Of T)() As Integer
-        Return 0
-    End Function 
-    
-    <SuppressMessage(""Test"", ""Token"")> 
-    Public MustOverride Sub M3() 
-End|] Class
-",
-                Diagnostic("Token", "C").WithLocation(4, 26),
-                Diagnostic("Token", "End").WithLocation(12, 1));
-        }
-
-        [Fact]
         public async Task SuppressSyntaxDiagnosticsOnOperatorCSharp()
         {
             await VerifyTokenDiagnosticsCSharpAsync(@"
@@ -1009,21 +677,6 @@ class C
 ",
                 Diagnostic("Token", "{").WithLocation(3, 1),
                 Diagnostic("Token", "}").WithLocation(9, 1));
-        }
-
-        [Fact]
-        public async Task SuppressSyntaxDiagnosticsOnOperatorBasic()
-        {
-            await VerifyTokenDiagnosticsBasicAsync(@"
-Class [|C
-    <System.Diagnostics.CodeAnalysis.SuppressMessage(""Test"", ""Token"")> 
-    Public Shared Operator +(ByVal a As C, ByVal b As C) As C 
-        Return Nothing
-    End Operator 
-End|] Class 
-",
-                Diagnostic("Token", "C").WithLocation(2, 7),
-                Diagnostic("Token", "End").WithLocation(7, 1));
         }
 
         [Fact]
@@ -1043,20 +696,6 @@ class C : Base
 ",
                 Diagnostic("Token", "{").WithLocation(8, 1),
                 Diagnostic("Token", "}").WithLocation(11, 1));
-        }
-
-        [Fact]
-        public async Task SuppressSyntaxDiagnosticsOnConstructorBasic()
-        {
-            await VerifyTokenDiagnosticsBasicAsync(@"
-Class [|C
-    <System.Diagnostics.CodeAnalysis.SuppressMessage(""Test"", ""Token"")>
-    Public Sub New()
-    End Sub
-End|] Class
-",
-                Diagnostic("Token", "C").WithLocation(2, 7),
-                Diagnostic("Token", "End").WithLocation(6, 1));
         }
 
         [Fact]
@@ -1090,22 +729,6 @@ class C
 ",
                 Diagnostic("Token", "{").WithLocation(3, 1),
                 Diagnostic("Token", "}").WithLocation(11, 1));
-        }
-
-        [Fact]
-        public async Task SuppressSyntaxDiagnosticsOnNestedTypeBasic()
-        {
-            await VerifyTokenDiagnosticsBasicAsync(@"
-Class [|C
-    <System.Diagnostics.CodeAnalysis.SuppressMessage(""Test"", ""Token"")>
-    Class D
-        Class E
-        End Class
-    End Class
-End|] Class
-",
-                Diagnostic("Token", "C").WithLocation(2, 7),
-                Diagnostic("Token", "End").WithLocation(8, 1));
         }
 
         #endregion
@@ -1161,21 +784,6 @@ public class C
 }
 ",
                 new[] { new WarningOnCodeBodyAnalyzer(LanguageNames.CSharp) });
-        }
-
-        [Fact]
-        public async Task SuppressMessageOnCodeBodyBasic()
-        {
-            await VerifyBasicAsync(
-                @"
-Public Class C
-    <System.Diagnostics.CodeAnalysis.SuppressMessage(""Test"", ""CodeBody"")>
-    Sub Goo()
-        Goo()
-    End Sub
-End Class
-",
-                new[] { new WarningOnCodeBodyAnalyzer(LanguageNames.VisualBasic) });
         }
 
         #endregion
@@ -1242,24 +850,6 @@ public class C
         }
 
         [Fact]
-        public async Task InvalidAttributeConstructorParameters()
-        {
-            await VerifyBasicAsync(@"
-Imports System.Diagnostics.CodeAnalysis
-
-<module: SuppressMessage(UndeclaredIdentifier, ""Comment"")>
-<module: SuppressMessage(""Test"", UndeclaredIdentifier)>
-<module: SuppressMessage(""Test"", ""Comment"", Scope:=UndeclaredIdentifier, Target:=""C"")>
-<module: SuppressMessage(""Test"", ""Comment"", Scope:=""Type"", Target:=UndeclaredIdentifier)>
-
-Class C
-End Class
-",
-                new[] { new WarningOnTypeDeclarationAnalyzer() },
-                Diagnostic("TypeDeclaration", "C").WithLocation(9, 7));
-        }
-
-        [Fact]
         public async Task AnalyzerExceptionDiagnosticsWithDifferentContext()
         {
             var exceptionDiagnostics = new HashSet<Diagnostic>();
@@ -1309,32 +899,6 @@ public class C2
         protected Task VerifyTokenDiagnosticsCSharpAsync(string markup, params DiagnosticDescription[] diagnostics)
         {
             return VerifyTokenDiagnosticsAsync(markup, LanguageNames.CSharp, diagnostics);
-        }
-
-        protected async Task VerifyBasicAsync(string source, string rootNamespace, DiagnosticAnalyzer[] analyzers, params DiagnosticDescription[] diagnostics)
-        {
-            Assert.False(string.IsNullOrWhiteSpace(rootNamespace), string.Format("Invalid root namespace '{0}'", rootNamespace));
-            await VerifyAsync(source, LanguageNames.VisualBasic, analyzers, diagnostics, onAnalyzerException: null, rootNamespace: rootNamespace);
-        }
-
-        protected async Task VerifyBasicAsync(string source, DiagnosticAnalyzer[] analyzers, params DiagnosticDescription[] diagnostics)
-        {
-            await VerifyAsync(source, LanguageNames.VisualBasic, analyzers, diagnostics);
-        }
-
-        protected async Task VerifyBasicAsync(string source, DiagnosticAnalyzer[] analyzers, Action<Exception, DiagnosticAnalyzer, Diagnostic> onAnalyzerException, params DiagnosticDescription[] diagnostics)
-        {
-            await VerifyAsync(source, LanguageNames.VisualBasic, analyzers, diagnostics, onAnalyzerException);
-        }
-
-        protected async Task VerifyBasicAsync(string source, DiagnosticAnalyzer[] analyzers, bool logAnalyzerExceptionAsDiagnostics, params DiagnosticDescription[] diagnostics)
-        {
-            await VerifyAsync(source, LanguageNames.VisualBasic, analyzers, diagnostics, onAnalyzerException: null, logAnalyzerExceptionAsDiagnostics: logAnalyzerExceptionAsDiagnostics);
-        }
-
-        protected Task VerifyTokenDiagnosticsBasicAsync(string markup, params DiagnosticDescription[] diagnostics)
-        {
-            return VerifyTokenDiagnosticsAsync(markup, LanguageNames.VisualBasic, diagnostics);
         }
 
         protected abstract Task VerifyAsync(string source, string language, DiagnosticAnalyzer[] analyzers, DiagnosticDescription[] diagnostics, Action<Exception, DiagnosticAnalyzer, Diagnostic> onAnalyzerException = null, bool logAnalyzerExceptionAsDiagnostics = false, string rootNamespace = null);

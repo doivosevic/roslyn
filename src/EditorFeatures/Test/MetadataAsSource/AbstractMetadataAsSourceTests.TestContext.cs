@@ -193,18 +193,7 @@ namespace Microsoft.CodeAnalysis.Editor.UnitTests.MetadataAsSource
 
                 return null;
             }
-
-            private static bool ContainsVisualBasicKeywords(string input)
-            {
-                return
-                    input.Contains("Class") ||
-                    input.Contains("Structure") ||
-                    input.Contains("Namespace") ||
-                    input.Contains("Sub") ||
-                    input.Contains("Function") ||
-                    input.Contains("Dim");
-            }
-
+            
             private static string DeduceLanguageString(string input)
             {
                 return ContainsVisualBasicKeywords(input)

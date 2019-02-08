@@ -159,24 +159,6 @@ namespace Microsoft.CodeAnalysis.UnitTests.TestFiles
             {
                 public static string NetCoreMultiTFM_ProjectReferenceToFSharp_FSharpLib = GetText("NetCoreMultiTFM_ProjectReferenceToFSharp.fsharplib.fsharplib.fsproj");
             }
-
-            public static class VisualBasic
-            {
-                public static string AnalyzerReference => GetText("ProjectFiles.VisualBasic.AnalyzerReference.vbproj");
-                public static string Circular_Target => GetText("ProjectFiles.VisualBasic.Circular_Target.vbproj");
-                public static string Circular_Top => GetText("ProjectFiles.VisualBasic.Circular_Top.vbproj");
-                public static string Embed => GetText("ProjectFiles.VisualBasic.Embed.vbproj");
-                public static string Issue29122_ClassLibrary1 => GetText("Issue29122.Proj1.ClassLibrary1.vbproj");
-                public static string Issue29122_ClassLibrary2 => GetText("Issue29122.Proj2.ClassLibrary2.vbproj");
-                public static string InvalidProjectReference => GetText("ProjectFiles.VisualBasic.InvalidProjectReference.vbproj");
-                public static string NonExistentProjectReference => GetText("ProjectFiles.VisualBasic.NonExistentProjectReference.vbproj");
-                public static string UnknownProjectExtension => GetText("ProjectFiles.VisualBasic.UnknownProjectExtension.vbproj");
-                public static string VisualBasicProject => GetText("ProjectFiles.VisualBasic.VisualBasicProject.vbproj");
-                public static string VisualBasicProject_3_5 => GetText("ProjectFiles.VisualBasic.VisualBasicProject_3_5.vbproj");
-                public static string WithPrefer32Bit => GetText("ProjectFiles.VisualBasic.WithPrefer32Bit.vbproj");
-                public static string WithoutPrefer32Bit => GetText("ProjectFiles.VisualBasic.WithoutPrefer32Bit.vbproj");
-                public static string WithoutVBTargetsImported => GetText("ProjectFiles.VisualBasic.WithoutVBTargetsImported.vbproj");
-            }
         }
 
         public static class SourceFiles
@@ -215,19 +197,6 @@ namespace Microsoft.CodeAnalysis.UnitTests.TestFiles
             public static class Text
             {
                 public static string ValidAdditionalFile => GetText("SourceFiles.Text.ValidAdditionalFile.txt");
-            }
-
-            public static class VisualBasic
-            {
-                public static string Application => GetText("SourceFiles.VisualBasic.Application.myapp");
-                public static string Application_Designer => GetText("SourceFiles.VisualBasic.Application.Designer.vb");
-                public static string AssemblyInfo => GetText("SourceFiles.VisualBasic.AssemblyInfo.vb");
-                public static string Resources => GetText("SourceFiles.VisualBasic.Resources.resx_");
-                public static string Resources_Designer => GetText("SourceFiles.VisualBasic.Resources.Designer.vb");
-                public static string Settings => GetText("SourceFiles.VisualBasic.Settings.settings");
-                public static string Settings_Designer => GetText("SourceFiles.VisualBasic.Settings.Designer.vb");
-                public static string VisualBasicClass => GetText("SourceFiles.VisualBasic.VisualBasicClass.vb");
-                public static string VisualBasicClass_WithConditionalAttributes => GetText("SourceFiles.VisualBasic.VisualBasicClass_WithConditionalAttributes.vb");
             }
 
             public static class Xaml

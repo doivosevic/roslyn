@@ -22,7 +22,6 @@ using Microsoft.CodeAnalysis.Text;
 using Roslyn.Test.Utilities;
 using Roslyn.Utilities;
 using Xunit;
-using VB = Microsoft.CodeAnalysis.VisualBasic;
 using KeyValuePairUtil = Roslyn.Utilities.KeyValuePairUtil;
 using System.Security.Cryptography;
 
@@ -389,7 +388,6 @@ namespace A.B {
                 new TestMetadataReferenceResolver(files: new Dictionary<string, PortableExecutableReference>()
                 {
                     { @"a.dll", TestReferences.NetFx.v4_0_30319.Microsoft_CSharp },
-                    { @"b.dll", TestReferences.NetFx.v4_0_30319.Microsoft_VisualBasic },
                 })));
 
             c.VerifyDiagnostics();
@@ -398,7 +396,6 @@ namespace A.B {
             Assert.Same(TestReferences.NetFx.v4_0_30319.Microsoft_CSharp, c.GetDirectiveReference(rd1[0]));
             Assert.Same(TestReferences.NetFx.v4_0_30319.Microsoft_CSharp, c.GetDirectiveReference(rd1[1]));
             Assert.Same(TestReferences.NetFx.v4_0_30319.Microsoft_CSharp, c.GetDirectiveReference(rd2[0]));
-            Assert.Same(TestReferences.NetFx.v4_0_30319.Microsoft_VisualBasic, c.GetDirectiveReference(rd2[1]));
             Assert.Same(TestReferences.NetFx.v4_0_30319.Microsoft_CSharp, c.GetDirectiveReference(rd3[0]));
 
             // different script name or directive string:
@@ -948,165 +945,7 @@ var a = new C2();
             });
             assembly.VerifyEmitDiagnostics(Diagnostic(ErrorCode.ERR_NetModuleNameMustBeUnique).WithArguments("a1.netmodule"));
         }
-
-        [Fact]
-        public void MixedRefType()
-        {
-            var vbComp = VB.VisualBasicCompilation.Create("CompilationVB");
-            var comp = CSharpCompilation.Create("Compilation");
-
-            vbComp = vbComp.AddReferences(SystemRef);
-
-            // Add VB reference to C# compilation
-            foreach (var item in vbComp.References)
-            {
-                comp = comp.AddReferences(item);
-                comp = comp.ReplaceReference(item, item);
-            }
-            Assert.Equal(1, comp.ExternalReferences.Length);
-
-            var text1 = @"class A {}";
-            var comp1 = CSharpCompilation.Create("Test1", new[] { SyntaxFactory.ParseSyntaxTree(text1) });
-            var comp2 = CSharpCompilation.Create("Test2", new[] { SyntaxFactory.ParseSyntaxTree(text1) });
-
-            var compRef1 = comp1.ToMetadataReference();
-            var compRef2 = comp2.ToMetadataReference();
-
-            var compRef = vbComp.ToMetadataReference(embedInteropTypes: true);
-
-            var ref1 = TestReferences.NetFx.v4_0_30319.mscorlib;
-            var ref2 = TestReferences.NetFx.v4_0_30319.System;
-
-            // Add CompilationReference
-            comp = CSharpCompilation.Create(
-                "Test1",
-                new[] { SyntaxFactory.ParseSyntaxTree(text1) },
-                new MetadataReference[] { compRef1, compRef2 });
-
-            Assert.Equal(2, comp.ExternalReferences.Length);
-            Assert.True(comp.References.Contains(compRef1));
-            Assert.True(comp.References.Contains(compRef2));
-            var smb = comp.GetReferencedAssemblySymbol(compRef1);
-            Assert.Equal(smb.Kind, SymbolKind.Assembly);
-            Assert.Equal("Test1", smb.Identity.Name, StringComparer.OrdinalIgnoreCase);
-
-            // Mixed reference type
-            comp = comp.AddReferences(ref1);
-            Assert.Equal(3, comp.ExternalReferences.Length);
-            Assert.True(comp.References.Contains(ref1));
-
-            // Replace Compilation reference with Assembly file reference
-            comp = comp.ReplaceReference(compRef2, ref2);
-            Assert.Equal(3, comp.ExternalReferences.Length);
-            Assert.True(comp.References.Contains(ref2));
-
-            // Replace Assembly file reference with Compilation reference
-            comp = comp.ReplaceReference(ref1, compRef2);
-            Assert.Equal(3, comp.ExternalReferences.Length);
-            Assert.True(comp.References.Contains(compRef2));
-
-            var modRef1 = TestReferences.MetadataTests.NetModule01.ModuleCS00;
-
-            // Add Module file reference
-            comp = comp.AddReferences(modRef1);
-            // Not implemented code
-            //var modSmb = comp.GetReferencedModuleSymbol(modRef1);
-            //Assert.Equal("ModuleCS00.mod", modSmb.Name);
-            //Assert.Equal(4, comp.References.Count);
-            //Assert.True(comp.References.Contains(modRef1));
-
-            //smb = comp.GetReferencedAssemblySymbol(reference: modRef1);
-            //Assert.Equal(smb.Kind, SymbolKind.Assembly);
-            //Assert.Equal("Test1", smb.Identity.Name, StringComparer.OrdinalIgnoreCase);
-
-            // GetCompilationNamespace Not implemented(Derived Class AssemblySymbol)
-            //var m = smb.GlobalNamespace.GetMembers();
-            //var nsSmb = smb.GlobalNamespace.GetMembers("NS").Single() as NamespaceSymbol;
-            //var ns = comp.GetCompilationNamespace(ns: nsSmb);
-            //Assert.Equal(ns.Kind, SymbolKind.Namespace);
-            //Assert.True(String.Equals(ns.Name, "Compilation", StringComparison.OrdinalIgnoreCase));
-
-            //var asbSmb = smb as Symbol;
-            //var ns1 = comp.GetCompilationNamespace(ns: asbSmb as NamespaceSymbol);
-            //Assert.Equal(ns1.Kind, SymbolKind.Namespace);
-            //Assert.True(String.Equals(ns1.Name, "Compilation", StringComparison.OrdinalIgnoreCase));
-
-            // Get Referenced Module Symbol
-            //var moduleSmb = comp.GetReferencedModuleSymbol(reference: modRef1);
-            //Assert.Equal(SymbolKind.NetModule, moduleSmb.Kind);
-            //Assert.Equal("ModuleCS00.mod", moduleSmb.Name, StringComparer.OrdinalIgnoreCase);
-
-            // GetCompilationNamespace Not implemented(Derived Class ModuleSymbol)
-            //nsSmb = moduleSmb.GlobalNamespace.GetMembers("Runtime").Single() as NamespaceSymbol;
-            //ns = comp.GetCompilationNamespace(ns: nsSmb);
-            //Assert.Equal(ns.Kind, SymbolKind.Namespace);
-            //Assert.True(String.Equals(ns.Name, "Compilation", StringComparison.OrdinalIgnoreCase));
-
-            //var modSmbol = moduleSmb as Symbol;
-            //ns1 = comp.GetCompilationNamespace(ns: modSmbol as NamespaceSymbol);
-            //Assert.Equal(ns1.Kind, SymbolKind.Namespace);
-            //Assert.True(String.Equals(ns1.Name, "Compilation", StringComparison.OrdinalIgnoreCase));
-
-            // Get Compilation Namespace
-            //nsSmb = comp.GlobalNamespace;
-            //ns = comp.GetCompilationNamespace(ns: nsSmb);
-            //Assert.Equal(ns.Kind, SymbolKind.Namespace);
-            //Assert.True(String.Equals(ns.Name, "Compilation", StringComparison.OrdinalIgnoreCase));
-
-            // GetCompilationNamespace Not implemented(Derived Class MergedNamespaceSymbol)
-            //NamespaceSymbol merged = MergedNamespaceSymbol.Create(new NamespaceExtent(new MockAssemblySymbol("Merged")), null, null);
-            //ns = comp.GetCompilationNamespace(ns: merged);
-            //Assert.Equal(ns.Kind, SymbolKind.Namespace);
-            //Assert.True(String.Equals(ns.Name, "Compilation", StringComparison.OrdinalIgnoreCase));
-
-            // GetCompilationNamespace Not implemented(Derived Class RetargetingNamespaceSymbol)
-            //Retargeting.RetargetingNamespaceSymbol retargetSmb = nsSmb as Retargeting.RetargetingNamespaceSymbol;
-            //ns = comp.GetCompilationNamespace(ns: retargetSmb);
-            //Assert.Equal(ns.Kind, SymbolKind.Namespace);
-            //Assert.True(String.Equals(ns.Name, "Compilation", StringComparison.OrdinalIgnoreCase));
-
-            // GetCompilationNamespace Not implemented(Derived Class PENamespaceSymbol)
-            //Symbols.Metadata.PE.PENamespaceSymbol pensSmb = nsSmb as Symbols.Metadata.PE.PENamespaceSymbol;
-            //ns = comp.GetCompilationNamespace(ns: pensSmb);
-            //Assert.Equal(ns.Kind, SymbolKind.Namespace);
-            //Assert.True(String.Equals(ns.Name, "Compilation", StringComparison.OrdinalIgnoreCase));
-
-            // Replace Module file reference with compilation reference
-            comp = comp.RemoveReferences(compRef1).ReplaceReference(modRef1, compRef1);
-            Assert.Equal(3, comp.ExternalReferences.Length);
-            // Check the reference order after replace
-            Assert.True(comp.ExternalReferences[2] is CSharpCompilationReference, "Expected compilation reference");
-            Assert.Equal(compRef1, comp.ExternalReferences[2]);
-
-            // Replace compilation Module file reference with Module file reference
-            comp = comp.ReplaceReference(compRef1, modRef1);
-            // Check the reference order after replace
-            Assert.Equal(3, comp.ExternalReferences.Length);
-            Assert.Equal(MetadataImageKind.Module, comp.ExternalReferences[2].Properties.Kind);
-            Assert.Equal(modRef1, comp.ExternalReferences[2]);
-
-            // Add VB compilation ref
-            Assert.Throws<ArgumentException>(() => comp.AddReferences(compRef));
-
-            foreach (var item in comp.References)
-            {
-                comp = comp.RemoveReferences(item);
-            }
-            Assert.Equal(0, comp.ExternalReferences.Length);
-
-            // Not Implemented
-            // var asmByteRef = MetadataReference.CreateFromImage(new byte[5], embedInteropTypes: true);
-            //var asmObjectRef = new AssemblyObjectReference(assembly: System.Reflection.Assembly.GetAssembly(typeof(object)),embedInteropTypes :true);
-            //comp =comp.AddReferences(asmByteRef, asmObjectRef);
-            //Assert.Equal(2, comp.References.Count);
-            //Assert.Equal(ReferenceKind.AssemblyBytes, comp.References[0].Kind);
-            //Assert.Equal(ReferenceKind.AssemblyObject , comp.References[1].Kind);
-            //Assert.Equal(asmByteRef, comp.References[0]);
-            //Assert.Equal(asmObjectRef, comp.References[1]);
-            //Assert.True(comp.References[0].EmbedInteropTypes);
-            //Assert.True(comp.References[1].EmbedInteropTypes);
-        }
-
+        
         [Fact]
         public void NegGetCompilationNamespace()
         {
@@ -1153,40 +992,6 @@ var a = new C2();
             {
                 var modSmb1 = comp.GetReferencedModuleSymbol(null);
             });
-        }
-
-        [WorkItem(537778, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/537778")]
-        // Throw exception when the parameter of the parameter type of GetReferencedAssemblySymbol is VB.CompilationReference
-        [Fact]
-        public void NegGetSymbol1()
-        {
-            var opt = TestOptions.ReleaseDll;
-            var comp = CSharpCompilation.Create("Compilation");
-            var vbComp = VB.VisualBasicCompilation.Create("CompilationVB");
-            vbComp = vbComp.AddReferences(SystemRef);
-            var compRef = vbComp.ToMetadataReference();
-            Assert.Throws<ArgumentException>(() => comp.AddReferences(compRef));
-
-            // Throw exception when the parameter of GetBinding is null
-            Assert.Throws<ArgumentNullException>(
-            delegate
-            {
-                comp.GetSemanticModel(null);
-            });
-
-            // Throw exception when the parameter of GetTypeByNameAndArity is NULL 
-            //Assert.Throws<Exception>(
-            //delegate
-            //{
-            //    comp.GetTypeByNameAndArity(fullName: null, arity: 1);
-            //});
-
-            // Throw exception when the parameter of GetTypeByNameAndArity is less than 0 
-            //Assert.Throws<Exception>(
-            //delegate
-            //{
-            //    comp.GetTypeByNameAndArity(string.Empty, -4);
-            //});
         }
 
         // Add already existing item 
@@ -1343,74 +1148,7 @@ var a = new C2();
             Assert.Throws<ArgumentException>(() => (comp.AddSyntaxTrees(t1, t1)));
             Assert.Equal(0, comp.SyntaxTrees.Length);
         }
-
-        [Fact]
-        public void NegSynTree()
-        {
-            var comp = CSharpCompilation.Create("Compilation");
-            SyntaxTree syntaxTree = SyntaxFactory.ParseSyntaxTree("Using Goo;");
-            // Throw exception when add null SyntaxTree
-            Assert.Throws<ArgumentNullException>(
-            delegate
-            {
-                comp.AddSyntaxTrees(null);
-            });
-
-            // Throw exception when Remove null SyntaxTree
-            Assert.Throws<ArgumentNullException>(
-            delegate
-            {
-                comp.RemoveSyntaxTrees(null);
-            });
-
-            // No exception when replacing a SyntaxTree with null
-            var compP = comp.AddSyntaxTrees(syntaxTree);
-            comp = compP.ReplaceSyntaxTree(syntaxTree, null);
-            Assert.Equal(0, comp.SyntaxTrees.Length);
-
-            // Throw exception when remove null SyntaxTree
-            Assert.Throws<ArgumentNullException>(
-            delegate
-            {
-                comp = comp.ReplaceSyntaxTree(null, syntaxTree);
-            });
-
-            var s1 = "Imports System.Text";
-            SyntaxTree t1 = VB.VisualBasicSyntaxTree.ParseText(s1);
-            SyntaxTree t2 = t1;
-            var t3 = t2;
-
-            var vbComp = VB.VisualBasicCompilation.Create("CompilationVB");
-            vbComp = vbComp.AddSyntaxTrees(t1, VB.VisualBasicSyntaxTree.ParseText("Using Goo;"));
-            // Throw exception when cast SyntaxTree
-            foreach (var item in vbComp.SyntaxTrees)
-            {
-                t3 = item;
-                Exception invalidCastSynTreeEx = Assert.Throws<InvalidCastException>(
-                delegate
-                {
-                    comp = comp.AddSyntaxTrees(t3);
-                });
-                invalidCastSynTreeEx = Assert.Throws<InvalidCastException>(
-                delegate
-                {
-                    comp = comp.RemoveSyntaxTrees(t3);
-                });
-                invalidCastSynTreeEx = Assert.Throws<InvalidCastException>(
-                delegate
-                {
-                    comp = comp.ReplaceSyntaxTree(t3, t3);
-                });
-            }
-            // Get Binding with tree is not exist
-            SyntaxTree t4 = SyntaxFactory.ParseSyntaxTree(s1);
-            Assert.Throws<ArgumentException>(
-            delegate
-            {
-                comp.RemoveSyntaxTrees(new SyntaxTree[] { t4 }).GetSemanticModel(t4);
-            });
-        }
-
+        
         [Fact]
         public void GetEntryPoint_Exe()
         {

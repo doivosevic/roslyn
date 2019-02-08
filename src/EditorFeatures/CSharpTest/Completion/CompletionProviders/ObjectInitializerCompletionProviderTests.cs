@@ -590,32 +590,7 @@ class d
         {
             TestCommonIsTextualTriggerCharacter();
         }
-
-        [WorkItem(530828, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/530828")]
-        [Fact, Trait(Traits.Feature, Traits.Features.Completion)]
-        public async Task DoNotIncludeIndexedPropertyWithNonOptionalParameter()
-        {
-            var markup = @"C c01 = new C() {$$ }";
-            var referencedCode = @"Public Class C
-    Public Property IndexProp(ByVal p1 As Integer) As String
-        Get
-            Return Nothing
-        End Get
-        Set(ByVal value As String)
-        End Set
-    End Property
-End Class";
-            await VerifyItemInEditorBrowsableContextsAsync(
-                markup: markup,
-                referencedCode: referencedCode,
-                item: "IndexProp",
-                expectedSymbolsSameSolution: 0,
-                expectedSymbolsMetadataReference: 0,
-                sourceLanguage: LanguageNames.CSharp,
-                referencedLanguage: LanguageNames.VisualBasic,
-                hideAdvancedMembers: false);
-        }
-
+        
         [WorkItem(4754, "https://github.com/dotnet/roslyn/issues/4754")]
         [Fact, Trait(Traits.Feature, Traits.Features.Completion)]
         public async Task CollectionInitializerPatternFromBaseType()

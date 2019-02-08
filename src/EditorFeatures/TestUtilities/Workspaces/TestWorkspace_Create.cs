@@ -16,8 +16,6 @@ namespace Microsoft.CodeAnalysis.Editor.UnitTests.Workspaces
     {
         private const string CSharpExtension = ".cs";
         private const string CSharpScriptExtension = ".csx";
-        private const string VisualBasicExtension = ".vb";
-        private const string VisualBasicScriptExtension = ".vbx";
 
         private const string WorkspaceElementName = "Workspace";
         private const string ProjectElementName = "Project";
@@ -145,9 +143,7 @@ namespace Microsoft.CodeAnalysis.Editor.UnitTests.Workspaces
 
             if (extension == null)
             {
-                extension = language == LanguageNames.CSharp
-                ? CSharpExtension
-                : VisualBasicExtension;
+                extension = CSharpExtension;
             }
 
             foreach (var file in files)
@@ -187,12 +183,6 @@ namespace Microsoft.CodeAnalysis.Editor.UnitTests.Workspaces
                     extension = parseOptions[i].Kind == SourceCodeKind.Regular
                         ? CSharpExtension
                         : CSharpScriptExtension;
-                }
-                else if (language == LanguageNames.VisualBasic)
-                {
-                    extension = parseOptions[i].Kind == SourceCodeKind.Regular
-                        ? VisualBasicExtension
-                        : VisualBasicScriptExtension;
                 }
                 else
                 {
@@ -242,41 +232,6 @@ namespace Microsoft.CodeAnalysis.Editor.UnitTests.Workspaces
         }
 
         #endregion
-
-        #region VB
-
-        public static TestWorkspace CreateVisualBasic(
-            string file,
-            ParseOptions parseOptions = null,
-            CompilationOptions compilationOptions = null,
-            ExportProvider exportProvider = null,
-            string[] metadataReferences = null,
-            bool openDocuments = true)
-        {
-            return CreateVisualBasic(new[] { file }, parseOptions, compilationOptions, exportProvider, metadataReferences, openDocuments);
-        }
-
-        public static TestWorkspace CreateVisualBasic(
-            string[] files,
-            ParseOptions parseOptions = null,
-            CompilationOptions compilationOptions = null,
-            ExportProvider exportProvider = null,
-            string[] metadataReferences = null,
-            bool openDocuments = true)
-        {
-            return Create(LanguageNames.VisualBasic, compilationOptions, parseOptions, files, exportProvider, metadataReferences, openDocuments: openDocuments);
-        }
-
-        /// <param name="files">Can pass in multiple file contents with individual source kind: files will be named test1.vb, test2.vbx, etc.</param>
-        public static TestWorkspace CreateVisualBasic(
-            string[] files,
-            ParseOptions[] parseOptions = null,
-            CompilationOptions compilationOptions = null,
-            ExportProvider exportProvider = null)
-        {
-            return Create(LanguageNames.VisualBasic, compilationOptions, parseOptions, files, exportProvider);
-        }
-
-        #endregion
+        
     }
 }

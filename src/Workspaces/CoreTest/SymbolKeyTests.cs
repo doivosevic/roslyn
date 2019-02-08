@@ -766,11 +766,6 @@ class C
                 var tree = CSharp.SyntaxFactory.ParseSyntaxTree(source, path: path);
                 return CSharp.CSharpCompilation.Create("Test", syntaxTrees: new[] { tree }, references: references);
             }
-            else if (language == LanguageNames.VisualBasic)
-            {
-                var tree = VisualBasic.SyntaxFactory.ParseSyntaxTree(source, path: path);
-                return VisualBasic.VisualBasicCompilation.Create("Test", syntaxTrees: new[] { tree }, references: references);
-            }
 
             throw new NotSupportedException();
         }
@@ -838,10 +833,6 @@ class C
             foreach (var declaringLocation in containingSymbol.DeclaringSyntaxReferences)
             {
                 var node = declaringLocation.GetSyntax();
-                if (node.Language == LanguageNames.VisualBasic)
-                {
-                    node = node.Parent;
-                }
 
                 var semanticModel = compilation.GetSemanticModel(node.SyntaxTree);
 

@@ -19,7 +19,7 @@ namespace Microsoft.CodeAnalysis
 {
     public static class CommonDiagnosticAnalyzers
     {
-        [DiagnosticAnalyzer(LanguageNames.CSharp, LanguageNames.VisualBasic)]
+        [DiagnosticAnalyzer(LanguageNames.CSharp)]
         public class AnalyzerForErrorLogTest : DiagnosticAnalyzer
         {
             public static readonly DiagnosticDescriptor Descriptor1 = new DiagnosticDescriptor(
@@ -170,7 +170,7 @@ namespace Microsoft.CodeAnalysis
             }
         }
 
-        [DiagnosticAnalyzer(LanguageNames.CSharp, LanguageNames.VisualBasic)]
+        [DiagnosticAnalyzer(LanguageNames.CSharp)]
         public class NotConfigurableDiagnosticAnalyzer : DiagnosticAnalyzer
         {
             public static readonly DiagnosticDescriptor EnabledRule = new DiagnosticDescriptor(
@@ -212,7 +212,7 @@ namespace Microsoft.CodeAnalysis
             }
         }
 
-        [DiagnosticAnalyzer(LanguageNames.CSharp, LanguageNames.VisualBasic)]
+        [DiagnosticAnalyzer(LanguageNames.CSharp)]
         public class CodeBlockActionAnalyzer : DiagnosticAnalyzer
         {
             private readonly bool _onlyStatelessAction;
@@ -270,12 +270,6 @@ namespace Microsoft.CodeAnalysis
         public class CSharpCodeBlockObjectCreationAnalyzer : CodeBlockObjectCreationAnalyzer<SyntaxKind>
         {
             protected override SyntaxKind ObjectCreationExpressionKind => SyntaxKind.ObjectCreationExpression;
-        }
-
-        [DiagnosticAnalyzer(LanguageNames.VisualBasic)]
-        public class VisualBasicCodeBlockObjectCreationAnalyzer : CodeBlockObjectCreationAnalyzer<VisualBasic.SyntaxKind>
-        {
-            protected override VisualBasic.SyntaxKind ObjectCreationExpressionKind => VisualBasic.SyntaxKind.ObjectCreationExpression;
         }
 
         public abstract class CodeBlockObjectCreationAnalyzer<TLanguageKindEnum> : DiagnosticAnalyzer
@@ -338,12 +332,6 @@ namespace Microsoft.CodeAnalysis
             protected override SyntaxKind NamespaceDeclarationSyntaxKind => SyntaxKind.NamespaceDeclaration;
         }
 
-        [DiagnosticAnalyzer(LanguageNames.VisualBasic)]
-        public class VisualBasicNamespaceDeclarationAnalyzer : AbstractNamespaceDeclarationAnalyzer<VisualBasic.SyntaxKind>
-        {
-            protected override VisualBasic.SyntaxKind NamespaceDeclarationSyntaxKind => VisualBasic.SyntaxKind.NamespaceStatement;
-        }
-
         public abstract class AbstractNamespaceDeclarationAnalyzer<TLanguageKindEnum> : DiagnosticAnalyzer
             where TLanguageKindEnum : struct
         {
@@ -372,7 +360,7 @@ namespace Microsoft.CodeAnalysis
             }
         }
 
-        [DiagnosticAnalyzer(LanguageNames.CSharp, LanguageNames.VisualBasic)]
+        [DiagnosticAnalyzer(LanguageNames.CSharp)]
         public sealed class AnalyzerWithNoActions : DiagnosticAnalyzer
         {
             public static readonly DiagnosticDescriptor DummyRule = new DiagnosticDescriptor(
@@ -387,7 +375,7 @@ namespace Microsoft.CodeAnalysis
             public override void Initialize(AnalysisContext context) { }
         }
 
-        [DiagnosticAnalyzer(LanguageNames.CSharp, LanguageNames.VisualBasic)]
+        [DiagnosticAnalyzer(LanguageNames.CSharp)]
         public sealed class AnalyzerWithDisabledRules : DiagnosticAnalyzer
         {
             public static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
@@ -405,7 +393,7 @@ namespace Microsoft.CodeAnalysis
             }
         }
 
-        [DiagnosticAnalyzer(LanguageNames.CSharp, LanguageNames.VisualBasic)]
+        [DiagnosticAnalyzer(LanguageNames.CSharp)]
         public sealed class EnsureNoMergedNamespaceSymbolAnalyzer : DiagnosticAnalyzer
         {
             public const string DiagnosticId = nameof(DiagnosticId);
@@ -437,14 +425,14 @@ namespace Microsoft.CodeAnalysis
             }
         }
 
-        [DiagnosticAnalyzer(LanguageNames.CSharp, LanguageNames.VisualBasic)]
+        [DiagnosticAnalyzer(LanguageNames.CSharp)]
         public sealed class AnalyzerWithNoSupportedDiagnostics : DiagnosticAnalyzer
         {
             public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; }
             public override void Initialize(AnalysisContext context) { }
         }
 
-        [DiagnosticAnalyzer(LanguageNames.CSharp, LanguageNames.VisualBasic)]
+        [DiagnosticAnalyzer(LanguageNames.CSharp)]
         public sealed class AnalyzerWithInvalidDiagnosticId : DiagnosticAnalyzer
         {
             public static readonly DiagnosticDescriptor Descriptor = new DiagnosticDescriptor(
@@ -463,7 +451,7 @@ namespace Microsoft.CodeAnalysis
             }
         }
 
-        [DiagnosticAnalyzer(LanguageNames.CSharp, LanguageNames.VisualBasic)]
+        [DiagnosticAnalyzer(LanguageNames.CSharp)]
         public sealed class AnalyzerWithNullDescriptor : DiagnosticAnalyzer
         {
             public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create((DiagnosticDescriptor)null);
@@ -473,7 +461,7 @@ namespace Microsoft.CodeAnalysis
             }
         }
 
-        [DiagnosticAnalyzer(LanguageNames.CSharp, LanguageNames.VisualBasic)]
+        [DiagnosticAnalyzer(LanguageNames.CSharp)]
         public sealed class AnalyzerWithCSharpCompilerDiagnosticId : DiagnosticAnalyzer
         {
             public static readonly DiagnosticDescriptor Descriptor = new DiagnosticDescriptor(
@@ -492,7 +480,7 @@ namespace Microsoft.CodeAnalysis
             }
         }
 
-        [DiagnosticAnalyzer(LanguageNames.CSharp, LanguageNames.VisualBasic)]
+        [DiagnosticAnalyzer(LanguageNames.CSharp)]
         public sealed class AnalyzerWithBasicCompilerDiagnosticId : DiagnosticAnalyzer
         {
             public static readonly DiagnosticDescriptor Descriptor = new DiagnosticDescriptor(
@@ -511,7 +499,7 @@ namespace Microsoft.CodeAnalysis
             }
         }
 
-        [DiagnosticAnalyzer(LanguageNames.CSharp, LanguageNames.VisualBasic)]
+        [DiagnosticAnalyzer(LanguageNames.CSharp)]
         public sealed class AnalyzerWithInvalidDiagnosticSpan : DiagnosticAnalyzer
         {
             private readonly TextSpan _badSpan;
@@ -530,7 +518,7 @@ namespace Microsoft.CodeAnalysis
                 => context.RegisterSyntaxTreeAction(c => c.ReportDiagnostic(Diagnostic.Create(Descriptor, SourceLocation.Create(c.Tree, _badSpan))));
         }
 
-        [DiagnosticAnalyzer(LanguageNames.CSharp, LanguageNames.VisualBasic)]
+        [DiagnosticAnalyzer(LanguageNames.CSharp)]
         public sealed class AnalyzerWithInvalidDiagnosticLocation : DiagnosticAnalyzer
         {
             private readonly Location _invalidLocation;
@@ -591,7 +579,7 @@ namespace Microsoft.CodeAnalysis
             }
         }
 
-        [DiagnosticAnalyzer(LanguageNames.CSharp, LanguageNames.VisualBasic)]
+        [DiagnosticAnalyzer(LanguageNames.CSharp)]
         public sealed class AnalyzerWithAsyncMethodRegistration : DiagnosticAnalyzer
         {
             public static readonly DiagnosticDescriptor Descriptor = new DiagnosticDescriptor(
@@ -617,7 +605,7 @@ namespace Microsoft.CodeAnalysis
             }
         }
 
-        [DiagnosticAnalyzer(LanguageNames.CSharp, LanguageNames.VisualBasic)]
+        [DiagnosticAnalyzer(LanguageNames.CSharp)]
         public sealed class AnalyzerWithAsyncLambdaRegistration : DiagnosticAnalyzer
         {
             public static readonly DiagnosticDescriptor Descriptor = new DiagnosticDescriptor(
@@ -641,7 +629,7 @@ namespace Microsoft.CodeAnalysis
             }
         }
 
-        [DiagnosticAnalyzer(LanguageNames.CSharp, LanguageNames.VisualBasic)]
+        [DiagnosticAnalyzer(LanguageNames.CSharp)]
         public sealed class AnalyzerThatThrowsInGetMessage : DiagnosticAnalyzer
         {
             public static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
@@ -680,7 +668,7 @@ namespace Microsoft.CodeAnalysis
             }
         }
 
-        [DiagnosticAnalyzer(LanguageNames.CSharp, LanguageNames.VisualBasic)]
+        [DiagnosticAnalyzer(LanguageNames.CSharp)]
         public sealed class AnalyzerReportingMisformattedDiagnostic : DiagnosticAnalyzer
         {
             public static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
@@ -702,7 +690,7 @@ namespace Microsoft.CodeAnalysis
             }
         }
 
-        [DiagnosticAnalyzer(LanguageNames.CSharp, LanguageNames.VisualBasic)]
+        [DiagnosticAnalyzer(LanguageNames.CSharp)]
         public class HiddenDiagnosticsCompilationAnalyzer : DiagnosticAnalyzer
         {
             public static readonly DiagnosticDescriptor Descriptor = new DiagnosticDescriptor(
@@ -736,7 +724,7 @@ namespace Microsoft.CodeAnalysis
         /// This analyzer will deadlock if the driver runs analyzers on a single thread OR takes a lock around callbacks into this analyzer to prevent concurrent analyzer execution
         /// Former indicates a bug in the test using this analyzer and the latter indicates a bug in the analyzer driver.
         /// </summary>
-        [DiagnosticAnalyzer(LanguageNames.CSharp, LanguageNames.VisualBasic)]
+        [DiagnosticAnalyzer(LanguageNames.CSharp)]
         public class ConcurrentAnalyzer : DiagnosticAnalyzer
         {
             private readonly ImmutableHashSet<string> _symbolNames;
@@ -808,7 +796,7 @@ namespace Microsoft.CodeAnalysis
         /// This analyzer will report diagnostics only if it receives any concurrent action callbacks, which would be a
         /// bug in the analyzer driver as this analyzer doesn't invoke <see cref="AnalysisContext.EnableConcurrentExecution"/>.
         /// </summary>
-        [DiagnosticAnalyzer(LanguageNames.CSharp, LanguageNames.VisualBasic)]
+        [DiagnosticAnalyzer(LanguageNames.CSharp)]
         public class NonConcurrentAnalyzer : DiagnosticAnalyzer
         {
             public static readonly DiagnosticDescriptor Descriptor = new DiagnosticDescriptor(
@@ -846,7 +834,7 @@ namespace Microsoft.CodeAnalysis
             }
         }
 
-        [DiagnosticAnalyzer(LanguageNames.CSharp, LanguageNames.VisualBasic)]
+        [DiagnosticAnalyzer(LanguageNames.CSharp)]
         public sealed class OperationAnalyzer : DiagnosticAnalyzer
         {
             private readonly ActionKind _actionKind;
@@ -995,7 +983,7 @@ namespace Microsoft.CodeAnalysis
             }
         }
 
-        [DiagnosticAnalyzer(LanguageNames.CSharp, LanguageNames.VisualBasic)]
+        [DiagnosticAnalyzer(LanguageNames.CSharp)]
         public sealed class OperationBlockAnalyzer : DiagnosticAnalyzer
         {
             public static readonly DiagnosticDescriptor Descriptor = new DiagnosticDescriptor(
@@ -1020,7 +1008,7 @@ namespace Microsoft.CodeAnalysis
             }
         }
 
-        [DiagnosticAnalyzer(LanguageNames.CSharp, LanguageNames.VisualBasic)]
+        [DiagnosticAnalyzer(LanguageNames.CSharp)]
         public sealed class FieldReferenceOperationAnalyzer : DiagnosticAnalyzer
         {
             private readonly bool _doOperationBlockAnalysis;
@@ -1071,7 +1059,7 @@ namespace Microsoft.CodeAnalysis
             }
         }
 
-        [DiagnosticAnalyzer(LanguageNames.CSharp, LanguageNames.VisualBasic)]
+        [DiagnosticAnalyzer(LanguageNames.CSharp)]
         public sealed class MethodOrConstructorBodyOperationAnalyzer : DiagnosticAnalyzer
         {
             public static readonly DiagnosticDescriptor Descriptor = new DiagnosticDescriptor(
@@ -1093,7 +1081,7 @@ namespace Microsoft.CodeAnalysis
             }
         }
 
-        [DiagnosticAnalyzer(LanguageNames.CSharp, LanguageNames.VisualBasic)]
+        [DiagnosticAnalyzer(LanguageNames.CSharp)]
         public class GeneratedCodeAnalyzer : DiagnosticAnalyzer
         {
             private readonly GeneratedCodeAnalysisFlags? _generatedCodeAnalysisFlagsOpt;
@@ -1188,7 +1176,7 @@ namespace Microsoft.CodeAnalysis
             }
         }
 
-        [DiagnosticAnalyzer(LanguageNames.CSharp, LanguageNames.VisualBasic)]
+        [DiagnosticAnalyzer(LanguageNames.CSharp)]
         public class GeneratedCodeAnalyzer2 : DiagnosticAnalyzer
         {
             public static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
@@ -1222,7 +1210,7 @@ namespace Microsoft.CodeAnalysis
             }
         }
 
-        [DiagnosticAnalyzer(LanguageNames.CSharp, LanguageNames.VisualBasic)]
+        [DiagnosticAnalyzer(LanguageNames.CSharp)]
         public class SharedStateAnalyzer : DiagnosticAnalyzer
         {
             private readonly SyntaxTreeValueProvider<bool> _treeValueProvider;
@@ -1352,7 +1340,7 @@ namespace Microsoft.CodeAnalysis
             }
         }
 
-        [DiagnosticAnalyzer(LanguageNames.CSharp, LanguageNames.VisualBasic)]
+        [DiagnosticAnalyzer(LanguageNames.CSharp)]
         public class AnalyzerForParameters : DiagnosticAnalyzer
         {
             public static readonly DiagnosticDescriptor ParameterDescriptor = new DiagnosticDescriptor(
@@ -1376,7 +1364,7 @@ namespace Microsoft.CodeAnalysis
             }
         }
 
-        [DiagnosticAnalyzer(LanguageNames.CSharp, LanguageNames.VisualBasic)]
+        [DiagnosticAnalyzer(LanguageNames.CSharp)]
         public class SymbolStartAnalyzer : DiagnosticAnalyzer
         {
             private readonly SymbolKind _symbolKind;

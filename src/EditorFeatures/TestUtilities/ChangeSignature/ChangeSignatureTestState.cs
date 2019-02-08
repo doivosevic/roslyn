@@ -11,8 +11,6 @@ using Microsoft.CodeAnalysis.Editor.UnitTests.Workspaces;
 using Microsoft.CodeAnalysis.Notification;
 using Microsoft.CodeAnalysis.Shared.Extensions;
 using Microsoft.CodeAnalysis.Test.Utilities;
-using Microsoft.CodeAnalysis.VisualBasic;
-using Microsoft.CodeAnalysis.VisualBasic.ChangeSignature;
 using Microsoft.VisualStudio.Composition;
 using Roslyn.Test.Utilities;
 
@@ -30,9 +28,7 @@ namespace Microsoft.CodeAnalysis.Editor.UnitTests.ChangeSignature
         public static ChangeSignatureTestState Create(string markup, string languageName, ParseOptions parseOptions = null)
         {
             var exportProvider = s_exportProviderFactory.CreateExportProvider();
-            var workspace = languageName == LanguageNames.CSharp
-                  ? TestWorkspace.CreateCSharp(markup, exportProvider: exportProvider, parseOptions: (CSharpParseOptions)parseOptions)
-                  : TestWorkspace.CreateVisualBasic(markup, exportProvider: exportProvider, parseOptions: parseOptions, compilationOptions: new VisualBasicCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
+            var workspace = TestWorkspace.CreateCSharp(markup, exportProvider: exportProvider, parseOptions: (CSharpParseOptions)parseOptions);
 
             return new ChangeSignatureTestState(workspace);
         }
@@ -84,8 +80,7 @@ namespace Microsoft.CodeAnalysis.Editor.UnitTests.ChangeSignature
             ExportProviderCache.GetOrCreateExportProviderFactory(
                 TestExportProvider.MinimumCatalogWithCSharpAndVisualBasic
                     .WithPart(typeof(TestChangeSignatureOptionsService))
-                    .WithPart(typeof(CSharpChangeSignatureService))
-                    .WithPart(typeof(VisualBasicChangeSignatureService)));
+                    .WithPart(typeof(CSharpChangeSignatureService)));
 
         public void Dispose()
         {

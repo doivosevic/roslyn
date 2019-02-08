@@ -6255,63 +6255,7 @@ public interface Goo
                 referencedLanguage: LanguageNames.CSharp,
                 hideAdvancedMembers: true);
         }
-
-        [WorkItem(7336, "DevDiv_Projects/Roslyn")]
-        [Fact, Trait(Traits.Feature, Traits.Features.Completion)]
-        public async Task EditorBrowsable_CrossLanguage_CStoVB_Always()
-        {
-            var markup = @"
-class Program
-{
-    void M()
-    {
-        $$
-    }
-}";
-
-            var referencedCode = @"
-<System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Always)>
-Public Class Goo
-End Class";
-            await VerifyItemInEditorBrowsableContextsAsync(
-                markup: markup,
-                referencedCode: referencedCode,
-                item: "Goo",
-                expectedSymbolsSameSolution: 1,
-                expectedSymbolsMetadataReference: 1,
-                sourceLanguage: LanguageNames.CSharp,
-                referencedLanguage: LanguageNames.VisualBasic,
-                hideAdvancedMembers: false);
-        }
-
-        [WorkItem(7336, "DevDiv_Projects/Roslyn")]
-        [Fact, Trait(Traits.Feature, Traits.Features.Completion)]
-        public async Task EditorBrowsable_CrossLanguage_CStoVB_Never()
-        {
-            var markup = @"
-class Program
-{
-    void M()
-    {
-        $$
-    }
-}";
-
-            var referencedCode = @"
-<System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)>
-Public Class Goo
-End Class";
-            await VerifyItemInEditorBrowsableContextsAsync(
-                markup: markup,
-                referencedCode: referencedCode,
-                item: "Goo",
-                expectedSymbolsSameSolution: 0,
-                expectedSymbolsMetadataReference: 0,
-                sourceLanguage: LanguageNames.CSharp,
-                referencedLanguage: LanguageNames.VisualBasic,
-                hideAdvancedMembers: false);
-        }
-
+        
         [WorkItem(7336, "DevDiv_Projects/Roslyn")]
         [Fact, Trait(Traits.Feature, Traits.Features.Completion)]
         public async Task EditorBrowsable_TypeLibType_NotHidden()
@@ -6896,57 +6840,7 @@ class C
 
             await VerifyItemExistsAsync(markup, "Console");
         }
-
-        [Fact, Trait(Traits.Feature, Traits.Features.Completion)]
-        public async Task TestIndexedProperty()
-        {
-            var markup = @"class Program
-{
-    void M()
-    {
-            CCC c = new CCC();
-            c.$$
-    }
-}";
-
-            // Note that <COMImport> is required by compiler.  Bug 17013 tracks enabling indexed property for non-COM types.
-            var referencedCode = @"Imports System.Runtime.InteropServices
-
-<ComImport()>
-<GuidAttribute(CCC.ClassId)>
-Public Class CCC
-
-#Region ""COM GUIDs""
-    Public Const ClassId As String = ""9d965fd2-1514-44f6-accd-257ce77c46b0""
-    Public Const InterfaceId As String = ""a9415060-fdf0-47e3-bc80-9c18f7f39cf6""
-    Public Const EventsId As String = ""c6a866a5-5f97-4b53-a5df-3739dc8ff1bb""
-# End Region
-
-            ''' <summary>
-    ''' An index property from VB
-    ''' </summary>
-    ''' <param name=""p1"">p1 is an integer index</param>
-    ''' <returns>A string</returns>
-    Public Property IndexProp(ByVal p1 As Integer, Optional ByVal p2 As Integer = 0) As String
-        Get
-            Return Nothing
-        End Get
-        Set(ByVal value As String)
-
-        End Set
-    End Property
-End Class";
-
-            await VerifyItemInEditorBrowsableContextsAsync(
-                markup: markup,
-                referencedCode: referencedCode,
-                item: "IndexProp",
-                expectedSymbolsSameSolution: 1,
-                expectedSymbolsMetadataReference: 1,
-                sourceLanguage: LanguageNames.CSharp,
-                referencedLanguage: LanguageNames.VisualBasic);
-        }
-
+        
         [WorkItem(546841, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/546841")]
         [Fact, Trait(Traits.Feature, Traits.Features.Completion)]
         public async Task TestDeclarationAmbiguity()

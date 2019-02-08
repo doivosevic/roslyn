@@ -42,56 +42,5 @@ namespace Roslyn.VisualStudio.IntegrationTests.CSharp
             GenerateTypeDialog.ClickCancel();
             GenerateTypeDialog.VerifyClosed();
         }
-
-        [WpfFact, Trait(Traits.Feature, Traits.Features.CodeActionsGenerateType)]
-        public void CSharpToBasic()
-        {
-            var vbProj = new ProjectUtils.Project("VBProj");
-            VisualStudio.SolutionExplorer.AddProject(vbProj, WellKnownProjectTemplates.ClassLibrary, LanguageNames.VisualBasic);
-
-            var project = new ProjectUtils.Project(ProjectName);
-            VisualStudio.SolutionExplorer.OpenFile(project, "Class1.cs");
-
-            SetUpEditor(@"class C
-{
-    void Method() 
-    { 
-        $$A a;    
-    }
-}
-");
-
-            VisualStudio.Editor.Verify.CodeAction("Generate new type...",
-                applyFix: true,
-                blockUntilComplete: false);
-
-            GenerateTypeDialog.VerifyOpen();
-            GenerateTypeDialog.SetAccessibility("public");
-            GenerateTypeDialog.SetKind("interface");
-            GenerateTypeDialog.SetTargetProject("VBProj");
-            GenerateTypeDialog.SetTargetFileToNewName("GenerateTypeTest");
-            GenerateTypeDialog.ClickOK();
-            GenerateTypeDialog.VerifyClosed();
-
-            VisualStudio.SolutionExplorer.OpenFile(vbProj, "GenerateTypeTest.vb");
-            var actualText = VisualStudio.Editor.GetText();
-            Assert.Contains(@"Public Interface A
-End Interface
-", actualText);
-
-            VisualStudio.SolutionExplorer.OpenFile(project, "Class1.cs");
-            actualText = VisualStudio.Editor.GetText();
-            Assert.Contains(@"using VBProj;
-
-class C
-{
-    void Method() 
-    { 
-        A a;    
-    }
-}
-", actualText);
-
-        }
     }
 }

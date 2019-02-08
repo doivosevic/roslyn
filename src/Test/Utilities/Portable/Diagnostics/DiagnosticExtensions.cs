@@ -302,16 +302,14 @@ namespace Microsoft.CodeAnalysis
 
         public static DiagnosticAnalyzer GetCompilerDiagnosticAnalyzer(string languageName)
         {
-            return languageName == LanguageNames.CSharp ?
-                (DiagnosticAnalyzer)new Diagnostics.CSharp.CSharpCompilerDiagnosticAnalyzer() :
-                new Diagnostics.VisualBasic.VisualBasicCompilerDiagnosticAnalyzer();
+            return
+                (DiagnosticAnalyzer)new Diagnostics.CSharp.CSharpCompilerDiagnosticAnalyzer();
         }
 
         public static ImmutableDictionary<string, ImmutableArray<DiagnosticAnalyzer>> GetCompilerDiagnosticAnalyzersMap()
         {
             var builder = ImmutableDictionary.CreateBuilder<string, ImmutableArray<DiagnosticAnalyzer>>();
             builder.Add(LanguageNames.CSharp, ImmutableArray.Create(GetCompilerDiagnosticAnalyzer(LanguageNames.CSharp)));
-            builder.Add(LanguageNames.VisualBasic, ImmutableArray.Create(GetCompilerDiagnosticAnalyzer(LanguageNames.VisualBasic)));
             return builder.ToImmutable();
         }
 
@@ -325,7 +323,6 @@ namespace Microsoft.CodeAnalysis
         {
             var builder = ImmutableDictionary.CreateBuilder<string, ImmutableArray<AnalyzerReference>>();
             builder.Add(LanguageNames.CSharp, ImmutableArray.Create(GetCompilerDiagnosticAnalyzerReference(LanguageNames.CSharp)));
-            builder.Add(LanguageNames.VisualBasic, ImmutableArray.Create(GetCompilerDiagnosticAnalyzerReference(LanguageNames.VisualBasic)));
             return builder.ToImmutable();
         }
 

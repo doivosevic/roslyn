@@ -19,7 +19,6 @@ using Microsoft.CodeAnalysis.Remote;
 using Microsoft.CodeAnalysis.Shared.Options;
 using Microsoft.CodeAnalysis.Test.Utilities;
 using Microsoft.CodeAnalysis.Text;
-using Microsoft.CodeAnalysis.VisualBasic.UseNullPropagation;
 using Microsoft.CodeAnalysis.Workspaces.Diagnostics;
 using Microsoft.VisualStudio.LanguageServices.Remote;
 using Roslyn.Test.Utilities;
@@ -61,36 +60,7 @@ namespace Roslyn.VisualStudio.Next.UnitTests.Remote
                 Assert.Equal(DiagnosticSeverity.Info, diagnostics[0].Severity);
             }
         }
-
-        [Fact, Trait(Traits.Feature, Traits.Features.RemoteHost)]
-        public async Task TestVisualBasicAnalyzerOptions()
-        {
-            var code = @"Class Test
-    Sub Method()
-        Dim b = Nothing
-        Dim a = If(b Is Nothing, Nothing, b.ToString())
-    End Sub
-End Class";
-
-            using (var workspace = CreateWorkspace(LanguageNames.VisualBasic, code))
-            {
-                // set option
-                workspace.Options = workspace.Options.WithChangedOption(CodeStyleOptions.PreferNullPropagation, LanguageNames.VisualBasic, new CodeStyleOption<bool>(false, NotificationOption.Silent));
-
-                var analyzerType = typeof(VisualBasicUseNullPropagationDiagnosticAnalyzer);
-                var analyzerResult = await AnalyzeAsync(workspace, workspace.CurrentSolution.ProjectIds.First(), analyzerType);
-
-                Assert.True(analyzerResult.IsEmpty);
-
-                // set option
-                workspace.Options = workspace.Options.WithChangedOption(CodeStyleOptions.PreferNullPropagation, LanguageNames.VisualBasic, new CodeStyleOption<bool>(true, NotificationOption.Error));
-                analyzerResult = await AnalyzeAsync(workspace, workspace.CurrentSolution.ProjectIds.First(), analyzerType);
-
-                var diagnostics = analyzerResult.SemanticLocals[analyzerResult.DocumentIds.First()];
-                Assert.Equal(IDEDiagnosticIds.UseNullPropagationDiagnosticId, diagnostics[0].Id);
-            }
-        }
-
+        
         [Fact, Trait(Traits.Feature, Traits.Features.RemoteHost)]
         public async Task TestCancellation()
         {
@@ -268,8 +238,7 @@ End Class";
                 TestWorkspace.CreateVisualBasic(code, parseOptions: options, exportProvider: TestHostServices.CreateExportProvider());
 
             workspace.Options = workspace.Options.WithChangedOption(RemoteHostOptions.RemoteHostTest, true)
-                                     .WithChangedOption(ServiceFeatureOnOffOptions.ClosedFileDiagnostic, LanguageNames.CSharp, true)
-                                     .WithChangedOption(ServiceFeatureOnOffOptions.ClosedFileDiagnostic, LanguageNames.VisualBasic, true);
+                                     .WithChangedOption(ServiceFeatureOnOffOptions.ClosedFileDiagnostic, LanguageNames.CSharp, true);
 
             return workspace;
         }

@@ -9,7 +9,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.FlowAnalysis;
 using Microsoft.CodeAnalysis.Operations;
 using Microsoft.CodeAnalysis.PooledObjects;
-using Microsoft.CodeAnalysis.VisualBasic;
+
 using Roslyn.Test.Utilities;
 using Roslyn.Utilities;
 using Xunit;
@@ -668,22 +668,7 @@ namespace Microsoft.CodeAnalysis.Test.Utilities
             var conversion = operation.Conversion;
             var isChecked = operation.IsChecked;
             var isTryCast = operation.IsTryCast;
-
-            switch (operation.Language)
-            {
-                case LanguageNames.CSharp:
-                    CSharp.Conversion csharpConversion = CSharp.CSharpExtensions.GetConversion(operation);
-                    Assert.Throws<ArgumentException>(() => VisualBasic.VisualBasicExtensions.GetConversion(operation));
-                    break;
-                case LanguageNames.VisualBasic:
-                    VisualBasic.Conversion visualBasicConversion = VisualBasic.VisualBasicExtensions.GetConversion(operation);
-                    Assert.Throws<ArgumentException>(() => CSharp.CSharpExtensions.GetConversion(operation));
-                    break;
-                default:
-                    Debug.Fail($"Language {operation.Language} is unknown!");
-                    break;
-            }
-
+            
             Assert.Same(operation.Operand, operation.Children.Single());
         }
 
@@ -965,28 +950,6 @@ namespace Microsoft.CodeAnalysis.Test.Utilities
         public override void VisitCompoundAssignment(ICompoundAssignmentOperation operation)
         {
             Assert.Equal(OperationKind.CompoundAssignment, operation.Kind);
-            var operatorMethod = operation.OperatorMethod;
-            var binaryOperationKind = operation.OperatorKind;
-            var inConversion = operation.InConversion;
-            var outConversion = operation.OutConversion;
-
-            if (operation.Syntax.Language == LanguageNames.CSharp)
-            {
-                Assert.Throws<ArgumentException>("compoundAssignment", () => VisualBasic.VisualBasicExtensions.GetInConversion(operation));
-                Assert.Throws<ArgumentException>("compoundAssignment", () => VisualBasic.VisualBasicExtensions.GetOutConversion(operation));
-                var inConversionInteranl = CSharp.CSharpExtensions.GetInConversion(operation);
-                var outConversionInteranl = CSharp.CSharpExtensions.GetOutConversion(operation);
-            }
-            else
-            {
-                Assert.Throws<ArgumentException>("compoundAssignment", () => CSharp.CSharpExtensions.GetInConversion(operation));
-                Assert.Throws<ArgumentException>("compoundAssignment", () => CSharp.CSharpExtensions.GetOutConversion(operation));
-                var inConversionInternal = VisualBasic.VisualBasicExtensions.GetInConversion(operation);
-                var outConversionInternal = VisualBasic.VisualBasicExtensions.GetOutConversion(operation);
-            }
-
-            var isLifted = operation.IsLifted;
-            var isChecked = operation.IsChecked;
             VisitAssignment(operation);
         }
 

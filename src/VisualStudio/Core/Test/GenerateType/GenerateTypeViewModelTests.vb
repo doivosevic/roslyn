@@ -62,39 +62,6 @@ namespace A
         End Function
 
         <Fact, Trait(Traits.Feature, Traits.Features.CodeActionsGenerateType)>
-        Public Async Function TestGenerateTypeExistingFileVisualBasic() As Task
-            Dim documentContentMarkup = <Text><![CDATA[
-Module Program
-    Sub Main(args As String())
-        Dim x As A.B.Goo$$ = Nothing
-    End Sub
-End Module
-
-Namespace A
-    Namespace B
-    End Namespace
-End Namespace"]]></Text>
-            Dim viewModel = Await GetViewModelAsync(documentContentMarkup, "Visual Basic")
-
-            ' Test the default values
-            Assert.Equal(0, viewModel.AccessSelectIndex)
-            Assert.Equal(0, viewModel.KindSelectIndex)
-            Assert.Equal("Goo", viewModel.TypeName)
-
-            Assert.Equal("Goo.vb", viewModel.FileName)
-
-            Assert.Equal(s_assembly1_Name, viewModel.SelectedProject.Name)
-            Assert.Equal(s_test1_Name + ".vb", viewModel.SelectedDocument.Name)
-
-            Assert.Equal(True, viewModel.IsExistingFile)
-
-            ' Set the Radio to new file
-            viewModel.IsNewFile = True
-            Assert.Equal(True, viewModel.IsNewFile)
-            Assert.Equal(False, viewModel.IsExistingFile)
-        End Function
-
-        <Fact, Trait(Traits.Feature, Traits.Features.CodeActionsGenerateType)>
         Public Async Function TestGenerateTypeNewFileBothLanguage() As Task
             Dim documentContentMarkup = <Text><![CDATA[
 class Program
@@ -329,46 +296,6 @@ class Program
             Assert.Equal("GooAttribute", viewModel.TypeName)
         End Function
 
-        <WorkItem(858815, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/858815")>
-        <Fact, Trait(Traits.Feature, Traits.Features.CodeActionsGenerateType)>
-        Public Async Function TestGenerateTypeAllowClassTypeKindForAttribute_VisualBasic() As Task
-            Dim documentContentMarkup = <Text><![CDATA[
-<Blah$$>
-Class C
-End Class]]></Text>
-            Dim viewModel = Await GetViewModelAsync(documentContentMarkup, LanguageNames.VisualBasic, typeKindvalue:=TypeKindOptions.Attribute, isAttribute:=True)
-
-            ' Check if only class is present
-            Assert.Equal(1, viewModel.KindList.Count)
-            Assert.Equal("Class", viewModel.KindList(0))
-
-            Assert.Equal("BlahAttribute", viewModel.TypeName)
-        End Function
-
-        <WorkItem(861544, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/861544")>
-        <Fact, Trait(Traits.Feature, Traits.Features.CodeActionsGenerateType)>
-        Public Async Function TestGenerateTypeWithCapsAttribute_VisualBasic() As Task
-            Dim documentContentMarkup = <Text><![CDATA[
-<GooAttribute$$>
-Public class CCC
-End class]]></Text>
-            Dim viewModel = Await GetViewModelAsync(documentContentMarkup, LanguageNames.VisualBasic, typeKindvalue:=TypeKindOptions.Class, isPublicOnlyAccessibility:=False, isAttribute:=True)
-
-            Assert.Equal("GooAttribute", viewModel.TypeName)
-        End Function
-
-        <WorkItem(861544, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/861544")>
-        <Fact, Trait(Traits.Feature, Traits.Features.CodeActionsGenerateType)>
-        Public Async Function TestGenerateTypeWithoutCapsAttribute_VisualBasic() As Task
-            Dim documentContentMarkup = <Text><![CDATA[
-<Gooattribute$$>
-Public class CCC
-End class]]></Text>
-            Dim viewModel = Await GetViewModelAsync(documentContentMarkup, LanguageNames.VisualBasic, typeKindvalue:=TypeKindOptions.Class, isPublicOnlyAccessibility:=False, isAttribute:=True)
-
-            Assert.Equal("GooattributeAttribute", viewModel.TypeName)
-        End Function
-
         <WorkItem(861544, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/861544")>
         <Fact, Trait(Traits.Feature, Traits.Features.CodeActionsGenerateType)>
         Public Async Function TestGenerateTypeWithCapsAttribute_CSharp() As Task
@@ -429,58 +356,6 @@ public interface CCC : $$DDD
 
             Assert.Equal(1, viewModel.AccessList.Count)
             Assert.Equal("public", viewModel.AccessList(0))
-        End Function
-
-        <WorkItem(861462, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/861462")>
-        <Fact, Trait(Traits.Feature, Traits.Features.CodeActionsGenerateType)>
-        Public Async Function TestGenerateTypeCheckOnlyPublic_VisualBasic_1() As Task
-            Dim documentContentMarkup = <Text><![CDATA[
-Public Class C
-    Implements $$D
-End Class]]></Text>
-            Dim viewModel = Await GetViewModelAsync(documentContentMarkup, LanguageNames.VisualBasic, typeKindvalue:=TypeKindOptions.Interface, isPublicOnlyAccessibility:=False)
-
-            ' Check if only Interface is present
-            Assert.Equal(1, viewModel.KindList.Count)
-            Assert.Equal("Interface", viewModel.KindList(0))
-
-            Assert.Equal(3, viewModel.AccessList.Count)
-        End Function
-
-        <WorkItem(861462, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/861462")>
-        <Fact, Trait(Traits.Feature, Traits.Features.CodeActionsGenerateType)>
-        Public Async Function TestGenerateTypeCheckOnlyPublic_VisualBasic_2() As Task
-            Dim documentContentMarkup = <Text><![CDATA[
-Public Class CC
-    Inherits $$DD
-End Class]]></Text>
-            Dim viewModel = Await GetViewModelAsync(documentContentMarkup, LanguageNames.VisualBasic, typeKindvalue:=TypeKindOptions.Class, isPublicOnlyAccessibility:=True)
-
-            ' Check if only class is present
-            Assert.Equal(1, viewModel.KindList.Count)
-            Assert.Equal("Class", viewModel.KindList(0))
-
-            ' Check if only Public is present
-            Assert.Equal(1, viewModel.AccessList.Count)
-            Assert.Equal("Public", viewModel.AccessList(0))
-        End Function
-
-        <WorkItem(861462, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/861462")>
-        <Fact, Trait(Traits.Feature, Traits.Features.CodeActionsGenerateType)>
-        Public Async Function TestGenerateTypeCheckOnlyPublic_VisualBasic_3() As Task
-            Dim documentContentMarkup = <Text><![CDATA[
-Public Interface CCC
-    Inherits $$DDD
-End Interface]]></Text>
-            Dim viewModel = Await GetViewModelAsync(documentContentMarkup, LanguageNames.VisualBasic, typeKindvalue:=TypeKindOptions.Interface, isPublicOnlyAccessibility:=True)
-
-            ' Check if only class is present
-            Assert.Equal(1, viewModel.KindList.Count)
-            Assert.Equal("Interface", viewModel.KindList(0))
-
-            ' Check if only Public is present
-            Assert.Equal(1, viewModel.AccessList.Count)
-            Assert.Equal("Public", viewModel.AccessList(0))
         End Function
 
         <WorkItem(861362, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/861362")>

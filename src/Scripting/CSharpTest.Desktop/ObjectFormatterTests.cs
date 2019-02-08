@@ -8,7 +8,6 @@ using System.Reflection;
 using Microsoft.CodeAnalysis.Scripting.Hosting;
 using Microsoft.CodeAnalysis.Scripting.Hosting.UnitTests;
 using Xunit;
-using VB = Microsoft.CodeAnalysis.VisualBasic;
 
 namespace Microsoft.CodeAnalysis.CSharp.Scripting.Hosting.UnitTests
 {
@@ -80,50 +79,6 @@ namespace Microsoft.CodeAnalysis.CSharp.Scripting.Hosting.UnitTests
 
             str = s_formatter.FormatObject(obj, SingleLineOptions);
             Assert.Equal("SortedList(1) { { int[1] { 3 }, int[1] { 4 } } }", str);
-        }
-
-        // TODO: move to portable
-        [Fact]
-        public void VBBackingFields_DebuggerBrowsable()
-        {
-            string source = @"
-Imports System
-
-Class C
-   Public WithEvents WE As C
-   Public Event E As Action
-   Public Property A As Integer
-End Class
-";
-            var compilation = VB.VisualBasicCompilation.Create(
-                "goo",
-                new[] { VB.VisualBasicSyntaxTree.ParseText(source) },
-                new[] { MetadataReference.CreateFromAssemblyInternal(typeof(object).GetTypeInfo().Assembly) },
-                new VB.VisualBasicCompilationOptions(OutputKind.DynamicallyLinkedLibrary, optimizationLevel: OptimizationLevel.Debug));
-
-            Assembly a;
-            using (var stream = new MemoryStream())
-            {
-                var result = compilation.Emit(stream);
-                a = Assembly.Load(stream.ToArray());
-            }
-
-            var c = a.GetType("C");
-            var obj = Activator.CreateInstance(c);
-
-            var str = s_formatter.FormatObject(obj, SeparateLinesOptions);
-            AssertMembers(str, "C",
-                "A: 0",
-                "WE: null"
-            );
-
-            var attrsA = c.GetField("_A", BindingFlags.Instance | BindingFlags.NonPublic).GetCustomAttributes(typeof(DebuggerBrowsableAttribute), true);
-            var attrsWE = c.GetField("_WE", BindingFlags.Instance | BindingFlags.NonPublic).GetCustomAttributes(typeof(DebuggerBrowsableAttribute), true);
-            var attrsE = c.GetField("EEvent", BindingFlags.Instance | BindingFlags.NonPublic).GetCustomAttributes(typeof(DebuggerBrowsableAttribute), true);
-
-            Assert.Equal(1, attrsA.Length);
-            Assert.Equal(1, attrsWE.Length);
-            Assert.Equal(1, attrsE.Length);
         }
     }
 }

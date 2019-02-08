@@ -116,11 +116,6 @@ public static class TestReferences
         () => AssemblyMetadata.CreateFromImage(TestResources.NetFX.v2_0_50727.System).GetReference(display: "System.dll"),
         LazyThreadSafetyMode.PublicationOnly);
             public static PortableExecutableReference System => s_system.Value;
-
-            private static readonly Lazy<PortableExecutableReference> s_microsoft_VisualBasic = new Lazy<PortableExecutableReference>(
-        () => AssemblyMetadata.CreateFromImage(TestResources.NetFX.v2_0_50727.Microsoft_VisualBasic).GetReference(display: "Microsoft.VisualBasic.dll"),
-        LazyThreadSafetyMode.PublicationOnly);
-            public static PortableExecutableReference Microsoft_VisualBasic => s_microsoft_VisualBasic.Value;
         }
 
         public static class v3_5_30729
@@ -180,12 +175,7 @@ public static class TestReferences
         () => AssemblyMetadata.CreateFromImage(TestResources.NetFX.v4_0_30319.Microsoft_CSharp).GetReference(filePath: @"R:\v4_0_30319\Microsoft.CSharp.dll"),
         LazyThreadSafetyMode.PublicationOnly);
             public static PortableExecutableReference Microsoft_CSharp => s_microsoft_CSharp.Value;
-
-            private static readonly Lazy<PortableExecutableReference> s_microsoft_VisualBasic = new Lazy<PortableExecutableReference>(
-        () => AssemblyMetadata.CreateFromImage(TestResources.NetFX.v4_0_30319.Microsoft_VisualBasic).GetReference(filePath: @"R:\v4_0_30319\Microsoft.VisualBasic.dll"),
-        LazyThreadSafetyMode.PublicationOnly);
-            public static PortableExecutableReference Microsoft_VisualBasic => s_microsoft_VisualBasic.Value;
-
+            
             private static readonly Lazy<PortableExecutableReference> s_microsoft_JScript = new Lazy<PortableExecutableReference>(
         () => AssemblyMetadata.CreateFromImage(TestResources.NetFX.v4_0_30319.Microsoft_JScript).GetReference(display: "Microsoft.JScript.dll"),
         LazyThreadSafetyMode.PublicationOnly);
@@ -276,11 +266,6 @@ public static class TestReferences
         () => AssemblyMetadata.CreateFromImage(TestResources.NetFX.netstandard20.System_Runtime_CompilerServices_Unsafe).GetReference(display: "System.Runtime.CompilerServices.Unsafe.dll (netstandard 2.0)"),
         LazyThreadSafetyMode.PublicationOnly);
         public static PortableExecutableReference UnsafeRef => s_system_Runtime_CompilerServices_Unsafe.Value;
-
-        private static readonly Lazy<PortableExecutableReference> s_microsoftVisualBasic = new Lazy<PortableExecutableReference>(
-        () => AssemblyMetadata.CreateFromImage(TestResources.NetFX.netstandard20.Microsoft_VisualBasic).GetReference(display: "Microsoft.VisualBasic.dll (netstandard 2.0 ref)"),
-        LazyThreadSafetyMode.PublicationOnly);
-        public static PortableExecutableReference MicrosoftVisualBasicRef => s_microsoftVisualBasic.Value;
     }
 
     public static class Net461

@@ -69,12 +69,6 @@ namespace Microsoft.VisualStudio.IntegrationTest.Utilities.OutOfProcess
                 feature: "ServiceFeaturesOnOff",
                 language: LanguageNames.CSharp,
                 value: value ? "true" : "false");
-
-            SetPerLanguageOption(
-                optionName: "Closed File Diagnostic",
-                feature: "ServiceFeaturesOnOff",
-                language: LanguageNames.VisualBasic,
-                value: value ? "true" : "false");
         }
 
         public void SetFeatureOption(string feature, string optionName, string language, string valueString)

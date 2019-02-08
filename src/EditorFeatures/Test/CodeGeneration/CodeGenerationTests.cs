@@ -17,7 +17,6 @@ using Microsoft.CodeAnalysis.Text;
 using Roslyn.Test.Utilities;
 using Xunit;
 using CS = Microsoft.CodeAnalysis.CSharp;
-using VB = Microsoft.CodeAnalysis.VisualBasic;
 
 namespace Microsoft.CodeAnalysis.Editor.UnitTests.CodeGeneration
 {
@@ -668,8 +667,6 @@ namespace Microsoft.CodeAnalysis.Editor.UnitTests.CodeGeneration
 
         internal static IEnumerable<SyntaxToken> CreateModifierTokens(Editing.DeclarationModifiers modifiers, string language)
         {
-            if (language == LanguageNames.CSharp)
-            {
                 if (modifiers.IsAbstract)
                 {
                     yield return CS.SyntaxFactory.Token(CS.SyntaxKind.AbstractKeyword);
@@ -724,59 +721,6 @@ namespace Microsoft.CodeAnalysis.Editor.UnitTests.CodeGeneration
                 {
                     yield return CS.SyntaxFactory.Token(CS.SyntaxKind.VirtualKeyword);
                 }
-            }
-            else
-            {
-                if (modifiers.IsAbstract)
-                {
-                    yield return VB.SyntaxFactory.Token(VB.SyntaxKind.MustOverrideKeyword);
-                }
-
-                if (modifiers.IsAsync)
-                {
-                    yield return VB.SyntaxFactory.Token(VB.SyntaxKind.AsyncKeyword);
-                }
-
-                if (modifiers.IsConst)
-                {
-                    yield return VB.SyntaxFactory.Token(VB.SyntaxKind.ConstKeyword);
-                }
-
-                if (modifiers.IsNew)
-                {
-                    yield return VB.SyntaxFactory.Token(VB.SyntaxKind.NewKeyword);
-                }
-
-                if (modifiers.IsOverride)
-                {
-                    yield return VB.SyntaxFactory.Token(VB.SyntaxKind.OverridesKeyword);
-                }
-
-                if (modifiers.IsPartial)
-                {
-                    yield return VB.SyntaxFactory.Token(VB.SyntaxKind.PartialKeyword);
-                }
-
-                if (modifiers.IsReadOnly)
-                {
-                    yield return VB.SyntaxFactory.Token(VB.SyntaxKind.ReadOnlyKeyword);
-                }
-
-                if (modifiers.IsSealed)
-                {
-                    yield return VB.SyntaxFactory.Token(VB.SyntaxKind.NotInheritableKeyword);
-                }
-
-                if (modifiers.IsStatic)
-                {
-                    yield return VB.SyntaxFactory.Token(VB.SyntaxKind.StaticKeyword);
-                }
-
-                if (modifiers.IsVirtual)
-                {
-                    yield return VB.SyntaxFactory.Token(VB.SyntaxKind.OverridableKeyword);
-                }
-            }
         }
 
         internal class TestContext : IDisposable
@@ -804,7 +748,7 @@ namespace Microsoft.CodeAnalysis.Editor.UnitTests.CodeGeneration
             {
                 _expected = expected.NormalizeLineEndings();
                 _language = language;
-                this.IsVisualBasic = _language == LanguageNames.VisualBasic;
+                this.IsVisualBasic = false;
                 _ignoreResult = ignoreResult;
                 Workspace = workspace;
                 this.Document = Workspace.CurrentSolution.Projects.Single().Documents.Single();
@@ -816,7 +760,7 @@ namespace Microsoft.CodeAnalysis.Editor.UnitTests.CodeGeneration
             public static async Task<TestContext> CreateAsync(string initial, string expected, string forceLanguage = null, bool ignoreResult = false)
             {
                 var language = forceLanguage != null ? forceLanguage : GetLanguage(initial);
-                var isVisualBasic = language == LanguageNames.VisualBasic;
+                var isVisualBasic = false;
                 var workspace = CreateWorkspaceFromFile(initial.NormalizeLineEndings(), isVisualBasic, null, null);
                 var semanticModel = await workspace.CurrentSolution.Projects.Single().Documents.Single().GetSemanticModelAsync();
 
@@ -877,14 +821,7 @@ namespace Microsoft.CodeAnalysis.Editor.UnitTests.CodeGeneration
                 var parts = statements.Split(new[] { delimiter }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (var p in parts)
                 {
-                    if (IsVisualBasic)
-                    {
-                        list.Add(VB.SyntaxFactory.ParseExecutableStatement(p));
-                    }
-                    else
-                    {
-                        list.Add(CS.SyntaxFactory.ParseStatement(p + delimiter));
-                    }
+                    list.Add(CS.SyntaxFactory.ParseStatement(p + delimiter));
                 }
 
                 return list.ToImmutableAndFree();
@@ -912,28 +849,12 @@ namespace Microsoft.CodeAnalysis.Editor.UnitTests.CodeGeneration
 
             public static string GetLanguage(string input)
             {
-                return ContainsVisualBasicKeywords(input)
-                    ? LanguageNames.VisualBasic : LanguageNames.CSharp;
+                return LanguageNames.CSharp;
             }
-
-            private static bool ContainsVisualBasicKeywords(string input)
-            {
-                return
-                    input.Contains("Module") ||
-                    input.Contains("Class") ||
-                    input.Contains("Structure") ||
-                    input.Contains("Namespace") ||
-                    input.Contains("Sub") ||
-                    input.Contains("Function") ||
-                    input.Contains("Dim") ||
-                    input.Contains("Enum");
-            }
-
+            
             private static TestWorkspace CreateWorkspaceFromFile(string file, bool isVisualBasic, ParseOptions parseOptions, CompilationOptions compilationOptions)
             {
-                return isVisualBasic ?
-                    TestWorkspace.CreateVisualBasic(file, (VB.VisualBasicParseOptions)parseOptions, (VB.VisualBasicCompilationOptions)compilationOptions) :
-                    TestWorkspace.CreateCSharp(file, (CS.CSharpParseOptions)parseOptions, (CS.CSharpCompilationOptions)compilationOptions);
+                return TestWorkspace.CreateCSharp(file, (CS.CSharpParseOptions)parseOptions, (CS.CSharpCompilationOptions)compilationOptions);
             }
         }
     }

@@ -4253,54 +4253,7 @@ class B
     }
 }");
         }
-
-        [WorkItem(546849, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/546849")]
-        [Fact, Trait(Traits.Feature, Traits.Features.QuickInfo)]
-        public async Task TestIndexedProperty()
-        {
-            var markup = @"class Program
-{
-    void M()
-    {
-            CCC c = new CCC();
-            c.Index$$Prop[0] = ""s"";
-    }
-}";
-
-            // Note that <COMImport> is required by compiler.  Bug 17013 tracks enabling indexed property for non-COM types.
-            var referencedCode = @"Imports System.Runtime.InteropServices
-<ComImport()>
-<GuidAttribute(CCC.ClassId)>
-Public Class CCC
-
-#Region ""COM GUIDs""
-    Public Const ClassId As String = ""9d965fd2-1514-44f6-accd-257ce77c46b0""
-    Public Const InterfaceId As String = ""a9415060-fdf0-47e3-bc80-9c18f7f39cf6""
-    Public Const EventsId As String = ""c6a866a5-5f97-4b53-a5df-3739dc8ff1bb""
-# End Region
-
-    ''' <summary>
-    ''' An index property from VB
-    ''' </summary>
-    ''' <param name=""p1"">p1 is an integer index</param>
-    ''' <returns>A string</returns>
-    Public Property IndexProp(ByVal p1 As Integer, Optional ByVal p2 As Integer = 0) As String
-        Get
-            Return Nothing
-        End Get
-        Set(ByVal value As String)
-
-        End Set
-    End Property
-End Class";
-
-            await TestWithReferenceAsync(sourceCode: markup,
-                referencedCode: referencedCode,
-                sourceLanguage: LanguageNames.CSharp,
-                referencedLanguage: LanguageNames.VisualBasic,
-                expectedResults: MainDescription("string CCC.IndexProp[int p1, [int p2 = 0]] { get; set; }"));
-        }
-
+        
         [WorkItem(546918, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/546918")]
         [Fact, Trait(Traits.Feature, Traits.Features.QuickInfo)]
         public async Task TestUnconstructedGeneric()

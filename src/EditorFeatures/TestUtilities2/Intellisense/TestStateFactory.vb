@@ -17,17 +17,6 @@ Namespace Microsoft.CodeAnalysis.Editor.UnitTests.IntelliSense
             Throw New ArgumentException(completionImplementation.ToString())
         End Function
 
-        Public Shared Function CreateVisualBasicTestState(completionImplementation As CompletionImplementation,
-                                                           documentElement As XElement,
-                                                           Optional extraCompletionProviders As CompletionProvider() = Nothing,
-                                                           Optional extraExportedTypes As List(Of Type) = Nothing) As ITestState
-            If completionImplementation = CompletionImplementation.Legacy Then
-                Return TestState.CreateVisualBasicTestState(documentElement, extraCompletionProviders, extraExportedTypes)
-            End If
-
-            Throw New ArgumentException(completionImplementation.ToString())
-        End Function
-
         Public Shared Function CreateTestStateFromWorkspace(completionImplementation As CompletionImplementation,
                                                             workspaceElement As XElement,
                                                             Optional extraCompletionProviders As CompletionProvider() = Nothing,

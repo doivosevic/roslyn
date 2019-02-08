@@ -20,7 +20,6 @@ Imports Microsoft.VisualStudio.Language.Intellisense
 Imports Microsoft.VisualStudio.LanguageServices.CSharp.LanguageService
 Imports Microsoft.VisualStudio.LanguageServices.Implementation.DebuggerIntelliSense
 Imports Microsoft.VisualStudio.LanguageServices.Implementation.Extensions
-Imports Microsoft.VisualStudio.LanguageServices.VisualBasic
 Imports Microsoft.VisualStudio.Text
 Imports Microsoft.VisualStudio.Text.BraceCompletion
 Imports Microsoft.VisualStudio.Text.Editor
@@ -142,17 +141,6 @@ Namespace Microsoft.VisualStudio.LanguageServices.UnitTests.DebuggerIntelliSense
                 Return False
             End Get
         End Property
-
-        Public Shared Function CreateVisualBasicTestState(
-                documentElement As XElement,
-                isImmediateWindow As Boolean,
-                Optional extraCompletionProviders As CompletionProvider() = Nothing,
-                Optional extraSignatureHelpProviders As ISignatureHelpProvider() = Nothing) As TestState
-
-            Return New TestState(documentElement,
-                CreateLazyProviders(extraCompletionProviders, LanguageNames.VisualBasic, roles:=Nothing),
-                isImmediateWindow)
-        End Function
 
         Public Shared Function CreateCSharpTestState(
                 workspaceElement As XElement,

@@ -106,44 +106,7 @@ namespace MyNamespace
                 hints.Do(v => v.Close());
             }
         }
-
-        [WpfFact, Trait(Traits.Feature, Traits.Features.Outlining)]
-        public async Task VisualBasicOutliningTagger()
-        {
-            var code = @"Imports System
-Namespace MyNamespace
-#Region ""MyRegion""
-    Module MyClass
-        Sub Main(args As String())
-            Dim x As Integer = 5
-        End Sub
-    End Module
-#End Region
-End Namespace";
-
-            using (var workspace = TestWorkspace.CreateVisualBasic(code))
-            {
-                var tags = await GetTagsFromWorkspaceAsync(workspace);
-
-                // ensure all 4 outlining region tags were found
-                Assert.Equal(4, tags.Count);
-
-                // ensure only the method outlining region is marked as an implementation
-                Assert.False(tags[0].IsImplementation);
-                Assert.False(tags[1].IsImplementation);
-                Assert.False(tags[2].IsImplementation);
-                Assert.True(tags[3].IsImplementation);
-
-                // verify line counts
-                var hints = tags.Select(x => x.CollapsedHintForm).Cast<ViewHostingControl>().Select(vhc => vhc.TextView_TestOnly).ToList();
-                Assert.Equal(9, hints[0].TextSnapshot.LineCount); // namespace
-                Assert.Equal(7, hints[1].TextSnapshot.LineCount); // region
-                Assert.Equal(5, hints[2].TextSnapshot.LineCount); // class
-                Assert.Equal(3, hints[3].TextSnapshot.LineCount); // method
-                hints.Do(v => v.Close());
-            }
-        }
-
+        
         [WpfFact, Trait(Traits.Feature, Traits.Features.Outlining)]
         public async Task OutliningTaggerTooltipText()
         {

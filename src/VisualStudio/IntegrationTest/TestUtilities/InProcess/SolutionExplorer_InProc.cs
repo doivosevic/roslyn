@@ -27,7 +27,6 @@ namespace Microsoft.VisualStudio.IntegrationTest.Utilities.InProcess
         private string _fileName;
 
         private static readonly IDictionary<string, string> _csharpProjectTemplates = InitializeCSharpProjectTemplates();
-        private static readonly IDictionary<string, string> _visualBasicProjectTemplates = InitializeVisualBasicProjectTemplates();
 
         private SolutionExplorer_InProc() { }
 
@@ -48,22 +47,7 @@ namespace Microsoft.VisualStudio.IntegrationTest.Utilities.InProcess
                 [WellKnownProjectTemplates.WebApplication] = "WebApplicationProject40"
             };
         }
-
-        private static IDictionary<string, string> InitializeVisualBasicProjectTemplates()
-        {
-            var localeID = GetDTE().LocaleID;
-
-            return new Dictionary<string, string>
-            {
-                [WellKnownProjectTemplates.ClassLibrary] = $@"Windows\{localeID}\ClassLibrary.zip",
-                [WellKnownProjectTemplates.ConsoleApplication] = "Microsoft.VisualBasic.Windows.ConsoleApplication",
-                [WellKnownProjectTemplates.Website] = "EmptyWeb.zip",
-                [WellKnownProjectTemplates.WinFormsApplication] = "WindowsApplication.zip",
-                [WellKnownProjectTemplates.WpfApplication] = "WpfApplication.zip",
-                [WellKnownProjectTemplates.WebApplication] = "WebApplicationProject40"
-            };
-        }
-
+        
         public void AddMetadataReference(string assemblyName, string projectName)
         {
             var project = GetProject(projectName);
@@ -300,8 +284,6 @@ namespace Microsoft.VisualStudio.IntegrationTest.Utilities.InProcess
             {
                 case LanguageNames.CSharp:
                     return CSharp;
-                case LanguageNames.VisualBasic:
-                    return VisualBasic;
                 default:
                     throw new ArgumentException($"{languageName} is not supported.", nameof(languageName));
             }

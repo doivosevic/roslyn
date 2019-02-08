@@ -5,9 +5,6 @@ using System.Collections.Generic;
 using Microsoft.CodeAnalysis.CSharp.Symbols;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
-using Microsoft.CodeAnalysis.VisualBasic;
-using Microsoft.CodeAnalysis.VisualBasic.Symbols;
-using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using Roslyn.Test.Utilities;
 using Microsoft.CodeAnalysis.Test.Utilities;
 
@@ -26,15 +23,15 @@ namespace Microsoft.CodeAnalysis.CSharp.UnitTests
             return MetadataReference.CreateFromImage(verifier.EmittedAssemblyData);
         }
 
-        private static VisualBasicCompilation CreateCompilationWithMscorlib(string source, string assemblyName, IEnumerable<MetadataReference> references)
+        private static CSharpCompilation CreateCompilationWithMscorlib(string source, string assemblyName, IEnumerable<MetadataReference> references)
         {
             if (assemblyName == null)
             {
                 assemblyName = TestBase.GetUniqueName();
             }
-            var tree = VisualBasicSyntaxTree.ParseText(source);
-            var options = new VisualBasicCompilationOptions(OutputKind.DynamicallyLinkedLibrary, optimizationLevel: OptimizationLevel.Release);
-            return VisualBasicCompilation.Create(assemblyName, new[] { tree }, references, options);
+            var tree = CSharpSyntaxTree.ParseText(source);
+            var options = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, optimizationLevel: OptimizationLevel.Release);
+            return CSharpCompilation.Create(assemblyName, new[] { tree }, references, options);
         }
 
         private static BasicTestBase s_instance;

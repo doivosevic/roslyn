@@ -117,23 +117,6 @@ Namespace Microsoft.CodeAnalysis.Editor.UnitTests.IntelliSense
             Return result
         End Function
 
-        Friend Shared Function CreateVisualBasicTestState(
-                documentElement As XElement,
-                Optional extraCompletionProviders As CompletionProvider() = Nothing,
-                Optional extraExportedTypes As List(Of Type) = Nothing) As TestState
-            Return New TestState(
-                <Workspace>
-                    <Project Language="Visual Basic" CommonReferences="true">
-                        <Document>
-                            <%= documentElement.Value %>
-                        </Document>
-                    </Project>
-                </Workspace>,
-                CreateLazyProviders(extraCompletionProviders, LanguageNames.VisualBasic, roles:=Nothing),
-                excludedTypes:=Nothing,
-                extraExportedTypes)
-        End Function
-
         Friend Shared Function CreateCSharpTestState(
                 documentElement As XElement,
                 Optional extraCompletionProviders As CompletionProvider() = Nothing,
@@ -162,7 +145,7 @@ Namespace Microsoft.CodeAnalysis.Editor.UnitTests.IntelliSense
                 Optional workspaceKind As String = Nothing) As TestState
             Return New TestState(
                 workspaceElement,
-                CreateLazyProviders(extraCompletionProviders, LanguageNames.VisualBasic, roles:=Nothing),
+                CreateLazyProviders(extraCompletionProviders, LanguageNames.CSharp, roles:=Nothing),
                 excludedTypes:=Nothing,
                 extraExportedTypes,
                 workspaceKind:=workspaceKind)

@@ -209,10 +209,6 @@ namespace Microsoft.CodeAnalysis.Test.Utilities
                 {
                     // Workaround for https://github.com/dotnet/roslyn/issues/11903 - skip the IOperation for EndBlockStatement.
                     ImmutableArray<SyntaxNode> executableCodeBlocks = declaration.ExecutableCodeBlocks;
-                    if (declaration.DeclaredSymbol.Kind == SymbolKind.Method && compilation.Language == LanguageNames.VisualBasic)
-                    {
-                        executableCodeBlocks = executableCodeBlocks.RemoveAt(executableCodeBlocks.Length - 1);
-                    }
 
                     foreach (SyntaxNode executableCodeBlock in executableCodeBlocks)
                     {

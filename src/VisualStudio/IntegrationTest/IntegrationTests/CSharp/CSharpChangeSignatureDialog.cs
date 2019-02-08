@@ -122,56 +122,5 @@ class C
     }
 }", actualText);
         }
-
-        [WpfFact, Trait(Traits.Feature, Traits.Features.ChangeSignature)]
-        public void VerifyCrossLanguageGlobalUndo()
-        {
-            SetUpEditor(@"using VBProject;
-
-class Program
-{
-    static void Main(string[] args)
-    {
-        VBClass vb = new VBClass();
-        vb.Method$$(1, y: ""hello"");
-        vb.Method(2, ""world"");
-    }
-}");
-
-            var vbProject = new ProjectUtils.Project("VBProject");
-            var vbProjectReference = new ProjectUtils.ProjectReference(vbProject.Name);
-            var project = new ProjectUtils.Project(ProjectName);
-            VisualStudio.SolutionExplorer.AddProject(vbProject, WellKnownProjectTemplates.ClassLibrary, LanguageNames.VisualBasic);
-            VisualStudio.Editor.SetText(@"
-Public Class VBClass
-    Public Sub Method(x As Integer, y As String)
-    End Sub
-End Class");
-
-            VisualStudio.SolutionExplorer.SaveAll();
-            VisualStudio.SolutionExplorer.AddProjectReference(fromProjectName: project, toProjectName: vbProjectReference);
-            VisualStudio.SolutionExplorer.OpenFile(project, "Class1.cs");
-
-            ChangeSignatureDialog.Invoke();
-            ChangeSignatureDialog.VerifyOpen();
-            ChangeSignatureDialog.SelectParameter("String y");
-            ChangeSignatureDialog.ClickUpButton();
-            ChangeSignatureDialog.ClickOK();
-            ChangeSignatureDialog.VerifyClosed();
-            var actualText = VisualStudio.Editor.GetText();
-            Assert.Contains(@"vb.Method(y: ""hello"", x: 1);", actualText);
-
-            VisualStudio.SolutionExplorer.OpenFile(vbProject, "Class1.vb");
-            actualText = VisualStudio.Editor.GetText();
-            Assert.Contains(@"Public Sub Method(y As String, x As Integer)", actualText);
-
-            VisualStudio.Editor.Undo();
-            actualText = VisualStudio.Editor.GetText();
-            Assert.Contains(@"Public Sub Method(x As Integer, y As String)", actualText);
-
-            VisualStudio.SolutionExplorer.OpenFile(project, "Class1.cs");
-            actualText = VisualStudio.Editor.GetText();
-            Assert.Contains(@"vb.Method(2, ""world"");", actualText);
-        }
     }
 }

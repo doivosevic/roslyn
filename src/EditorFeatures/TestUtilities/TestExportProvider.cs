@@ -54,41 +54,23 @@ namespace Microsoft.CodeAnalysis.Editor.UnitTests
             {
                 // ROSLYN
                 typeof(CodeAnalysis.CSharp.IntroduceVariable.CSharpIntroduceVariableService), // Ensures that CSharpFeatures is included in the composition
-                typeof(CodeAnalysis.VisualBasic.IntroduceVariable.VisualBasicIntroduceVariableService), // Ensures that BasicFeatures is included in the composition
                 typeof(CSharp.ContentType.ContentTypeDefinitions), // CSharp Content Type
-                typeof(VisualBasic.ContentType.ContentTypeDefinitions), // VB Content Type
-                typeof(VisualBasic.Formatting.Indentation.VisualBasicIndentationService),
                 typeof(CSharp.Formatting.Indentation.CSharpIndentationService),
                 typeof(CodeAnalysis.CSharp.CSharpCompilationFactoryService),
-                typeof(CodeAnalysis.VisualBasic.VisualBasicCompilationFactoryService),
                 typeof(CodeAnalysis.CSharp.CSharpSyntaxTreeFactoryServiceFactory), // CSharpServicesCore
-                typeof(CodeAnalysis.VisualBasic.VisualBasicSyntaxTreeFactoryServiceFactory), // BasicServicesCore
                 typeof(CodeAnalysis.CSharp.CodeGeneration.CSharpCodeGenerationServiceFactory),
-                typeof(CodeAnalysis.VisualBasic.CodeGeneration.VisualBasicCodeGenerationServiceFactory),
                 typeof(CodeAnalysis.CSharp.CSharpSyntaxFactsServiceFactory),
-                typeof(CodeAnalysis.VisualBasic.VisualBasicSyntaxFactsServiceFactory),
                 typeof(CodeAnalysis.CSharp.FindSymbols.CSharpDeclaredSymbolInfoFactoryService),
-                typeof(CodeAnalysis.VisualBasic.FindSymbols.VisualBasicDeclaredSymbolInfoFactoryService),
                 typeof(CodeAnalysis.CSharp.CSharpSymbolDeclarationService),
-                typeof(CodeAnalysis.VisualBasic.VisualBasicSymbolDeclarationService),
                 typeof(CodeAnalysis.CSharp.Formatting.CSharpFormattingService),
-                typeof(CodeAnalysis.VisualBasic.Formatting.VisualBasicFormattingService),
                 typeof(CSharp.LanguageServices.CSharpSymbolDisplayServiceFactory),
                 typeof(CSharp.Interactive.CSharpInteractiveEvaluator),
-                typeof(VisualBasic.LanguageServices.VisualBasicSymbolDisplayServiceFactory),
-                typeof(VisualBasic.Interactive.VisualBasicInteractiveEvaluator),
                 typeof(CodeAnalysis.CSharp.Simplification.CSharpSimplificationService),
-                typeof(CodeAnalysis.VisualBasic.Simplification.VisualBasicSimplificationService),
                 typeof(CodeAnalysis.CSharp.Rename.CSharpRenameConflictLanguageService),
-                typeof(CodeAnalysis.VisualBasic.Rename.VisualBasicRenameRewriterLanguageServiceFactory),
                 typeof(CodeAnalysis.CSharp.CSharpSemanticFactsServiceFactory),
-                typeof(CodeAnalysis.VisualBasic.VisualBasicSemanticFactsServiceFactory),
                 typeof(CodeAnalysis.CSharp.CodeGeneration.CSharpSyntaxGenerator),
-                typeof(CodeAnalysis.VisualBasic.CodeGeneration.VisualBasicSyntaxGenerator),
                 typeof(CSharp.LanguageServices.CSharpContentTypeLanguageService),
-                typeof(VisualBasic.LanguageServices.VisualBasicContentTypeLanguageService),
                 typeof(CodeAnalysis.CSharp.Execution.CSharpOptionsSerializationService),
-                typeof(CodeAnalysis.VisualBasic.Execution.VisualBasicOptionsSerializationService),
                 typeof(CodeAnalysis.Execution.DesktopReferenceSerializationServiceFactory),
                 typeof(CodeAnalysis.Execution.SerializerServiceFactory),
                 typeof(CodeAnalysis.Shared.TestHooks.AsynchronousOperationListenerProvider),
@@ -102,15 +84,9 @@ namespace Microsoft.CodeAnalysis.Editor.UnitTests
                 .Concat(DesktopTestHelpers.GetAllTypesImplementingGivenInterface(
                     typeof(CodeAnalysis.CSharp.Formatting.DefaultOperationProvider).Assembly, typeof(ISyntaxFormattingService)))
                 .Concat(DesktopTestHelpers.GetAllTypesImplementingGivenInterface(
-                    typeof(CodeAnalysis.VisualBasic.Formatting.DefaultOperationProvider).Assembly, typeof(ISyntaxFormattingService)))
-                .Concat(DesktopTestHelpers.GetAllTypesImplementingGivenInterface(
                     typeof(CodeAnalysis.CSharp.Formatting.DefaultOperationProvider).Assembly, typeof(IFormattingRule)))
                 .Concat(DesktopTestHelpers.GetAllTypesImplementingGivenInterface(
-                    typeof(CodeAnalysis.VisualBasic.Formatting.DefaultOperationProvider).Assembly, typeof(IFormattingRule)))
-                .Concat(DesktopTestHelpers.GetAllTypesImplementingGivenInterface(
                     typeof(CodeAnalysis.CSharp.Formatting.DefaultOperationProvider).Assembly, typeof(ICodeGenerationService)))
-                .Concat(DesktopTestHelpers.GetAllTypesImplementingGivenInterface(
-                    typeof(CodeAnalysis.VisualBasic.Formatting.DefaultOperationProvider).Assembly, typeof(ICodeGenerationService)))
                 .Concat(TestHelpers.GetAllTypesWithStaticFieldsImplementingType(typeof(CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions).Assembly, typeof(CodeAnalysis.Options.IOption)))
                 .Distinct()
                 .ToArray();

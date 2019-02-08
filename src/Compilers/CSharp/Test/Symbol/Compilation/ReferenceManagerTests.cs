@@ -1372,13 +1372,11 @@ public class A
                     files: new Dictionary<string, PortableExecutableReference>()
                     {
                         { @"C:\A\lib.dll", TestReferences.NetFx.v4_0_30319.Microsoft_CSharp },
-                        { @"C:\B\lib.dll", TestReferences.NetFx.v4_0_30319.Microsoft_VisualBasic },
                     })));
 
             c.VerifyDiagnostics();
 
             Assert.Same(TestReferences.NetFx.v4_0_30319.Microsoft_CSharp, c.GetDirectiveReference(rd1));
-            Assert.Same(TestReferences.NetFx.v4_0_30319.Microsoft_VisualBasic, c.GetDirectiveReference(rd2));
         }
 
         [Fact]

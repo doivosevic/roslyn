@@ -4,7 +4,6 @@ using Microsoft.CodeAnalysis.CSharp.DocumentationComments;
 using Microsoft.CodeAnalysis.MetadataAsSource;
 using Microsoft.CodeAnalysis.Shared.Utilities;
 using Microsoft.CodeAnalysis.Test.Utilities;
-using Microsoft.CodeAnalysis.VisualBasic.DocumentationComments;
 using Roslyn.Test.Utilities;
 using Xunit;
 
@@ -13,7 +12,6 @@ namespace Microsoft.CodeAnalysis.Editor.UnitTests.MetadataAsSource
     public class DocCommentFormatterTests
     {
         private CSharpDocumentationCommentFormattingService _csharpService = new CSharpDocumentationCommentFormattingService();
-        private VisualBasicDocumentationCommentFormattingService _vbService = new VisualBasicDocumentationCommentFormattingService();
 
         private void TestFormat(string docCommentXmlFragment, string expected)
         {
@@ -25,10 +23,8 @@ namespace Microsoft.CodeAnalysis.Editor.UnitTests.MetadataAsSource
             var docComment = DocumentationComment.FromXmlFragment(docCommentXmlFragment);
 
             var csharpFormattedComment = string.Join("\r\n", AbstractMetadataAsSourceService.DocCommentFormatter.Format(_csharpService, docComment));
-            var vbFormattedComment = string.Join("\r\n", AbstractMetadataAsSourceService.DocCommentFormatter.Format(_vbService, docComment));
 
             Assert.Equal(expectedCSharp, csharpFormattedComment);
-            Assert.Equal(expectedVB, vbFormattedComment);
         }
 
         [Fact, Trait(Traits.Feature, Traits.Features.MetadataAsSource)]

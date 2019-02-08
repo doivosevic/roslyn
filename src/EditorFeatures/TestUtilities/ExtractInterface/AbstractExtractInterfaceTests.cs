@@ -3,7 +3,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.Test.Utilities;
-using Microsoft.CodeAnalysis.VisualBasic;
+
 using Xunit;
 
 namespace Microsoft.CodeAnalysis.Editor.UnitTests.ExtractInterface
@@ -32,31 +32,7 @@ namespace Microsoft.CodeAnalysis.Editor.UnitTests.ExtractInterface
                 expectedUpdatedOriginalDocumentCode,
                 expectedInterfaceCode);
         }
-
-        public static async Task TestExtractInterfaceCommandVisualBasicAsync(
-            string markup,
-            bool expectedSuccess,
-            string expectedMemberName = null,
-            string expectedInterfaceName = null,
-            string expectedNamespaceName = null,
-            string expectedTypeParameterSuffix = null,
-            string expectedUpdatedOriginalDocumentCode = null,
-            string expectedInterfaceCode = null,
-            string rootNamespace = null)
-        {
-            await TestExtractInterfaceCommandAsync(
-                markup,
-                LanguageNames.VisualBasic,
-                expectedSuccess,
-                expectedMemberName,
-                expectedInterfaceName,
-                expectedNamespaceName,
-                expectedTypeParameterSuffix,
-                expectedUpdatedOriginalDocumentCode,
-                expectedInterfaceCode,
-                new VisualBasicCompilationOptions(OutputKind.DynamicallyLinkedLibrary, rootNamespace: rootNamespace));
-        }
-
+        
         private static async Task TestExtractInterfaceCommandAsync(
             string markup,
             string languageName,

@@ -11,7 +11,6 @@ using Microsoft.CodeAnalysis.ExtractInterface;
 using Microsoft.CodeAnalysis.Notification;
 using Microsoft.CodeAnalysis.Shared.Extensions;
 using Microsoft.CodeAnalysis.Test.Utilities;
-using Microsoft.CodeAnalysis.VisualBasic.ExtractInterface;
 using Microsoft.VisualStudio.Composition;
 
 namespace Microsoft.CodeAnalysis.Editor.UnitTests.ExtractInterface
@@ -29,9 +28,7 @@ namespace Microsoft.CodeAnalysis.Editor.UnitTests.ExtractInterface
         public static ExtractInterfaceTestState Create(string markup, string languageName, CompilationOptions compilationOptions)
         {
             var exportProvider = ExportProviderFactory.CreateExportProvider();
-            var workspace = languageName == LanguageNames.CSharp
-                ? TestWorkspace.CreateCSharp(markup, exportProvider: exportProvider, compilationOptions: compilationOptions as CSharpCompilationOptions)
-                : TestWorkspace.CreateVisualBasic(markup, exportProvider: exportProvider, compilationOptions: compilationOptions);
+            var workspace = TestWorkspace.CreateCSharp(markup, exportProvider: exportProvider, compilationOptions: compilationOptions as CSharpCompilationOptions);
             return new ExtractInterfaceTestState(workspace);
         }
 
@@ -55,8 +52,7 @@ namespace Microsoft.CodeAnalysis.Editor.UnitTests.ExtractInterface
             ExportProviderCache.GetOrCreateExportProviderFactory(
                 TestExportProvider.MinimumCatalogWithCSharpAndVisualBasic
                     .WithPart(typeof(TestExtractInterfaceOptionsService))
-                    .WithPart(typeof(CSharpExtractInterfaceService))
-                    .WithPart(typeof(VisualBasicExtractInterfaceService)));
+                    .WithPart(typeof(CSharpExtractInterfaceService)));
 
         public TestExtractInterfaceOptionsService TestExtractInterfaceOptionsService
         {

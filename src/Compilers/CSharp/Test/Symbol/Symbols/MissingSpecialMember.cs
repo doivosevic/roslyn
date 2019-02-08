@@ -552,10 +552,6 @@ namespace System
             {
                 switch (wkt)
                 {
-                    case WellKnownType.Microsoft_VisualBasic_Embedded:
-                    case WellKnownType.Microsoft_VisualBasic_CompilerServices_EmbeddedOperators:
-                        // Not applicable in C#.
-                        continue;
                     case WellKnownType.System_FormattableString:
                     case WellKnownType.System_Runtime_CompilerServices_FormattableStringFactory:
                     case WellKnownType.System_Runtime_CompilerServices_NullableAttribute:
@@ -678,30 +674,6 @@ namespace System
                             WellKnownType.Microsoft_CSharp_RuntimeBinder_CSharpArgumentInfo,
                             WellKnownType.Microsoft_CSharp_RuntimeBinder_CSharpArgumentInfoFlags,
                             WellKnownType.Microsoft_CSharp_RuntimeBinder_CSharpBinderFlags,
-                            WellKnownType.Microsoft_VisualBasic_CallType,
-                            WellKnownType.Microsoft_VisualBasic_Embedded,
-                            WellKnownType.Microsoft_VisualBasic_CompilerServices_Conversions,
-                            WellKnownType.Microsoft_VisualBasic_CompilerServices_Operators,
-                            WellKnownType.Microsoft_VisualBasic_CompilerServices_NewLateBinding,
-                            WellKnownType.Microsoft_VisualBasic_CompilerServices_EmbeddedOperators,
-                            WellKnownType.Microsoft_VisualBasic_CompilerServices_StandardModuleAttribute,
-                            WellKnownType.Microsoft_VisualBasic_CompilerServices_Utils,
-                            WellKnownType.Microsoft_VisualBasic_CompilerServices_LikeOperator,
-                            WellKnownType.Microsoft_VisualBasic_CompilerServices_ProjectData,
-                            WellKnownType.Microsoft_VisualBasic_CompilerServices_ObjectFlowControl,
-                            WellKnownType.Microsoft_VisualBasic_CompilerServices_ObjectFlowControl_ForLoopControl,
-                            WellKnownType.Microsoft_VisualBasic_CompilerServices_StaticLocalInitFlag,
-                            WellKnownType.Microsoft_VisualBasic_CompilerServices_StringType,
-                            WellKnownType.Microsoft_VisualBasic_CompilerServices_IncompleteInitialization,
-                            WellKnownType.Microsoft_VisualBasic_CompilerServices_Versioned,
-                            WellKnownType.Microsoft_VisualBasic_CompareMethod,
-                            WellKnownType.Microsoft_VisualBasic_Strings,
-                            WellKnownType.Microsoft_VisualBasic_ErrObject,
-                            WellKnownType.Microsoft_VisualBasic_FileSystem,
-                            WellKnownType.Microsoft_VisualBasic_ApplicationServices_ApplicationBase,
-                            WellKnownType.Microsoft_VisualBasic_ApplicationServices_WindowsFormsApplicationBase,
-                            WellKnownType.Microsoft_VisualBasic_Information,
-                            WellKnownType.Microsoft_VisualBasic_Interaction,
 
                             WellKnownType.System_Func_T,
                             WellKnownType.System_Func_T2,
@@ -876,10 +848,6 @@ namespace System
                 {
                     case WellKnownMember.Count:
                         // Not a real value;
-                        continue;
-                    case WellKnownMember.Microsoft_VisualBasic_Embedded__ctor:
-                    case WellKnownMember.Microsoft_VisualBasic_CompilerServices_EmbeddedOperators__CompareStringStringStringBoolean:
-                        // C# can't embed VB core.
                         continue;
                     case WellKnownMember.System_Array__Empty:
                     case WellKnownMember.System_Runtime_CompilerServices_NullableAttribute__ctorByte:

@@ -13,7 +13,6 @@ using Microsoft.CodeAnalysis.Editor.Implementation.RenameTracking;
 using Microsoft.CodeAnalysis.Editor.Shared.Utilities;
 using Microsoft.CodeAnalysis.Editor.UnitTests.Utilities;
 using Microsoft.CodeAnalysis.Editor.UnitTests.Workspaces;
-using Microsoft.CodeAnalysis.Editor.VisualBasic.RenameTracking;
 using Microsoft.CodeAnalysis.Notification;
 using Microsoft.CodeAnalysis.Shared.TestHooks;
 using Microsoft.CodeAnalysis.Shared.Utilities;
@@ -50,30 +49,7 @@ namespace Microsoft.CodeAnalysis.Editor.UnitTests.RenameTracking
 
         private readonly CodeFixProvider _codeFixProvider;
         private readonly RenameTrackingCancellationCommandHandler _commandHandler = new RenameTrackingCancellationCommandHandler();
-
-        public static RenameTrackingTestState Create(
-            string markup,
-            string languageName,
-            bool onBeforeGlobalSymbolRenamedReturnValue = true,
-            bool onAfterGlobalSymbolRenamedReturnValue = true)
-        {
-            var workspace = CreateTestWorkspace(markup, languageName, EditorServicesUtil.ExportProvider);
-            return new RenameTrackingTestState(workspace, languageName, onBeforeGlobalSymbolRenamedReturnValue, onAfterGlobalSymbolRenamedReturnValue);
-        }
-
-        public static RenameTrackingTestState CreateFromWorkspaceXml(
-            string workspaceXml,
-            string languageName,
-            bool onBeforeGlobalSymbolRenamedReturnValue = true,
-            bool onAfterGlobalSymbolRenamedReturnValue = true)
-        {
-            var workspace = TestWorkspace.Create(
-                workspaceXml,
-                exportProvider: EditorServicesUtil.ExportProvider);
-
-            return new RenameTrackingTestState(workspace, languageName, onBeforeGlobalSymbolRenamedReturnValue, onAfterGlobalSymbolRenamedReturnValue);
-        }
-
+        
         public RenameTrackingTestState(
             TestWorkspace workspace,
             string languageName,
@@ -116,31 +92,12 @@ namespace Microsoft.CodeAnalysis.Editor.UnitTests.RenameTracking
                     _historyRegistry,
                     SpecializedCollections.SingletonEnumerable(_mockRefactorNotifyService));
             }
-            else if (languageName == LanguageNames.VisualBasic)
-            {
-                _codeFixProvider = new VisualBasicRenameTrackingCodeFixProvider(
-                    Workspace.ExportProvider.GetExport<Host.IWaitIndicator>().Value,
-                    _historyRegistry,
-                    SpecializedCollections.SingletonEnumerable(_mockRefactorNotifyService));
-            }
             else
             {
                 throw new ArgumentException("Invalid language name: " + languageName, nameof(languageName));
             }
         }
-
-        private static TestWorkspace CreateTestWorkspace(string code, string languageName, ExportProvider exportProvider = null)
-        {
-            var xml = string.Format(@"
-<Workspace>
-    <Project Language=""{0}"" CommonReferences=""true"">
-        <Document>{1}</Document>
-    </Project>
-</Workspace>", languageName, code);
-
-            return TestWorkspace.Create(xml, exportProvider: exportProvider);
-        }
-
+        
         public void SendEscape()
         {
             _commandHandler.ExecuteCommand(new EscapeKeyCommandArgs(_view, _view.TextBuffer), TestCommandExecutionContext.Create());

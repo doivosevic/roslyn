@@ -666,66 +666,7 @@ public class Goo
         }
 
         #endregion
-
-        #region Indexed Property tests
-
-        [WorkItem(530811, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/530811")]
-        [Fact, Trait(Traits.Feature, Traits.Features.SignatureHelp)]
-        public async Task IndexedProperty()
-        {
-            var markup = @"class Program
-{
-    void M()
-    {
-            CCC c = new CCC();
-            c.IndexProp[$$
-    }
-}";
-
-            // Note that <COMImport> is required by compiler.  Bug 17013 tracks enabling indexed property for non-COM types.
-            var referencedCode = @"Imports System.Runtime.InteropServices
-
-<ComImport()>
-<GuidAttribute(CCC.ClassId)>
-Public Class CCC
-
-#Region ""COM GUIDs""
-    Public Const ClassId As String = ""9d965fd2-1514-44f6-accd-257ce77c46b0""
-    Public Const InterfaceId As String = ""a9415060-fdf0-47e3-bc80-9c18f7f39cf6""
-    Public Const EventsId As String = ""c6a866a5-5f97-4b53-a5df-3739dc8ff1bb""
-# End Region
-
-            ''' <summary>
-    ''' An index property from VB
-    ''' </summary>
-    ''' <param name=""p1"">p1 is an integer index</param>
-    ''' <returns>A string</returns>
-    Public Property IndexProp(ByVal p1 As Integer) As String
-        Get
-            Return Nothing
-        End Get
-        Set(ByVal value As String)
-
-        End Set
-    End Property
-End Class";
-
-            var metadataItems = new List<SignatureHelpTestItem>();
-            metadataItems.Add(new SignatureHelpTestItem("string CCC.IndexProp[int p1]", string.Empty, string.Empty, currentParameterIndex: 0));
-
-            var projectReferenceItems = new List<SignatureHelpTestItem>();
-            projectReferenceItems.Add(new SignatureHelpTestItem("string CCC.IndexProp[int p1]", "An index property from VB", "p1 is an integer index", currentParameterIndex: 0));
-
-            await TestSignatureHelpInEditorBrowsableContextsAsync(markup: markup,
-                                               referencedCode: referencedCode,
-                                               expectedOrderedItemsMetadataReference: metadataItems,
-                                               expectedOrderedItemsSameSolution: projectReferenceItems,
-                                               sourceLanguage: LanguageNames.CSharp,
-                                               referencedLanguage: LanguageNames.VisualBasic);
-        }
-
-        #endregion
-
+        
         [Fact, Trait(Traits.Feature, Traits.Features.SignatureHelp)]
         public async Task FieldUnavailableInOneLinkedFile()
         {

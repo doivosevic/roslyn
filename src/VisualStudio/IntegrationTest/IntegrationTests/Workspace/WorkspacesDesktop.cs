@@ -16,13 +16,7 @@ namespace Roslyn.VisualStudio.IntegrationTests.Workspace
             : base(instanceFactory, WellKnownProjectTemplates.ClassLibrary)
         {
         }
-
-        [WpfFact, Trait(Traits.Feature, Traits.Features.Workspace)]
-        public override void OpenCSharpThenVBSolution()
-        {
-            base.OpenCSharpThenVBSolution();
-        }
-
+        
         [WpfFact, Trait(Traits.Feature, Traits.Features.Workspace)]
         public override void MetadataReference()
         {
@@ -33,15 +27,6 @@ namespace Roslyn.VisualStudio.IntegrationTests.Workspace
         public override void ProjectReference()
         {
             base.ProjectReference();
-        }
-
-        [WpfFact, Trait(Traits.Feature, Traits.Features.Workspace)]
-        public override void ProjectProperties()
-        {
-            VisualStudio.SolutionExplorer.CreateSolution(nameof(WorkspacesDesktop));
-            var project = new ProjectUtils.Project(ProjectName);
-            VisualStudio.SolutionExplorer.AddProject(project, WellKnownProjectTemplates.ClassLibrary, LanguageNames.VisualBasic);
-            base.ProjectProperties();
         }
     }
 }

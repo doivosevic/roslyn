@@ -9,7 +9,6 @@ using Roslyn.Test.Utilities;
 using Roslyn.Utilities;
 using Xunit;
 using CS = Microsoft.CodeAnalysis.CSharp;
-using VB = Microsoft.CodeAnalysis.VisualBasic;
 
 namespace Microsoft.CodeAnalysis.Editor.UnitTests.MetadataAsSource
 {
@@ -29,13 +28,6 @@ public class [|C|]
 {{
     public C();
 }}");
-            await GenerateAndVerifySourceAsync(metadataSource, symbolName, LanguageNames.VisualBasic, $@"#Region ""{FeaturesResources.Assembly} ReferencedAssembly, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null""
-' {CodeAnalysisResources.InMemoryAssembly}
-#End Region
-
-Public Class [|C|]
-    Public Sub New()
-End Class");
         }
 
         [WorkItem(546241, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/546241")]
@@ -52,12 +44,6 @@ End Class");
 public interface [|I|]
 {{
 }}");
-            await GenerateAndVerifySourceAsync(metadataSource, symbolName, LanguageNames.VisualBasic, $@"#Region ""{FeaturesResources.Assembly} ReferencedAssembly, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null""
-' {CodeAnalysisResources.InMemoryAssembly}
-#End Region
-
-Public Interface [|I|]
-End Interface");
         }
 
         [Fact, Trait(Traits.Feature, Traits.Features.MetadataAsSource)]
@@ -74,13 +60,6 @@ public class C
 {{
     public [|C|]();
 }}");
-            await GenerateAndVerifySourceAsync(metadataSource, symbolName, LanguageNames.VisualBasic, $@"#Region ""{FeaturesResources.Assembly} ReferencedAssembly, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null""
-' {CodeAnalysisResources.InMemoryAssembly}
-#End Region
-
-Public Class C
-    Public Sub [|New|]()
-End Class");
         }
 
         [Fact, Trait(Traits.Feature, Traits.Features.MetadataAsSource)]
@@ -99,15 +78,6 @@ public class C
 
     public void [|Goo|]();
 }}");
-            await GenerateAndVerifySourceAsync(metadataSource, symbolName, LanguageNames.VisualBasic, $@"#Region ""{FeaturesResources.Assembly} ReferencedAssembly, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null""
-' {CodeAnalysisResources.InMemoryAssembly}
-#End Region
-
-Public Class C
-    Public Sub New()
-
-    Public Sub [|Goo|]()
-End Class");
         }
 
         [Fact, Trait(Traits.Feature, Traits.Features.MetadataAsSource)]
@@ -126,15 +96,6 @@ public class C
 
     public C();
 }}");
-            await GenerateAndVerifySourceAsync(metadataSource, symbolName, LanguageNames.VisualBasic, $@"#Region ""{FeaturesResources.Assembly} ReferencedAssembly, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null""
-' {CodeAnalysisResources.InMemoryAssembly}
-#End Region
-
-Public Class C
-    Public [|S|] As String
-
-    Public Sub New()
-End Class");
         }
 
         [WorkItem(546240, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/546240")]
@@ -154,15 +115,6 @@ public class C
 
     public string [|S|] {{ get; protected set; }}
 }}");
-            await GenerateAndVerifySourceAsync(metadataSource, symbolName, LanguageNames.VisualBasic, $@"#Region ""{FeaturesResources.Assembly} ReferencedAssembly, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null""
-' {CodeAnalysisResources.InMemoryAssembly}
-#End Region
-
-Public Class C
-    Public Sub New()
-
-    Public Property [|S|] As String
-End Class");
         }
 
         [WorkItem(546194, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/546194")]
@@ -185,17 +137,6 @@ public class C
 
     public event Action [|E|];
 }}");
-            await GenerateAndVerifySourceAsync(metadataSource, symbolName, LanguageNames.VisualBasic, $@"#Region ""{FeaturesResources.Assembly} ReferencedAssembly, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null""
-' {CodeAnalysisResources.InMemoryAssembly}
-#End Region
-
-Imports System
-
-Public Class C
-    Public Sub New()
-
-    Public Event [|E|] As Action
-End Class");
         }
 
         [Fact, Trait(Traits.Feature, Traits.Features.MetadataAsSource)]
@@ -217,17 +158,6 @@ public class C
         public D();
     }}
 }}");
-            await GenerateAndVerifySourceAsync(metadataSource, symbolName, LanguageNames.VisualBasic, $@"#Region ""{FeaturesResources.Assembly} ReferencedAssembly, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null""
-' {CodeAnalysisResources.InMemoryAssembly}
-#End Region
-
-Public Class C
-    Public Sub New()
-
-    Protected Class [|D|]
-        Public Sub New()
-    End Class
-End Class");
         }
 
         [WorkItem(546195, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/546195"), WorkItem(546269, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/546269")]
@@ -247,15 +177,6 @@ public enum [|E|]
     B = 1,
     C = 2
 }}");
-            await GenerateAndVerifySourceAsync(metadataSource, symbolName, LanguageNames.VisualBasic, $@"#Region ""{FeaturesResources.Assembly} ReferencedAssembly, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null""
-' {CodeAnalysisResources.InMemoryAssembly}
-#End Region
-
-Public Enum [|E|]
-    A = 0
-    B = 1
-    C = 2
-End Enum");
         }
 
         [WorkItem(546195, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/546195"), WorkItem(546269, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/546269")]
@@ -275,15 +196,6 @@ public enum E
     B = 1,
     [|C|] = 2
 }}");
-            await GenerateAndVerifySourceAsync(metadataSource, symbolName, LanguageNames.VisualBasic, $@"#Region ""{FeaturesResources.Assembly} ReferencedAssembly, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null""
-' {CodeAnalysisResources.InMemoryAssembly}
-#End Region
-
-Public Enum E
-    A = 0
-    B = 1
-    [|C|] = 2
-End Enum");
         }
 
         [WorkItem(546273, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/546273")]
@@ -303,15 +215,6 @@ public enum E : short
     B = 1,
     [|C|] = 2
 }}");
-            await GenerateAndVerifySourceAsync(metadataSource, symbolName, LanguageNames.VisualBasic, $@"#Region ""{FeaturesResources.Assembly} ReferencedAssembly, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null""
-' {CodeAnalysisResources.InMemoryAssembly}
-#End Region
-
-Public Enum E As Short
-    A = 0
-    B = 1
-    [|C|] = 2
-End Enum");
         }
 
         [WorkItem(650741, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/650741")]
@@ -329,13 +232,6 @@ public enum E : ulong
 {{
     [|A|] = 9223372036854775808
 }}");
-            await GenerateAndVerifySourceAsync(metadataSource, symbolName, LanguageNames.VisualBasic, $@"#Region ""{FeaturesResources.Assembly} ReferencedAssembly, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null""
-' {CodeAnalysisResources.InMemoryAssembly}
-#End Region
-
-Public Enum E As ULong
-    [|A|] = 9223372036854775808UL
-End Enum");
         }
 
         [Fact, Trait(Traits.Feature, Traits.Features.MetadataAsSource)]
@@ -354,15 +250,6 @@ public enum E : short
     B = 2,
     [|C|] = 3
 }}");
-            await GenerateAndVerifySourceAsync(metadataSource, symbolName, LanguageNames.VisualBasic, $@"#Region ""{FeaturesResources.Assembly} ReferencedAssembly, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null""
-' {CodeAnalysisResources.InMemoryAssembly}
-#End Region
-
-Public Enum E As Short
-    A = 1
-    B = 2
-    [|C|] = 3
-End Enum");
         }
 
         [WorkItem(546198, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/546198")]
@@ -383,15 +270,6 @@ namespace N
         public C();
     }}
 }}");
-            await GenerateAndVerifySourceAsync(metadataSource, symbolName, LanguageNames.VisualBasic, $@"#Region ""{FeaturesResources.Assembly} ReferencedAssembly, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null""
-' {CodeAnalysisResources.InMemoryAssembly}
-#End Region
-
-Namespace N
-    Public Class [|C|]
-        Public Sub New()
-    End Class
-End Namespace");
         }
 
         [WorkItem(546223, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/546223")]
@@ -411,15 +289,6 @@ public class C
 
     public C();
 }}");
-            await GenerateAndVerifySourceAsync(metadataSource, symbolName, LanguageNames.VisualBasic, $@"#Region ""{FeaturesResources.Assembly} ReferencedAssembly, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null""
-' {CodeAnalysisResources.InMemoryAssembly}
-#End Region
-
-Public Class C
-    Public Const [|S|] As String = ""Hello mas""
-
-    Public Sub New()
-End Class");
         }
 
         [WorkItem(546221, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/546221")]
@@ -448,14 +317,6 @@ public class [|C|]
 {{
     public C();
 }}");
-            await GenerateAndVerifySourceAsync(metadataSource, symbolName, LanguageNames.VisualBasic, $@"#Region ""{FeaturesResources.Assembly} ReferencedAssembly, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null""
-' {CodeAnalysisResources.InMemoryAssembly}
-#End Region
-
-<MyType(GetType(String))>
-Public Class [|C|]
-    Public Sub New()
-End Class");
         }
 
         [WorkItem(546231, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/546231")]
@@ -472,12 +333,6 @@ End Class");
 public struct [|S|]
 {{
 }}");
-            await GenerateAndVerifySourceAsync(metadataSource, symbolName, LanguageNames.VisualBasic, $@"#Region ""{FeaturesResources.Assembly} ReferencedAssembly, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null""
-' {CodeAnalysisResources.InMemoryAssembly}
-#End Region
-
-Public Structure [|S|]
-End Structure");
         }
 
         [Fact, Trait(Traits.Feature, Traits.Features.MetadataAsSource)]
@@ -496,15 +351,6 @@ public class [|C|]
 
     public static C Create();
 }}");
-            await GenerateAndVerifySourceAsync(metadataSource, symbolName, LanguageNames.VisualBasic, $@"#Region ""{FeaturesResources.Assembly} ReferencedAssembly, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null""
-' {CodeAnalysisResources.InMemoryAssembly}
-#End Region
-
-Public Class [|C|]
-    Public Sub New()
-
-    Public Shared Function Create() As C
-End Class");
         }
 
         [WorkItem(546227, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/546227")]
@@ -524,15 +370,6 @@ public class [|G|]<SomeType>
 
     public G();
 }}");
-            await GenerateAndVerifySourceAsync(metadataSource, symbolName, LanguageNames.VisualBasic, $@"#Region ""{FeaturesResources.Assembly} ReferencedAssembly, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null""
-' {CodeAnalysisResources.InMemoryAssembly}
-#End Region
-
-Public Class [|G|](Of SomeType)
-    Public S As SomeType
-
-    Public Sub New()
-End Class");
         }
 
         [WorkItem(546227, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/546227")]
@@ -552,14 +389,6 @@ public class C
 
     public delegate void [|D|]<SomeType>(SomeType s);
 }}");
-            await GenerateAndVerifySourceAsync(metadataSource, symbolName, LanguageNames.VisualBasic, $@"#Region ""{FeaturesResources.Assembly} ReferencedAssembly, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null""
-' {CodeAnalysisResources.InMemoryAssembly}
-#End Region
-
-Public Class C
-    Public Sub New()
-    Public Delegate Sub [|D|](Of SomeType)(s As SomeType)
-End Class");
         }
 
         [WorkItem(546200, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/546200")]
@@ -593,30 +422,18 @@ public class [|C|]
 {{
     public C();
 }}");
-            await GenerateAndVerifySourceAsync(metadataSource, symbolName, LanguageNames.VisualBasic, $@"#Region ""{FeaturesResources.Assembly} ReferencedAssembly, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null""
-' {CodeAnalysisResources.InMemoryAssembly}
-#End Region
-
-Imports N
-
-<Working(True)>
-Public Class [|C|]
-    Public Sub New()
-End Class");
         }
 
         [Fact, Trait(Traits.Feature, Traits.Features.MetadataAsSource)]
         public async Task TestSymbolIdMatchesMetadata()
         {
             await TestSymbolIdMatchesMetadataAsync(LanguageNames.CSharp);
-            await TestSymbolIdMatchesMetadataAsync(LanguageNames.VisualBasic);
         }
 
         [Fact, Trait(Traits.Feature, Traits.Features.MetadataAsSource)]
         public async Task TestNotReusedOnAssemblyDiffers()
         {
             await TestNotReusedOnAssemblyDiffersAsync(LanguageNames.CSharp);
-            await TestNotReusedOnAssemblyDiffersAsync(LanguageNames.VisualBasic);
         }
 
         [Fact, Trait(Traits.Feature, Traits.Features.MetadataAsSource)]
@@ -686,23 +503,7 @@ End Class");
                 context.VerifyDocumentReused(a, b);
             }
         }
-
-        [Fact, Trait(Traits.Feature, Traits.Features.MetadataAsSource)]
-        public async Task TestNotReusedGeneratingForDifferentLanguage()
-        {
-            using (var context = TestContext.Create(LanguageNames.CSharp))
-            {
-                var projectId = ProjectId.CreateNewId();
-                var project = context.CurrentSolution.AddProject(projectId, "ProjectB", "ProjectB", LanguageNames.VisualBasic).GetProject(projectId)
-                    .WithMetadataReferences(context.DefaultProject.MetadataReferences)
-                    .WithCompilationOptions(new VB.VisualBasicCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
-
-                var a = await context.GenerateSourceAsync(project: context.DefaultProject);
-                var b = await context.GenerateSourceAsync(project: project);
-                context.VerifyDocumentNotReused(a, b);
-            }
-        }
-
+        
         [WorkItem(546311, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/546311")]
         [Fact, Trait(Traits.Feature, Traits.Features.MetadataAsSource)]
         public async Task FormatMetadataAsSource()
@@ -775,135 +576,7 @@ public class [|C|]
             var symbolName = "C";
             await GenerateAndVerifySourceAsync(metadataSource, symbolName, LanguageNames.CSharp, expected);
         }
-
-        [WorkItem(530978, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/530978")]
-        [Fact, Trait(Traits.Feature, Traits.Features.MetadataAsSource)]
-        public async Task TestAttributesOnMembers()
-        {
-            var metadataSource = @"using System;
-
-[Obsolete]
-public class C
-{
-    [Obsolete]
-    [ThreadStatic]
-    public int field1;
-
-    [Obsolete]
-    public int prop1 { get; set; }
-
-    [Obsolete]
-    public int prop2 { get { return 10; } set {} }
-
-    [Obsolete]
-    public void method1() {}
-
-    [Obsolete]
-    public C() {}
-
-    [Obsolete]
-    ~C() {}
-
-    [Obsolete]
-    public int this[int x] { get { return 10; } set {} }
-
-    [Obsolete]
-    public event Action event1;
-
-    [Obsolete]
-    public event Action event2 { add {} remove {}}
-
-    public void method2([System.Runtime.CompilerServices.CallerMemberName] string name = """") {}
-
-    [Obsolete]
-    public static C operator + (C c1, C c2) { return new C(); }
-}
-";
-            var expectedCS = $@"#region {FeaturesResources.Assembly} ReferencedAssembly, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// {CodeAnalysisResources.InMemoryAssembly}
-#endregion
-
-using System;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-
-[DefaultMember(""Item"")]
-[Obsolete]
-public class [|C|]
-{{
-    [Obsolete]
-    [ThreadStatic]
-    public int field1;
-
-    [Obsolete]
-    public C();
-
-    [Obsolete]
-    ~C();
-
-    [Obsolete]
-    public int this[int x] {{ get; set; }}
-
-    [Obsolete]
-    public int prop1 {{ get; set; }}
-    [Obsolete]
-    public int prop2 {{ get; set; }}
-
-    [Obsolete]
-    public event Action event1;
-    [Obsolete]
-    public event Action event2;
-
-    [Obsolete]
-    public void method1();
-    public void method2([CallerMemberName] string name = """");
-
-    [Obsolete]
-    public static C operator +(C c1, C c2);
-}}";
-            var symbolName = "C";
-            await GenerateAndVerifySourceAsync(metadataSource, symbolName, LanguageNames.CSharp, expectedCS);
-
-            var expectedVB = $@"#Region ""{FeaturesResources.Assembly} ReferencedAssembly, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null""
-' {CodeAnalysisResources.InMemoryAssembly}
-#End Region
-
-Imports System
-Imports System.Reflection
-Imports System.Runtime.CompilerServices
-
-<DefaultMember(""Item"")> <Obsolete>
-Public Class [|C|]
-    <Obsolete> <ThreadStatic>
-    Public field1 As Integer
-
-    <Obsolete>
-    Public Sub New()
-
-    <Obsolete>
-    Public Property prop1 As Integer
-    <Obsolete>
-    Public Property prop2 As Integer
-    <Obsolete>
-    Default Public Property Item(x As Integer) As Integer
-
-    <Obsolete>
-    Public Event event1 As Action
-    <Obsolete>
-    Public Event event2 As Action
-
-    <Obsolete>
-    Public Sub method1()
-    Public Sub method2(<CallerMemberName> Optional name As String = """")
-    <Obsolete>
-    Protected Overrides Sub Finalize()
-
-    <Obsolete>
-    Public Shared Operator +(c1 As C, c2 As C) As C
-End Class";
-            await GenerateAndVerifySourceAsync(metadataSource, symbolName, LanguageNames.VisualBasic, expectedVB);
-        }
-
+        
         [WorkItem(530923, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/530923")]
         [Fact, Trait(Traits.Feature, Traits.Features.MetadataAsSource)]
         public async Task TestEmptyLineBetweenMembers()
@@ -961,37 +634,6 @@ public class [|C|]
 }}";
             var symbolName = "C";
             await GenerateAndVerifySourceAsync(metadataSource, symbolName, LanguageNames.CSharp, expectedCS);
-
-            var expectedVB = $@"#Region ""{FeaturesResources.Assembly} ReferencedAssembly, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null""
-' {CodeAnalysisResources.InMemoryAssembly}
-#End Region
-
-Imports System
-Imports System.Reflection
-Imports System.Runtime.CompilerServices
-
-<DefaultMember(""Item"")>
-Public Class [|C|]
-    Public field1 As Integer
-    Public field2 As Integer
-
-    Public Sub New()
-
-    Public Property prop1 As Integer
-    Public Property prop2 As Integer
-    Default Public Property Item(x As Integer) As Integer
-
-    Public Event event1 As Action
-    Public Event event2 As Action
-
-    Public Sub method1()
-    Public Sub method2(<CallerMemberName> Optional name As String = """")
-    Protected Overrides Sub Finalize()
-
-    Public Shared Operator +(c1 As C, c2 As C) As C
-    Public Shared Operator -(c1 As C, c2 As C) As C
-End Class";
-            await GenerateAndVerifySourceAsync(metadataSource, symbolName, LanguageNames.VisualBasic, expectedVB);
         }
 
         [WorkItem(728644, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/728644")]
@@ -1033,28 +675,6 @@ public interface [|IGoo|]
     Uri Method1();
 }}";
             await GenerateAndVerifySourceAsync(source, symbolName, LanguageNames.CSharp, expectedCS, includeXmlDocComments: true);
-
-            var expectedVB = $@"#Region ""{FeaturesResources.Assembly} ReferencedAssembly, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null""
-' {CodeAnalysisResources.InMemoryAssembly}
-#End Region
-
-Imports System
-
-'
-' {FeaturesResources.Summary_colon}
-'     T:IGoo
-Public Interface [|IGoo|]
-    '
-    ' {FeaturesResources.Summary_colon}
-    '     P:IGoo.Prop1
-    Property Prop1 As Uri
-
-    '
-    ' {FeaturesResources.Summary_colon}
-    '     M:IGoo.Method1
-    Function Method1() As Uri
-End Interface";
-            await GenerateAndVerifySourceAsync(source, symbolName, LanguageNames.VisualBasic, expectedVB, includeXmlDocComments: true);
         }
 
         [WorkItem(679114, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/679114"), WorkItem(715013, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/715013")]
@@ -1083,19 +703,6 @@ public class [|Test|]
     public void goo(FileOptions options = FileOptions.None);
 }}";
             await GenerateAndVerifySourceAsync(source, symbolName, LanguageNames.CSharp, expectedCS);
-
-            var expectedVB = $@"#Region ""{FeaturesResources.Assembly} ReferencedAssembly, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null""
-' {CodeAnalysisResources.InMemoryAssembly}
-#End Region
-
-Imports System.IO
-
-Public Class [|Test|]
-    Public Sub New()
-
-    Public Sub goo(Optional options As FileOptions = FileOptions.None)
-End Class";
-            await GenerateAndVerifySourceAsync(source, symbolName, LanguageNames.VisualBasic, expectedVB);
         }
 
         [WorkItem(651261, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/651261")]
@@ -1125,20 +732,6 @@ public class [|TestAttribute|] : Attribute
     public TestAttribute(int[] i);
 }}";
             await GenerateAndVerifySourceAsync(source, symbolName, LanguageNames.CSharp, expectedCS);
-
-            var expectedVB = $@"#Region ""{FeaturesResources.Assembly} ReferencedAssembly, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null""
-' {CodeAnalysisResources.InMemoryAssembly}
-#End Region
-
-Imports System
-
-<Test(Nothing)>
-Public Class [|TestAttribute|]
-    Inherits Attribute
-
-    Public Sub New(i() As Integer)
-End Class";
-            await GenerateAndVerifySourceAsync(source, symbolName, LanguageNames.VisualBasic, expectedVB);
         }
 
         [WorkItem(897006, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/897006")]
@@ -1178,52 +771,7 @@ public static class ObjectExtensions
                 context.VerifyResult(metadataAsSourceFile, expected);
             }
         }
-
-        [WorkItem(897006, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/897006")]
-        [Fact, Trait(Traits.Feature, Traits.Features.MetadataAsSource)]
-        public async Task TestNavigationViaReducedExtensionMethodVB()
-        {
-            var metadata = @"Imports System.Runtime.CompilerServices
-Namespace NS
-    Public Module StringExtensions
-        <Extension()>
-        Public Sub M(ByVal o As String, x As Integer)
-        End Sub
-    End Module
-End Namespace";
-            var sourceWithSymbolReference = @"
-Imports NS.StringExtensions
-Public Module C
-    Sub M()
-        Dim s = ""Yay""
-        s.[|M|](1)
-    End Sub
-End Module";
-            var expected = $@"#Region ""{FeaturesResources.Assembly} ReferencedAssembly, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null""
-' {CodeAnalysisResources.InMemoryAssembly}
-#End Region
-
-Imports System.Runtime.CompilerServices
-
-Namespace NS
-    <Extension>
-    Public Module StringExtensions <Extension>
-        Public Sub [|M|](o As String, x As Integer)
-    End Module
-End Namespace";
-
-            using (var context = TestContext.Create(
-                LanguageNames.VisualBasic,
-                SpecializedCollections.SingletonEnumerable(metadata),
-                includeXmlDocComments: false,
-                sourceWithSymbolReference: sourceWithSymbolReference))
-            {
-                var navigationSymbol = await context.GetNavigationSymbolAsync();
-                var metadataAsSourceFile = await context.GenerateSourceAsync(navigationSymbol);
-                context.VerifyResult(metadataAsSourceFile, expected);
-            }
-        }
-
+        
         [Fact, Trait(Traits.Feature, Traits.Features.MetadataAsSource)]
         public async Task TestIndexersAndOperators()
         {
@@ -1263,20 +811,6 @@ public class [|Program|]
 
     public static Program operator +(Program p1, Program p2);
 }}");
-            await GenerateAndVerifySourceAsync(metadataSource, symbolName, LanguageNames.VisualBasic, $@"#Region ""{FeaturesResources.Assembly} ReferencedAssembly, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null""
-' {CodeAnalysisResources.InMemoryAssembly}
-#End Region
-
-Imports System.Reflection
-
-<DefaultMember(""Item"")>
-Public Class [|Program|]
-    Public Sub New()
-
-    Default Public Property Item(x As Integer) As Integer
-
-    Public Shared Operator +(p1 As Program, p2 As Program) As Program
-End Class");
         }
 
         [WorkItem(15387, "https://github.com/dotnet/roslyn/issues/15387")]
@@ -1378,28 +912,6 @@ public interface [|IGoo|]
     Uri Method1();
 }}";
             await GenerateAndVerifySourceAsync(source, symbolName, LanguageNames.CSharp, expectedCS, includeXmlDocComments: true);
-
-            var expectedVB = $@"#Region ""{FeaturesResources.Assembly} ReferencedAssembly, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null""
-' {CodeAnalysisResources.InMemoryAssembly}
-#End Region
-
-Imports System
-
-'
-' {FeaturesResources.Summary_colon}
-'     T:IGoo ABCDE FGHIJK
-Public Interface [|IGoo|]
-    '
-    ' {FeaturesResources.Summary_colon}
-    '     P:IGoo.Prop1 ABCDE FGHIJK
-    Property Prop1 As Uri
-
-    '
-    ' {FeaturesResources.Summary_colon}
-    '     M:IGoo.Method1 ABCDE FGHIJK
-    Function Method1() As Uri
-End Interface";
-            await GenerateAndVerifySourceAsync(source, symbolName, LanguageNames.VisualBasic, expectedVB, includeXmlDocComments: true);
         }
 
         [Fact, Trait(Traits.Feature, Traits.Features.MetadataAsSource)]
@@ -1526,21 +1038,7 @@ class C
 
             await GenerateAndVerifySourceLineAsync(source, LanguageNames.CSharp, expected);
         }
-
-        [WorkItem(29786, "https://github.com/dotnet/roslyn/issues/29786")]
-        [Fact, Trait(Traits.Feature, Traits.Features.MetadataAsSource)]
-        public async Task TestSByteMinValueVB()
-        {
-            var source = @"
-Class C
-    Public Goo = SByte.[|MinValue|]
-End Class";
-
-            var expected = "Public Const MinValue As [SByte] = -128";
-
-            await GenerateAndVerifySourceLineAsync(source, LanguageNames.VisualBasic, expected);
-        }
-
+        
         [WorkItem(29786, "https://github.com/dotnet/roslyn/issues/29786")]
         [Fact, Trait(Traits.Feature, Traits.Features.MetadataAsSource)]
         public async Task TestInt16MinValue()
@@ -1555,21 +1053,7 @@ class C
 
             await GenerateAndVerifySourceLineAsync(source, LanguageNames.CSharp, expected);
         }
-
-        [WorkItem(29786, "https://github.com/dotnet/roslyn/issues/29786")]
-        [Fact, Trait(Traits.Feature, Traits.Features.MetadataAsSource)]
-        public async Task TestInt16MinValueVB()
-        {
-            var source = @"
-Class C
-    Public Goo = Short.[|MinValue|]
-End Class";
-
-            var expected = $"Public Const MinValue As Int16 = -32768";
-
-            await GenerateAndVerifySourceLineAsync(source, LanguageNames.VisualBasic, expected);
-        }
-
+        
         [WorkItem(29786, "https://github.com/dotnet/roslyn/issues/29786")]
         [Fact, Trait(Traits.Feature, Traits.Features.MetadataAsSource)]
         public async Task TestInt32MinValue()
@@ -1584,21 +1068,7 @@ class C
 
             await GenerateAndVerifySourceLineAsync(source, LanguageNames.CSharp, expected);
         }
-
-        [WorkItem(29786, "https://github.com/dotnet/roslyn/issues/29786")]
-        [Fact, Trait(Traits.Feature, Traits.Features.MetadataAsSource)]
-        public async Task TestInt32MinValueVB()
-        {
-            var source = @"
-Class C
-    Public Goo = Integer.[|MinValue|]
-End Class";
-
-            var expected = $"Public Const MinValue As Int32 = -2147483648";
-
-            await GenerateAndVerifySourceLineAsync(source, LanguageNames.VisualBasic, expected);
-        }
-
+        
         [WorkItem(29786, "https://github.com/dotnet/roslyn/issues/29786")]
         [Fact, Trait(Traits.Feature, Traits.Features.MetadataAsSource)]
         public async Task TestInt64MinValue()
@@ -1612,20 +1082,6 @@ class C
             var expected = $"public const Int64 MinValue = -9223372036854775808;";
 
             await GenerateAndVerifySourceLineAsync(source, LanguageNames.CSharp, expected);
-        }
-
-        [WorkItem(29786, "https://github.com/dotnet/roslyn/issues/29786")]
-        [Fact, Trait(Traits.Feature, Traits.Features.MetadataAsSource)]
-        public async Task TestInt64MinValueVB()
-        {
-            var source = @"
-Class C
-    Public Goo = Long.[|MinValue|]
-End Class";
-
-            var expected = $"Public Const MinValue As Int64 = -9223372036854775808";
-
-            await GenerateAndVerifySourceLineAsync(source, LanguageNames.VisualBasic, expected);
         }
     }
 }
