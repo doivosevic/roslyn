@@ -18,7 +18,7 @@ namespace Microsoft.CodeAnalysis.Scripting
                 new[] { TestReferences.NetStandard13.SystemRuntime },
                 new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
         }
-        
+
         internal static Compilation CreateCSharpCompilation(string source, MetadataReference[] references, string assemblyName = null, CSharpCompilationOptions options = null)
         {
             return CSharpCompilation.Create(

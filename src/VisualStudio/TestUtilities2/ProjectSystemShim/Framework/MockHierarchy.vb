@@ -292,10 +292,7 @@ Namespace Microsoft.VisualStudio.LanguageServices.UnitTests.ProjectSystemShim.Fr
         End Function
 
         Public Function GetAggregateProjectTypeGuids(ByRef pbstrProjTypeGuids As String) As Integer Implements IVsAggregatableProject.GetAggregateProjectTypeGuids
-            If _projectCapabilities = "VB" Then
-                pbstrProjTypeGuids = Guids.VisualBasicProjectIdString
-                Return VSConstants.S_OK
-            ElseIf _projectCapabilities = "CSharp" Then
+            If _projectCapabilities = "CSharp" Then
                 pbstrProjTypeGuids = Guids.CSharpProjectIdString
                 Return VSConstants.S_OK
             End If

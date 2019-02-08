@@ -496,7 +496,7 @@ class Derived : Base
                 //     ~Derived() { }
                 Diagnostic(ErrorCode.ERR_CantOverrideSealed, "Derived").WithArguments("Derived.~Derived()", "Base.Finalize()"));
         }
-        
+
         [WorkItem(647933, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/647933")]
         [Fact]
         public void ConditionalAttributeOnDestructor()

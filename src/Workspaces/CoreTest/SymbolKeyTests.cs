@@ -53,19 +53,6 @@ public class C
         }
 
         [Fact]
-        [WorkItem(14364, "https://github.com/dotnet/roslyn/issues/14364")]
-        public void TestVBParameterizedEvent()
-        {
-            var source = @"
-Module M
-    Event E(x As Object)
-End Module
-";
-            var compilation = GetCompilation(source, LanguageNames.VisualBasic);
-            TestRoundTrip(GetAllSymbols(compilation.GetSemanticModel(compilation.SyntaxTrees.Single())), compilation);
-        }
-
-        [Fact]
         public void TestNamespaceDeclarations()
         {
             var source = @"

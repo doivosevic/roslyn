@@ -38,42 +38,6 @@ Namespace Microsoft.VisualStudio.LanguageServices.UnitTests.SolutionExplorer
                 Assert.Null(collectionSource)
             End Using
         End Sub
-
-        <WpfFact, Trait(Traits.Feature, Traits.Features.Diagnostics)>
-        Public Sub CreateCollectionSource()
-            Using environment = New TestEnvironment()
-                Dim project = CreateVisualBasicProject(environment, "Goo")
-                Dim hierarchy = project.Hierarchy
-
-                Dim hierarchyItem = New MockHierarchyItem With {
-                    .HierarchyIdentity = New MockHierarchyItemIdentity With {
-                        .NestedHierarchy = hierarchy,
-                        .NestedItemID = MockHierarchy.ReferencesNodeItemId
-                    },
-                    .CanonicalName = "References",
-                    .Parent = New MockHierarchyItem With {
-                        .HierarchyIdentity = New MockHierarchyItemIdentity With {
-                            .NestedHierarchy = hierarchy,
-                            .NestedItemID = VSConstants.VSITEMID.Root
-                        },
-                        .CanonicalName = "Goo"
-                    }
-                }
-
-                Dim mapper = New HierarchyItemToProjectIdMap(environment.Workspace)
-
-                Dim provider As IAttachedCollectionSourceProvider = New AnalyzersFolderItemProvider(mapper, environment.Workspace, New FakeAnalyzersCommandHandler)
-
-                Dim collectionSource = provider.CreateCollectionSource(hierarchyItem, KnownRelationships.Contains)
-
-                Assert.NotNull(collectionSource)
-
-                Dim items = TryCast(collectionSource.Items, ObservableCollection(Of AnalyzersFolderItem))
-
-                Assert.Equal(expected:=1, actual:=items.Count)
-
-            End Using
-        End Sub
     End Class
 End Namespace
 

@@ -4189,60 +4189,6 @@ oneMoreTime:
             AppendNewBlock(@break);
             return FinishVisitingStatement(operation);
 
-            IOperation tryCallObjectForLoopControlHelper(SyntaxNode syntax, WellKnownMember helper)
-            {
-                bool isInitialization = false;
-                var loopObjectReference = new LocalReferenceOperation(loopObject,
-                                                                       isDeclaration: isInitialization,
-                                                                       semanticModel: null,
-                                                                       operation.LoopControlVariable.Syntax, loopObject.Type,
-                                                                       constantValue: default, isImplicit: true);
-
-                var method = (IMethodSymbol)_compilation.CommonGetWellKnownTypeMember(helper);
-                int parametersCount = WellKnownMembers.GetDescriptor(helper).ParametersCount;
-
-                if (method is null)
-                {
-                    var builder = ArrayBuilder<IOperation>.GetInstance(--parametersCount, fillWithValue: null);
-                    builder[--parametersCount] = loopObjectReference;
-                    do
-                    {
-                        builder[--parametersCount] = PopOperand();
-                    }
-                    while (parametersCount != 0);
-
-                    return MakeInvalidOperation(operation.LimitValue.Syntax, booleanType, builder.ToImmutableAndFree());
-                }
-                else
-                {
-                    var builder = ArrayBuilder<IArgumentOperation>.GetInstance(parametersCount, fillWithValue: null);
-
-                    builder[--parametersCount] = new ArgumentOperation(visitLoopControlVariableReference(forceImplicit: true), // Yes we are going to evaluate it again
-                                                                       ArgumentKind.Explicit, method.Parameters[parametersCount],
-                                                                       inConversionOpt: null, outConversionOpt: null,
-                                                                       semanticModel: null, syntax, isImplicit: true);
-
-                    builder[--parametersCount] = new ArgumentOperation(loopObjectReference,
-                                                                       ArgumentKind.Explicit, method.Parameters[parametersCount],
-                                                                       inConversionOpt: null, outConversionOpt: null,
-                                                                       semanticModel: null, syntax, isImplicit: true);
-
-                    do
-                    {
-                        IOperation value = PopOperand();
-                        builder[--parametersCount] = new ArgumentOperation(value,
-                                                                           ArgumentKind.Explicit, method.Parameters[parametersCount],
-                                                                           inConversionOpt: null, outConversionOpt: null,
-                                                                           semanticModel: null, isInitialization ? value.Syntax : syntax, isImplicit: true);
-                    }
-                    while (parametersCount != 0);
-
-                    return new InvocationOperation(method, instance: null, isVirtual: false, builder.ToImmutableAndFree(),
-                                                    semanticModel: null, operation.LimitValue.Syntax, method.ReturnType,
-                                                    constantValue: default, isImplicit: true);
-                }
-            }
-
             void initializeLoop()
             {
                 EvalStackFrame frame = PushStackFrame();
@@ -4276,7 +4222,7 @@ oneMoreTime:
 
                     PushOperand(Visit(operation.LimitValue));
                     PushOperand(Visit(operation.StepValue));
-                    
+
                     UnconditionalBranch(bodyBlock);
                 }
                 else
@@ -4427,7 +4373,7 @@ oneMoreTime:
 
                     EvalStackFrame frame = PushStackFrame();
                     PushOperand(visitLoopControlVariableReference(forceImplicit: true));
-                    
+
                     UnconditionalBranch(bodyBlock);
 
                     PopStackFrameAndLeaveRegion(frame);

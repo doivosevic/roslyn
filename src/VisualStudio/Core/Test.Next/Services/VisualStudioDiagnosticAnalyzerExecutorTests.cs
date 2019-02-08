@@ -60,7 +60,7 @@ namespace Roslyn.VisualStudio.Next.UnitTests.Remote
                 Assert.Equal(DiagnosticSeverity.Info, diagnostics[0].Severity);
             }
         }
-        
+
         [Fact, Trait(Traits.Feature, Traits.Features.RemoteHost)]
         public async Task TestCancellation()
         {
@@ -233,9 +233,7 @@ namespace Roslyn.VisualStudio.Next.UnitTests.Remote
 
         private TestWorkspace CreateWorkspace(string language, string code, ParseOptions options = null)
         {
-            var workspace = (language == LanguageNames.CSharp) ?
-                TestWorkspace.CreateCSharp(code, parseOptions: options, exportProvider: TestHostServices.CreateExportProvider()) :
-                TestWorkspace.CreateVisualBasic(code, parseOptions: options, exportProvider: TestHostServices.CreateExportProvider());
+            var workspace = TestWorkspace.CreateCSharp(code, parseOptions: options, exportProvider: TestHostServices.CreateExportProvider());
 
             workspace.Options = workspace.Options.WithChangedOption(RemoteHostOptions.RemoteHostTest, true)
                                      .WithChangedOption(ServiceFeatureOnOffOptions.ClosedFileDiagnostic, LanguageNames.CSharp, true);

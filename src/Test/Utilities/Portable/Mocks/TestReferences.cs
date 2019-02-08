@@ -175,7 +175,7 @@ public static class TestReferences
         () => AssemblyMetadata.CreateFromImage(TestResources.NetFX.v4_0_30319.Microsoft_CSharp).GetReference(filePath: @"R:\v4_0_30319\Microsoft.CSharp.dll"),
         LazyThreadSafetyMode.PublicationOnly);
             public static PortableExecutableReference Microsoft_CSharp => s_microsoft_CSharp.Value;
-            
+
             private static readonly Lazy<PortableExecutableReference> s_microsoft_JScript = new Lazy<PortableExecutableReference>(
         () => AssemblyMetadata.CreateFromImage(TestResources.NetFX.v4_0_30319.Microsoft_JScript).GetReference(display: "Microsoft.JScript.dll"),
         LazyThreadSafetyMode.PublicationOnly);

@@ -232,6 +232,6 @@ namespace Microsoft.CodeAnalysis.Editor.UnitTests.Workspaces
         }
 
         #endregion
-        
+
     }
 }

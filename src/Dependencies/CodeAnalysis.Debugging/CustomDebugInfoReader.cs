@@ -483,7 +483,7 @@ RETRY:
 
             return resultBuilder.ToImmutableAndFree();
         }
-        
+
         private static void CheckVersion(byte globalVersion, int methodToken)
         {
             if (globalVersion != CustomDebugInfoConstants.Version)
@@ -644,7 +644,7 @@ RETRY:
                     return false;
             }
         }
-        
+
         private static bool TrySplit(string input, int offset, char separator, out string before, out string after)
         {
             int separatorPos = input.IndexOf(separator, offset);

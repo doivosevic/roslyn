@@ -88,7 +88,7 @@ namespace Microsoft.VisualStudio.LanguageServices.CSharp.Options
             get { return GetBooleanOption(ServiceFeatureOnOffOptions.ClosedFileDiagnostic); }
             set { SetBooleanOption(ServiceFeatureOnOffOptions.ClosedFileDiagnostic, value); }
         }
-        
+
         public int EnterOutliningModeOnOpen
         {
             get { return GetBooleanOption(FeatureOnOffOptions.Outlining); }
@@ -124,7 +124,7 @@ namespace Microsoft.VisualStudio.LanguageServices.CSharp.Options
             get { return GetBooleanOption(FeatureOnOffOptions.AutoFormattingOnSemicolon); }
             set { SetBooleanOption(FeatureOnOffOptions.AutoFormattingOnSemicolon, value); }
         }
-        
+
         public int Indent_BlockContents
         {
             get { return GetBooleanOption(CSharpFormattingOptions.IndentBlock); }

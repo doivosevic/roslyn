@@ -4008,7 +4008,7 @@ public class C
                 SymbolDisplayPartKind.Punctuation,
                 SymbolDisplayPartKind.Punctuation);
         }
-        
+
         [Fact]
         public void TestWindowsRuntimeEvent()
         {
@@ -4152,7 +4152,7 @@ namespace N
                 SymbolDisplayPartKind.Punctuation,
                 SymbolDisplayPartKind.EventName);
         }
-        
+
         [Fact]
         public void FormatPrimitive()
         {
@@ -5264,7 +5264,7 @@ class A
                 SymbolDisplayPartKind.Space,
                 SymbolDisplayPartKind.ParameterName);
         }
-        
+
         private static void RefReturnInternal(Compilation comp)
         {
             var formatBase = new SymbolDisplayFormat(
@@ -5418,7 +5418,7 @@ class A
                 SymbolDisplayPartKind.Keyword,
                 SymbolDisplayPartKind.Punctuation);
         }
-        
+
         private static void RefReadonlyReturnInternal(Compilation comp)
         {
             var formatBase = new SymbolDisplayFormat(
@@ -6485,7 +6485,7 @@ namespace Nested
                 SymbolDisplayPartKind.Punctuation,
                 SymbolDisplayPartKind.StructName);
         }
-        
+
         [Fact]
         public void EnumConstraint_Type()
         {

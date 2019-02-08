@@ -516,7 +516,7 @@ namespace Microsoft.VisualStudio.LanguageServices.Implementation.Progression
             foreach (var reference in symbol.ContainingSymbol.DeclaringSyntaxReferences)
             {
                 var currentNode = await reference.GetSyntaxAsync(cancellationToken).ConfigureAwait(false);
-                
+
                 if (currentNode != null)
                 {
                     Document document = solution.GetDocument(currentNode.SyntaxTree);

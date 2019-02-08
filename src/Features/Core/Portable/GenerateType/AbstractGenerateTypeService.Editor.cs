@@ -65,7 +65,7 @@ namespace Microsoft.CodeAnalysis.GenerateType
                 _generateTypeOptionsResult = generateTypeOptionsResult;
                 _cancellationToken = cancellationToken;
             }
-            
+
             internal async Task<IEnumerable<CodeActionOperation>> GetOperationsAsync()
             {
                 // Check to see if it is from GFU Dialog
@@ -104,7 +104,7 @@ namespace Microsoft.CodeAnalysis.GenerateType
                 else
                 {
                     var namedType = GenerateNamedType(_generateTypeOptionsResult);
-                    
+
                     if (_generateTypeOptionsResult.IsNewFile)
                     {
                         return await GetGenerateInNewFileOperationsAsync(
@@ -335,12 +335,12 @@ namespace Microsoft.CodeAnalysis.GenerateType
                 var includeUsingsOrImports = namespaceContainersAndUsings.usingOrImport;
 
                 Tuple<INamespaceSymbol, INamespaceOrTypeSymbol, Location> enclosingNamespaceGeneratedTypeToAddAndLocation = null;
-                    enclosingNamespaceGeneratedTypeToAddAndLocation = await _service.GetOrGenerateEnclosingNamespaceSymbolAsync(
-                     namedType,
-                     containers,
-                     generateTypeOptionsResult.ExistingDocument,
-                     root,
-                     _cancellationToken).ConfigureAwait(false);
+                enclosingNamespaceGeneratedTypeToAddAndLocation = await _service.GetOrGenerateEnclosingNamespaceSymbolAsync(
+                 namedType,
+                 containers,
+                 generateTypeOptionsResult.ExistingDocument,
+                 root,
+                 _cancellationToken).ConfigureAwait(false);
 
                 var solution = _semanticDocument.Project.Solution;
                 var codeGenResult = await CodeGenerator.AddNamespaceOrTypeDeclarationAsync(

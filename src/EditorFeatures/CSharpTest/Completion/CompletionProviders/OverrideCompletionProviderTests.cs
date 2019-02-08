@@ -2081,7 +2081,7 @@ public class B : A
 
             await VerifyCustomCommitProviderAsync(markupBeforeCommit, "Goo", expectedCodeAfterCommit);
         }
-        
+
         #endregion
 
         #region "Commit: With Trivia"

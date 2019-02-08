@@ -668,7 +668,7 @@ namespace Microsoft.CodeAnalysis.Test.Utilities
             var conversion = operation.Conversion;
             var isChecked = operation.IsChecked;
             var isTryCast = operation.IsTryCast;
-            
+
             Assert.Same(operation.Operand, operation.Children.Single());
         }
 

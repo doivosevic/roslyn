@@ -99,7 +99,7 @@ namespace Microsoft.CodeAnalysis.UnitTests
             var csharpTrivia3 = csharpTriviaList2.ElementAt(1); //from converted list
             Assert.Equal(correctSpan, csharpTrivia3.Span);
         }
-        
+
         [Fact]
         public void TestTrackNodes()
         {

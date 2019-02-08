@@ -39,17 +39,7 @@ namespace Microsoft.Cci
         {
             if (ShouldForwardToPreviousMethodWithUsingInfo(context, methodBody))
             {
-                // SerializeNamespaceScopeMetadata will do the actual forwarding in case this is a CSharp method.
-                // VB on the other hand adds a "@methodtoken" to the scopes instead.
-                if (false)
-                {
-                    forwardToMethod = _previousMethodBodyWithUsingInfo.MethodDefinition;
-                }
-                else
-                {
-                    forwardToMethod = null;
-                }
-
+                forwardToMethod = null;
                 return true;
             }
 
@@ -235,11 +225,6 @@ namespace Microsoft.Cci
 
         private void SerializeNamespaceScopeMetadata(ref CustomDebugInfoEncoder encoder, EmitContext context, IMethodBody methodBody)
         {
-            if (false)
-            {
-                return;
-            }
-
             if (ShouldForwardToPreviousMethodWithUsingInfo(context, methodBody))
             {
                 Debug.Assert(!ReferenceEquals(_previousMethodBodyWithUsingInfo, methodBody));
@@ -268,16 +253,6 @@ namespace Microsoft.Cci
                 ReferenceEquals(_previousMethodBodyWithUsingInfo, methodBody))
             {
                 return false;
-            }
-
-            // VB includes method namespace in namespace scopes:
-            if (false)
-            {
-                if (_pdbWriter.GetOrCreateSerializedNamespaceName(_previousMethodBodyWithUsingInfo.MethodDefinition.ContainingNamespace) !=
-                    _pdbWriter.GetOrCreateSerializedNamespaceName(methodBody.MethodDefinition.ContainingNamespace))
-                {
-                    return false;
-                }
             }
 
             var previousScopes = _previousMethodBodyWithUsingInfo.ImportScope;

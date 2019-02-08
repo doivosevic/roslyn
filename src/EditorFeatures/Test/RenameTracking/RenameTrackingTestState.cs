@@ -49,7 +49,7 @@ namespace Microsoft.CodeAnalysis.Editor.UnitTests.RenameTracking
 
         private readonly CodeFixProvider _codeFixProvider;
         private readonly RenameTrackingCancellationCommandHandler _commandHandler = new RenameTrackingCancellationCommandHandler();
-        
+
         public RenameTrackingTestState(
             TestWorkspace workspace,
             string languageName,
@@ -97,7 +97,7 @@ namespace Microsoft.CodeAnalysis.Editor.UnitTests.RenameTracking
                 throw new ArgumentException("Invalid language name: " + languageName, nameof(languageName));
             }
         }
-        
+
         public void SendEscape()
         {
             _commandHandler.ExecuteCommand(new EscapeKeyCommandArgs(_view, _view.TextBuffer), TestCommandExecutionContext.Create());

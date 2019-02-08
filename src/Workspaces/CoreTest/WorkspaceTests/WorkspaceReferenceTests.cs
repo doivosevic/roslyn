@@ -84,48 +84,6 @@ namespace Microsoft.CodeAnalysis.UnitTests.WorkspaceTests
         }
 
         [Fact]
-        public async Task CheckCrossLanguageReferencesSameAfterSolutionChangedTest()
-        {
-            using (var ws = new AdhocWorkspace())
-            {
-                var referenceInfo = ProjectInfo.Create(
-                    ProjectId.CreateNewId(),
-                    VersionStamp.Create(),
-                    "ReferenceProject",
-                    "ReferenceProject",
-                    LanguageNames.VisualBasic,
-                    metadataReferences: ImmutableArray.Create<MetadataReference>(PortableExecutableReference.CreateFromFile(typeof(object).Assembly.Location)));
-
-                var referenceProject = ws.AddProject(referenceInfo);
-
-                var projectInfo = ProjectInfo.Create(
-                    ProjectId.CreateNewId(),
-                    VersionStamp.Create(),
-                    "TestProject",
-                    "TestProject",
-                    LanguageNames.CSharp,
-                    projectReferences: ImmutableArray.Create<ProjectReference>(new ProjectReference(referenceInfo.Id)),
-                    metadataReferences: ImmutableArray.Create<MetadataReference>(PortableExecutableReference.CreateFromFile(typeof(object).Assembly.Location)));
-
-                var project = ws.AddProject(projectInfo);
-
-                // get original references
-                var compilation1 = await project.GetCompilationAsync();
-                var references1 = compilation1.ExternalReferences;
-
-                // just some arbitary action to create new snpahost that doesnt affect references
-                var info = DocumentInfo.Create(DocumentId.CreateNewId(project.Id), "code.cs");
-                var document = ws.AddDocument(info);
-
-                // get new compilation
-                var compilation2 = await document.Project.GetCompilationAsync();
-                var references2 = compilation2.ExternalReferences;
-
-                Assert.Equal(references1, references2);
-            }
-        }
-
-        [Fact]
         public async Task CheckP2PReferencesNotSameAfterReferenceChangedTest()
         {
             using (var ws = new AdhocWorkspace())

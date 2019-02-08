@@ -18,7 +18,7 @@ namespace Microsoft.CodeAnalysis.UnitTests.Diagnostics
         {
             VerifyNamespaceResolution("namespace $$N {}", LanguageNames.CSharp, false, "N");
         }
-        
+
         [Fact]
         public void TestResolveNestedNamespace1()
         {
@@ -32,7 +32,7 @@ namespace A
 ",
                 LanguageNames.CSharp, false, "A.B.C");
         }
-        
+
         [Fact]
         public void TestResolveNamespaceWithSameNameAsGenericInterface1()
         {
@@ -94,7 +94,7 @@ class C
 ",
                 LanguageNames.CSharp, false, "C+D");
         }
-        
+
         [Fact]
         public void TestResolveNestedType1()
         {
@@ -113,7 +113,7 @@ namespace N
 ",
                 LanguageNames.CSharp, false, "N.C+D+E");
         }
-        
+
         [Fact]
         public void TestResolveGenericType1()
         {
@@ -127,7 +127,7 @@ class $$D<T1, T2, T3>
 ",
                 LanguageNames.CSharp, false, "D`3");
         }
-        
+
         [Fact]
         public void TestDontResolveGenericType1()
         {
@@ -138,7 +138,7 @@ class D<T1, T2, T3>
 ",
                 LanguageNames.CSharp, false, "D");
         }
-        
+
         [Fact]
         public void TestDontPartiallyResolveType1()
         {
@@ -152,7 +152,7 @@ class A
 ",
                 LanguageNames.CSharp, false, "A.B");
         }
-        
+
         [Fact]
         public void TestResolveField1()
         {
@@ -166,7 +166,7 @@ class C
                 "C.#s",
                 "C.s");
         }
-        
+
         [Fact]
         public void TestResolveProperty1()
         {
@@ -180,7 +180,7 @@ class C
                 "C.#StringProperty",
                 "C.StringProperty");
         }
-        
+
         [Fact]
         public void TestResolveEvent1()
         {
@@ -194,7 +194,7 @@ class C
                 "e:C.#E",
                 "C.E");
         }
-        
+
         [Fact]
         public void TestDontResolveNonEvent1()
         {
@@ -206,7 +206,7 @@ public class C
 ",
                LanguageNames.CSharp, false, "e:C.E");
         }
-        
+
         [Fact]
         public void TestResolvePropertySetMethod1()
         {
@@ -220,7 +220,7 @@ class C
                 "C.#set_StringProperty(System.String)",
                 "C.set_StringProperty(System.String):System.Void");
         }
-        
+
         [Fact]
         public void TestResolveEventAddMethod()
         {
@@ -274,7 +274,7 @@ class C
             "C.#Goo(System.Int32)",
             "C.Goo(System.Int32):System.Void");
         }
-        
+
         [Fact]
         public void TestResolveMethod1()
         {
@@ -290,7 +290,7 @@ class C
             "C.#Goo(System.String)",
             "C.Goo(System.String):System.String");
         }
-        
+
         [Fact]
         public void TestResolveOverloadedGenericMethod1()
         {
@@ -314,7 +314,7 @@ class C
 ",
                 LanguageNames.CSharp, false, "C.Goo():System.Int32");
         }
-        
+
         [Fact]
         public void TestResolveMethodOverloadedOnArity1()
         {
@@ -336,7 +336,7 @@ interface I
 ",
                 LanguageNames.CSharp, false, "I.M():System.Void");
         }
-        
+
         [Fact]
         public void TestResolveConstructor1()
         {
@@ -350,7 +350,7 @@ class C
                 "C.#.ctor()",
                 "C..ctor()");
         }
-        
+
         [Fact]
         public void TestResolveStaticConstructor1()
         {
@@ -364,7 +364,7 @@ class C
                 "C.#.cctor()",
                 "C..cctor()");
         }
-        
+
         [Fact]
         public void TestResolveSimpleOperator1()
         {
@@ -381,7 +381,7 @@ class C
                 "C.#op_Equality(C,C)",
                 "C.op_Equality(C,C):System.Boolean");
         }
-        
+
         [Fact]
         public void TestResolveIndexer1()
         {
@@ -403,7 +403,7 @@ class C
                 "C.#Item[System.Int32,System.String]",
                 "C.Item[System.Int32,System.String]");
         }
-        
+
         [Fact]
         public void TestResolveIndexerAccessorMethod()
         {
@@ -464,7 +464,7 @@ class C
                 "C.#IsComplex`2(System.Int32*,System.Int32&,!!0&,!!1[])",
                 "C.IsComplex(System.Int32*,System.Int32&,T0&,T1[]):System.Boolean");
         }
-        
+
         [Fact]
         public void TestFinalize1()
         {
@@ -480,7 +480,7 @@ class A
                 "A.#Finalize()",
                 "A.Finalize():System.Void");
         }
-        
+
         [Fact]
         public void TestResolveMethodWithComplexReturnType1()
         {
@@ -497,7 +497,7 @@ class C
                 "C.#GetComplex`1()",
                 "C.GetComplex():T[,][,,][][]");
         }
-        
+
         [Fact]
         public void TestResolveMethodWithGenericParametersAndReturnTypeFromContainingClass1()
         {
@@ -517,7 +517,7 @@ public class C<T0>
                 "C`1+D`1.#M`2(!0,!1,!!0)",
                 "C`1+D`1.M(T0,T1,T2):T3");
         }
-        
+
         [Fact]
         public void TestResolveIndexerWithGenericParametersTypeFromContainingClass1()
         {
@@ -537,7 +537,7 @@ public class C<T0>
                 "C`1+D`1.#Item[!1]",
                 "C`1+D`1.Item[!1]:!0");
         }
-        
+
         [Fact]
         public void TestResolveMethodOnOutParameter1()
         {
@@ -558,7 +558,7 @@ class C
                 "C.#M1(System.Int32&)",
                 "C.M1(System.Int32&):System.Void");
         }
-        
+
         [Fact]
         public void TestResolveMethodWithInstantiatedGenericParameterAndReturnType1()
         {
@@ -578,7 +578,7 @@ class C<T3>
                 "C.#M`1(G`2<System.Double,System.Double>,G`2<!0,!!0[]>)",
                 "C.M(G`2<System.Double,System.Double>,G`2<T3,T4[]>):G`2<System.Int32,System.Int32>");
         }
-        
+
         [Fact]
         public void TestResolveEscapedName1()
         {
@@ -594,7 +594,7 @@ namespace @namespace
                 LanguageNames.CSharp, false,
                 "namespace.class.if");
         }
-        
+
         [Fact]
         public void TestResolveMethodIgnoresConvention1()
         {
@@ -611,7 +611,7 @@ class C
             "C.#[stdcall]Goo(System.String)",
             "C.#[thiscall]Goo(System.String)");
         }
-        
+
         [Fact]
         public void TestNoResolutionForMalformedNames1()
         {
@@ -638,7 +638,7 @@ public class C<T0>
                 "C`1+D`1.@namespace", // Escaped name
                 "C`1+D`1.#[blah]M`2(!0,!1,!!0)"); // Invalid calling convention
         }
-        
+
         private static void VerifyNamespaceResolution(string markup, string language, bool rootNamespace, params string[] fxCopFullyQualifiedNames)
         {
             string rootNamespaceName = "";

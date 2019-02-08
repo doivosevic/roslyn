@@ -590,7 +590,7 @@ class d
         {
             TestCommonIsTextualTriggerCharacter();
         }
-        
+
         [WorkItem(4754, "https://github.com/dotnet/roslyn/issues/4754")]
         [Fact, Trait(Traits.Feature, Traits.Features.Completion)]
         public async Task CollectionInitializerPatternFromBaseType()

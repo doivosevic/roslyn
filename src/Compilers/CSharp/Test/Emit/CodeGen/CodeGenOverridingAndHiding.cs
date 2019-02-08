@@ -4018,7 +4018,7 @@ public class Test
             var compref = CreateCompilation(source, assemblyName: "XNoDefaultForParams_Dev10781558_Library");
             var comp = CompileAndVerify(source2, references: new[] { new CSharpCompilationReference(compref) }, expectedOutput: "M");
         }
-        
+
         [Fact]
         public void HidingAndNamedParameters()
         {

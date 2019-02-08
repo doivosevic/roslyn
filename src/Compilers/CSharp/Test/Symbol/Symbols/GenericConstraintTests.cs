@@ -5619,7 +5619,7 @@ class B : A
                 //         return null;
                 Diagnostic(ErrorCode.ERR_TypeVarCantBeNull, "null").WithArguments("T").WithLocation(14, 16));
         }
-        
+
         private static void CheckConstraints(
             TypeParameterSymbol typeParameter,
             TypeParameterConstraintKind constraints,

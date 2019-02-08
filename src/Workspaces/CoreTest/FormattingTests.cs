@@ -29,13 +29,13 @@ namespace Microsoft.CodeAnalysis.UnitTests
             Assert.NotNull(rules);
             Assert.NotEmpty(rules);
         }
-        
+
         private void AssertFormatCSharp(string expected, string input)
         {
             var tree = CS.SyntaxFactory.ParseSyntaxTree(input);
             AssertFormat(expected, tree);
         }
-        
+
         private void AssertFormat(string expected, SyntaxTree tree)
         {
             using (var workspace = new AdhocWorkspace())

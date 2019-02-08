@@ -302,9 +302,9 @@ namespace Microsoft.CodeAnalysis
             s_signature_HasThis_Void,
             s_signature_HasThis_Void_SecurityAction
         };
-        
+
         private static readonly byte[][] s_signaturesOfCodeAnalysisEmbedded = { s_signature_HasThis_Void };
-        
+
         private static readonly byte[][] s_signaturesOfClassInterfaceAttribute =
         {
             s_signature_HasThis_Void_Int16,

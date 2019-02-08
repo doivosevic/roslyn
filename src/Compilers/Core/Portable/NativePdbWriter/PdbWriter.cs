@@ -235,55 +235,6 @@ namespace Microsoft.Cci
             // NOTE: Dev12 has related cases "I" and "O" in EMITTER::ComputeDebugNamespace,
             // but they were probably implementation details that do not affect Roslyn.
 
-            if (false)
-            {
-                // VB doesn't support extern aliases
-                Debug.Assert(import.TargetAssemblyOpt == null);
-                Debug.Assert(declaredExternAliasesOpt == null);
-
-                if (import.TargetTypeOpt != null)
-                {
-                    Debug.Assert(import.TargetNamespaceOpt == null);
-                    Debug.Assert(import.TargetAssemblyOpt == null);
-
-                    // Native compiler doesn't write imports with generic types to PDB.
-                    if (import.TargetTypeOpt.IsTypeSpecification())
-                    {
-                        return null;
-                    }
-
-                    string typeName = GetOrCreateSerializedTypeName(import.TargetTypeOpt);
-
-                    if (import.AliasOpt != null)
-                    {
-                        return (isProjectLevel ? "@PA:" : "@FA:") + import.AliasOpt + "=" + typeName;
-                    }
-                    else
-                    {
-                        return (isProjectLevel ? "@PT:" : "@FT:") + typeName;
-                    }
-                }
-
-                if (import.TargetNamespaceOpt != null)
-                {
-                    string namespaceName = GetOrCreateSerializedNamespaceName(import.TargetNamespaceOpt);
-
-                    if (import.AliasOpt == null)
-                    {
-                        return (isProjectLevel ? "@P:" : "@F:") + namespaceName;
-                    }
-                    else
-                    {
-                        return (isProjectLevel ? "@PA:" : "@FA:") + import.AliasOpt + "=" + namespaceName;
-                    }
-                }
-
-                Debug.Assert(import.AliasOpt != null);
-                Debug.Assert(import.TargetXmlNamespaceOpt != null);
-
-                return (isProjectLevel ? "@PX:" : "@FX:") + import.AliasOpt + "=" + import.TargetXmlNamespaceOpt;
-            }
-
             Debug.Assert(import.TargetXmlNamespaceOpt == null);
 
             if (import.TargetTypeOpt != null)
@@ -345,7 +296,7 @@ namespace Microsoft.Cci
 
             return result;
         }
-        
+
         private string GetAssemblyReferenceAlias(IAssemblyReference assembly, HashSet<string> declaredExternAliases)
         {
             // no extern alias defined in scope at all -> error in compiler

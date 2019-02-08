@@ -16,7 +16,7 @@ namespace Roslyn.VisualStudio.IntegrationTests.Workspace
             : base(instanceFactory, WellKnownProjectTemplates.ClassLibrary)
         {
         }
-        
+
         [WpfFact, Trait(Traits.Feature, Traits.Features.Workspace)]
         public override void MetadataReference()
         {

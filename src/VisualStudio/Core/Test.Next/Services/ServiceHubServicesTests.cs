@@ -381,15 +381,6 @@ namespace Roslyn.VisualStudio.Next.UnitTests.Remote
                 "cs additional file content"
             }, Array.Empty<ProjectId>());
 
-            solution = AddProject(solution, LanguageNames.VisualBasic, new[]
-            {
-                "Class VB\r\nEnd Class",
-                "Class VB2\r\nEnd Class"
-            }, new[]
-            {
-                "vb additional file content"
-            }, new ProjectId[] { solution.ProjectIds.First() });
-
             solution = AddProject(solution, LanguageNames.CSharp, new[]
             {
                 "class Top { }"

@@ -667,60 +667,60 @@ namespace Microsoft.CodeAnalysis.Editor.UnitTests.CodeGeneration
 
         internal static IEnumerable<SyntaxToken> CreateModifierTokens(Editing.DeclarationModifiers modifiers, string language)
         {
-                if (modifiers.IsAbstract)
-                {
-                    yield return CS.SyntaxFactory.Token(CS.SyntaxKind.AbstractKeyword);
-                }
+            if (modifiers.IsAbstract)
+            {
+                yield return CS.SyntaxFactory.Token(CS.SyntaxKind.AbstractKeyword);
+            }
 
-                if (modifiers.IsAsync)
-                {
-                    yield return CS.SyntaxFactory.Token(CS.SyntaxKind.AsyncKeyword);
-                }
+            if (modifiers.IsAsync)
+            {
+                yield return CS.SyntaxFactory.Token(CS.SyntaxKind.AsyncKeyword);
+            }
 
-                if (modifiers.IsConst)
-                {
-                    yield return CS.SyntaxFactory.Token(CS.SyntaxKind.ConstKeyword);
-                }
+            if (modifiers.IsConst)
+            {
+                yield return CS.SyntaxFactory.Token(CS.SyntaxKind.ConstKeyword);
+            }
 
-                if (modifiers.IsNew)
-                {
-                    yield return CS.SyntaxFactory.Token(CS.SyntaxKind.NewKeyword);
-                }
+            if (modifiers.IsNew)
+            {
+                yield return CS.SyntaxFactory.Token(CS.SyntaxKind.NewKeyword);
+            }
 
-                if (modifiers.IsOverride)
-                {
-                    yield return CS.SyntaxFactory.Token(CS.SyntaxKind.OverrideKeyword);
-                }
+            if (modifiers.IsOverride)
+            {
+                yield return CS.SyntaxFactory.Token(CS.SyntaxKind.OverrideKeyword);
+            }
 
-                if (modifiers.IsPartial)
-                {
-                    yield return CS.SyntaxFactory.Token(CS.SyntaxKind.PartialKeyword);
-                }
+            if (modifiers.IsPartial)
+            {
+                yield return CS.SyntaxFactory.Token(CS.SyntaxKind.PartialKeyword);
+            }
 
-                if (modifiers.IsReadOnly)
-                {
-                    yield return CS.SyntaxFactory.Token(CS.SyntaxKind.ReadOnlyKeyword);
-                }
+            if (modifiers.IsReadOnly)
+            {
+                yield return CS.SyntaxFactory.Token(CS.SyntaxKind.ReadOnlyKeyword);
+            }
 
-                if (modifiers.IsSealed)
-                {
-                    yield return CS.SyntaxFactory.Token(CS.SyntaxKind.SealedKeyword);
-                }
+            if (modifiers.IsSealed)
+            {
+                yield return CS.SyntaxFactory.Token(CS.SyntaxKind.SealedKeyword);
+            }
 
-                if (modifiers.IsStatic)
-                {
-                    yield return CS.SyntaxFactory.Token(CS.SyntaxKind.StaticKeyword);
-                }
+            if (modifiers.IsStatic)
+            {
+                yield return CS.SyntaxFactory.Token(CS.SyntaxKind.StaticKeyword);
+            }
 
-                if (modifiers.IsUnsafe)
-                {
-                    yield return CS.SyntaxFactory.Token(CS.SyntaxKind.UnsafeKeyword);
-                }
+            if (modifiers.IsUnsafe)
+            {
+                yield return CS.SyntaxFactory.Token(CS.SyntaxKind.UnsafeKeyword);
+            }
 
-                if (modifiers.IsVirtual)
-                {
-                    yield return CS.SyntaxFactory.Token(CS.SyntaxKind.VirtualKeyword);
-                }
+            if (modifiers.IsVirtual)
+            {
+                yield return CS.SyntaxFactory.Token(CS.SyntaxKind.VirtualKeyword);
+            }
         }
 
         internal class TestContext : IDisposable
@@ -851,7 +851,7 @@ namespace Microsoft.CodeAnalysis.Editor.UnitTests.CodeGeneration
             {
                 return LanguageNames.CSharp;
             }
-            
+
             private static TestWorkspace CreateWorkspaceFromFile(string file, bool isVisualBasic, ParseOptions parseOptions, CompilationOptions compilationOptions)
             {
                 return TestWorkspace.CreateCSharp(file, (CS.CSharpParseOptions)parseOptions, (CS.CSharpCompilationOptions)compilationOptions);

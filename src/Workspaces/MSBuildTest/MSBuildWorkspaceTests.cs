@@ -61,7 +61,7 @@ namespace Microsoft.CodeAnalysis.MSBuild.UnitTests
                 Assert.StartsWith("public class CSharpClass", type.ToString(), StringComparison.Ordinal);
             }
         }
-        
+
         [ConditionalFact(typeof(VisualStudioMSBuildInstalled)), Trait(Traits.Feature, Traits.Features.MSBuildWorkspace)]
         [WorkItem(2824, "https://github.com/dotnet/roslyn/issues/2824")]
         public async Task Test_OpenProjectReferencingPortableProject()
@@ -221,7 +221,7 @@ namespace Microsoft.CodeAnalysis.MSBuild.UnitTests
                             compilation2.References.OfType<CompilationReference>().Any(c => c.Compilation == compilation1));
             }
         }
-        
+
         [ConditionalFact(typeof(VisualStudioMSBuildInstalled)), Trait(Traits.Feature, Traits.Features.MSBuildWorkspace)]
         public async Task TestInternalsVisibleToSigned()
         {
@@ -441,22 +441,6 @@ class C1
                 var solution = await workspace.OpenSolutionAsync(solutionFilePath);
                 var project = solution.Projects.First();
                 Assert.NotEmpty(project.Documents);
-            }
-        }
-        
-        [ConditionalFact(typeof(VisualStudioMSBuildInstalled)), Trait(Traits.Feature, Traits.Features.MSBuildWorkspace)]
-        public async Task Test_Respect_ReferenceOutputassembly_Flag()
-        {
-            var projFile = GetSolutionFileName(@"VisualBasicProject\VisualBasicProject.vbproj");
-            CreateFiles(GetSimpleCSharpSolutionFiles()
-                .WithFile(@"VisualBasicProject_Circular_Top.vbproj", Resources.ProjectFiles.VisualBasic.Circular_Top)
-                .WithFile(@"VisualBasicProject_Circular_Target.vbproj", Resources.ProjectFiles.VisualBasic.Circular_Target));
-            var projectFilePath = GetSolutionFileName(@"VisualBasicProject_Circular_Top.vbproj");
-
-            using (var workspace = CreateMSBuildWorkspace())
-            {
-                var project = await workspace.OpenProjectAsync(projectFilePath);
-                Assert.Empty(project.ProjectReferences);
             }
         }
 
@@ -1058,203 +1042,6 @@ class C1
         }
 
         [ConditionalFact(typeof(VisualStudioMSBuildInstalled)), Trait(Traits.Feature, Traits.Features.MSBuildWorkspace)]
-        public async Task TestOpenProject_WithInvalidProjectReference_SkipTrue_SucceedsWithEvent()
-        {
-            CreateFiles(GetMultiProjectSolutionFiles()
-                .WithFile(@"VisualBasicProject\VisualBasicProject.vbproj", Resources.ProjectFiles.VisualBasic.InvalidProjectReference));
-            var projectFilePath = GetSolutionFileName(@"VisualBasicProject\VisualBasicProject.vbproj");
-
-            using (var workspace = CreateMSBuildWorkspace())
-            {
-                var diagnostics = new List<WorkspaceDiagnostic>();
-                workspace.WorkspaceFailed += (s, args) =>
-                {
-                    diagnostics.Add(args.Diagnostic);
-                };
-
-                var project = await workspace.OpenProjectAsync(projectFilePath);
-
-                Assert.Single(project.Solution.ProjectIds); // didn't really open referenced project due to invalid file path.
-                Assert.Empty(project.ProjectReferences); // no resolved project references
-                Assert.Single(project.AllProjectReferences); // dangling project reference
-            }
-        }
-
-        [ConditionalFact(typeof(VisualStudioMSBuildInstalled)), Trait(Traits.Feature, Traits.Features.MSBuildWorkspace)]
-        public void TestOpenProject_WithInvalidProjectReference_SkipFalse_Fails()
-        {
-            CreateFiles(GetMultiProjectSolutionFiles()
-                .WithFile(@"VisualBasicProject\VisualBasicProject.vbproj", Resources.ProjectFiles.VisualBasic.InvalidProjectReference));
-            var projectFilePath = GetSolutionFileName(@"VisualBasicProject\VisualBasicProject.vbproj");
-
-            AssertEx.Throws<InvalidOperationException>(() =>
-            {
-                using (var workspace = CreateMSBuildWorkspace())
-                {
-                    workspace.SkipUnrecognizedProjects = false;
-                    workspace.OpenProjectAsync(projectFilePath).Wait();
-                }
-            });
-        }
-
-        [ConditionalFact(typeof(VisualStudioMSBuildInstalled)), Trait(Traits.Feature, Traits.Features.MSBuildWorkspace)]
-        public async Task TestOpenProject_WithNonExistentProjectReference_SkipTrue_SucceedsWithEvent()
-        {
-            CreateFiles(GetMultiProjectSolutionFiles()
-                .WithFile(@"VisualBasicProject\VisualBasicProject.vbproj", Resources.ProjectFiles.VisualBasic.NonExistentProjectReference));
-            var projectFilePath = GetSolutionFileName(@"VisualBasicProject\VisualBasicProject.vbproj");
-
-            using (var workspace = CreateMSBuildWorkspace())
-            {
-                var diagnostics = new List<WorkspaceDiagnostic>();
-                workspace.WorkspaceFailed += (s, args) =>
-                {
-                    diagnostics.Add(args.Diagnostic);
-                };
-
-                var project = await workspace.OpenProjectAsync(projectFilePath);
-
-                Assert.Single(project.Solution.ProjectIds); // didn't really open referenced project due to invalid file path.
-                Assert.Empty(project.ProjectReferences); // no resolved project references
-                Assert.Single(project.AllProjectReferences); // dangling project reference
-            }
-        }
-
-        [ConditionalFact(typeof(VisualStudioMSBuildInstalled)), Trait(Traits.Feature, Traits.Features.MSBuildWorkspace)]
-        public void TestOpenProject_WithNonExistentProjectReference_SkipFalse_Fails()
-        {
-            CreateFiles(GetMultiProjectSolutionFiles()
-                .WithFile(@"VisualBasicProject\VisualBasicProject.vbproj", Resources.ProjectFiles.VisualBasic.NonExistentProjectReference));
-            var projectFilePath = GetSolutionFileName(@"VisualBasicProject\VisualBasicProject.vbproj");
-
-            AssertEx.Throws<FileNotFoundException>(() =>
-            {
-                using (var workspace = CreateMSBuildWorkspace())
-                {
-                    workspace.SkipUnrecognizedProjects = false;
-                    workspace.OpenProjectAsync(projectFilePath).Wait();
-                }
-            });
-        }
-
-        [ConditionalFact(typeof(VisualStudioMSBuildInstalled)), Trait(Traits.Feature, Traits.Features.MSBuildWorkspace)]
-        public async Task TestOpenProject_WithUnrecognizedProjectReferenceFileExtension_SkipTrue_SucceedsWithEvent()
-        {
-            CreateFiles(GetMultiProjectSolutionFiles()
-                .WithFile(@"VisualBasicProject\VisualBasicProject.vbproj", Resources.ProjectFiles.VisualBasic.UnknownProjectExtension)
-                .WithFile(@"CSharpProject\CSharpProject.noproj", Resources.ProjectFiles.CSharp.CSharpProject));
-            var projectFilePath = GetSolutionFileName(@"VisualBasicProject\VisualBasicProject.vbproj");
-
-            using (var workspace = CreateMSBuildWorkspace())
-            {
-                var diagnostics = new List<WorkspaceDiagnostic>();
-                workspace.WorkspaceFailed += (s, args) =>
-                {
-                    diagnostics.Add(args.Diagnostic);
-                };
-
-                var project = await workspace.OpenProjectAsync(projectFilePath);
-
-                Assert.Single(project.Solution.ProjectIds); // didn't really open referenced project due to unrecognized extension.
-                Assert.Empty(project.ProjectReferences); // no resolved project references
-                Assert.Single(project.AllProjectReferences); // dangling project reference
-            }
-        }
-
-        [ConditionalFact(typeof(VisualStudioMSBuildInstalled)), Trait(Traits.Feature, Traits.Features.MSBuildWorkspace)]
-        public void TestOpenProject_WithUnrecognizedProjectReferenceFileExtension_SkipFalse_Fails()
-        {
-            CreateFiles(GetMultiProjectSolutionFiles()
-                .WithFile(@"VisualBasicProject\VisualBasicProject.vbproj", Resources.ProjectFiles.VisualBasic.UnknownProjectExtension)
-                .WithFile(@"CSharpProject\CSharpProject.noproj", Resources.ProjectFiles.CSharp.CSharpProject));
-            var projectFilePath = GetSolutionFileName(@"VisualBasicProject\VisualBasicProject.vbproj");
-
-            AssertEx.Throws<InvalidOperationException>(() =>
-            {
-                using (var workspace = CreateMSBuildWorkspace())
-                {
-                    workspace.SkipUnrecognizedProjects = false;
-                    workspace.OpenProjectAsync(projectFilePath).Wait();
-                }
-            });
-        }
-
-        [ConditionalFact(typeof(VisualStudioMSBuildInstalled)), Trait(Traits.Feature, Traits.Features.MSBuildWorkspace)]
-        public async Task TestOpenProject_WithUnrecognizedProjectReferenceFileExtension_WithMetadata_SkipTrue_SucceedsByLoadingMetadata()
-        {
-            CreateFiles(GetMultiProjectSolutionFiles()
-                .WithFile(@"VisualBasicProject\VisualBasicProject.vbproj", Resources.ProjectFiles.VisualBasic.UnknownProjectExtension)
-                .WithFile(@"CSharpProject\CSharpProject.noproj", Resources.ProjectFiles.CSharp.CSharpProject)
-                .WithFile(@"CSharpProject\bin\Debug\CSharpProject.dll", Resources.Dlls.CSharpProject));
-            var projectFilePath = GetSolutionFileName(@"VisualBasicProject\VisualBasicProject.vbproj");
-
-            // keep metadata reference from holding files open
-            Workspace.TestHookStandaloneProjectsDoNotHoldReferences = true;
-
-            using (var workspace = CreateMSBuildWorkspace())
-            {
-                var project = await workspace.OpenProjectAsync(projectFilePath);
-
-                Assert.Single(project.Solution.ProjectIds);
-                Assert.Empty(project.ProjectReferences);
-                Assert.Empty(project.AllProjectReferences);
-
-                var metaRefs = project.MetadataReferences.ToList();
-                Assert.Contains(metaRefs, r => r is PortableExecutableReference && ((PortableExecutableReference)r).Display.Contains("CSharpProject.dll"));
-            }
-        }
-
-        [ConditionalFact(typeof(VisualStudioMSBuildInstalled)), Trait(Traits.Feature, Traits.Features.MSBuildWorkspace)]
-        public async Task TestOpenProject_WithUnrecognizedProjectReferenceFileExtension_WithMetadata_SkipFalse_SucceedsByLoadingMetadata()
-        {
-            CreateFiles(GetMultiProjectSolutionFiles()
-                .WithFile(@"VisualBasicProject\VisualBasicProject.vbproj", Resources.ProjectFiles.VisualBasic.UnknownProjectExtension)
-                .WithFile(@"CSharpProject\CSharpProject.noproj", Resources.ProjectFiles.CSharp.CSharpProject)
-                .WithFile(@"CSharpProject\bin\Debug\CSharpProject.dll", Resources.Dlls.CSharpProject));
-            var projectFilePath = GetSolutionFileName(@"VisualBasicProject\VisualBasicProject.vbproj");
-
-            // keep metadata reference from holding files open
-            Workspace.TestHookStandaloneProjectsDoNotHoldReferences = true;
-
-            using (var workspace = CreateMSBuildWorkspace())
-            {
-                workspace.SkipUnrecognizedProjects = false;
-                var project = await workspace.OpenProjectAsync(projectFilePath);
-
-                Assert.Single(project.Solution.ProjectIds);
-                Assert.Empty(project.ProjectReferences);
-                Assert.Empty(project.AllProjectReferences);
-                Assert.Contains(project.MetadataReferences, r => r is PortableExecutableReference && ((PortableExecutableReference)r).Display.Contains("CSharpProject.dll"));
-            }
-        }
-
-        [ConditionalFact(typeof(VisualStudioMSBuildInstalled)), Trait(Traits.Feature, Traits.Features.MSBuildWorkspace)]
-        public async Task TestOpenProject_WithUnrecognizedProjectReferenceFileExtension_BadMsbuildProject_SkipTrue_SucceedsWithDanglingProjectReference()
-        {
-            CreateFiles(GetMultiProjectSolutionFiles()
-                .WithFile(@"VisualBasicProject\VisualBasicProject.vbproj", Resources.ProjectFiles.VisualBasic.UnknownProjectExtension)
-                .WithFile(@"CSharpProject\CSharpProject.noproj", Resources.Dlls.CSharpProject)); // use metadata file as stand-in for bad project file
-
-            var projectFilePath = GetSolutionFileName(@"VisualBasicProject\VisualBasicProject.vbproj");
-
-            // keep metadata reference from holding files open
-            Workspace.TestHookStandaloneProjectsDoNotHoldReferences = true;
-
-            using (var workspace = CreateMSBuildWorkspace())
-            {
-                workspace.SkipUnrecognizedProjects = true;
-
-                var project = await workspace.OpenProjectAsync(projectFilePath);
-
-                Assert.Single(project.Solution.ProjectIds);
-                Assert.Empty(project.ProjectReferences);
-                Assert.Single(project.AllProjectReferences);
-
-                Assert.InRange(workspace.Diagnostics.Count, 2, 3);
-            }
-        }
-
-        [ConditionalFact(typeof(VisualStudioMSBuildInstalled)), Trait(Traits.Feature, Traits.Features.MSBuildWorkspace)]
         public async Task TestOpenProject_WithReferencedProject_LoadMetadata_ExistingMetadata_Succeeds()
         {
             CreateFiles(GetMultiProjectSolutionFiles()
@@ -1328,30 +1115,6 @@ class C1
                 vbProject = workspace.CurrentSolution.GetProject(vbProject.Id);
                 Assert.Single(vbProject.ProjectReferences);
                 Assert.DoesNotContain(vbProject.MetadataReferences, r => r.Properties.Aliases.Contains("CSharpProject"));
-            }
-        }
-
-        [ConditionalFact(typeof(VisualStudioMSBuildInstalled), typeof(Framework35Installed))]
-        [Trait(Traits.Feature, Traits.Features.MSBuildWorkspace)]
-        [WorkItem(528984, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/528984")]
-        public async Task TestOpenProject_AddVBDefaultReferences()
-        {
-            var files = new FileSet(
-                ("VisualBasicProject_3_5.vbproj", Resources.ProjectFiles.VisualBasic.VisualBasicProject_3_5),
-                ("VisualBasicProject_VisualBasicClass.vb", Resources.SourceFiles.VisualBasic.VisualBasicClass));
-
-            CreateFiles(files);
-
-            var projectFilePath = GetSolutionFileName("VisualBasicProject_3_5.vbproj");
-
-            // keep metadata reference from holding files open
-            Workspace.TestHookStandaloneProjectsDoNotHoldReferences = true;
-
-            using (var workspace = CreateMSBuildWorkspace())
-            {
-                var project = await workspace.OpenProjectAsync(projectFilePath);
-                var compilation = await project.GetCompilationAsync();
-                var diagnostics = compilation.GetDiagnostics();
             }
         }
 
@@ -1546,7 +1309,7 @@ class C1
                 Assert.Contains(options.PreprocessorSymbolNames, name => name == "TRACE");
             }
         }
-        
+
         [ConditionalFact(typeof(VisualStudioMSBuildInstalled)), Trait(Traits.Feature, Traits.Features.MSBuildWorkspace)]
         public async Task Test_CSharp_ConditionalAttributeEmitted()
         {
@@ -1951,7 +1714,7 @@ class C1
                 var csdoc8 = AssertSemanticVersionChanged(csdoc7, csdoc7Text.Replace(literal7.Span, "100"));
             }
         }
-        
+
         [ConditionalFact(typeof(VisualStudioMSBuildInstalled)), Trait(Traits.Feature, Traits.Features.MSBuildWorkspace)]
         [WorkItem(529276, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/529276"), WorkItem(12086, "DevDiv_Projects/Roslyn")]
         public async Task TestOpenProject_LoadMetadataForReferenceProjects_NoMetadata()
@@ -2224,7 +1987,7 @@ class C1
                 Assert.NotEmpty(docComment);
             }
         }
-        
+
         [ConditionalFact(typeof(VisualStudioMSBuildInstalled)), Trait(Traits.Feature, Traits.Features.MSBuildWorkspace)]
         public void TestOpenProject_WithProjectFileLocked()
         {
@@ -2632,7 +2395,7 @@ class C { }";
                 Assert.DoesNotContain(@"<Reference Include=""System.Xaml,", projFileText);
             }
         }
-        
+
         [ConditionalFact(typeof(VisualStudioMSBuildInstalled)), Trait(Traits.Feature, Traits.Features.MSBuildWorkspace)]
         public async Task TestAddRemoveMetadataReference_NonGACorRefAssembly()
         {
@@ -2696,7 +2459,7 @@ class C { }";
                 Assert.DoesNotContain(@"<Analyzer Include=""..\Analyzers\MyAnalyzer.dll", projFileText);
             }
         }
-        
+
         [ConditionalFact(typeof(VisualStudioMSBuildInstalled)), Trait(Traits.Feature, Traits.Features.MSBuildWorkspace)]
         [WorkItem(1101040, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/1101040")]
         public async Task TestOpenProject_BadLink()
@@ -2838,45 +2601,6 @@ class C { }";
                     sdkDirectory: System.Runtime.InteropServices.RuntimeEnvironment.GetRuntimeDirectory());
 
                 Assert.Empty(commandLineArgs.Errors);
-            }
-        }
-
-        [ConditionalFact(typeof(VisualStudioMSBuildInstalled)), Trait(Traits.Feature, Traits.Features.MSBuildWorkspace)]
-        [WorkItem(29122, "https://github.com/dotnet/roslyn/issues/29122")]
-        public async Task TestOpenSolution_ProjectReferencesWithUnconventionalOutputPaths()
-        {
-            CreateFiles(GetBaseFiles()
-                .WithFile(@"TestVB2.sln", Resources.SolutionFiles.Issue29122_Solution)
-                .WithFile(@"Proj1\ClassLibrary1.vbproj", Resources.ProjectFiles.VisualBasic.Issue29122_ClassLibrary1)
-                .WithFile(@"Proj1\Class1.vb", Resources.SourceFiles.VisualBasic.VisualBasicClass)
-                .WithFile(@"Proj1\My Project\Application.Designer.vb", Resources.SourceFiles.VisualBasic.Application_Designer)
-                .WithFile(@"Proj1\My Project\Application.myapp", Resources.SourceFiles.VisualBasic.Application)
-                .WithFile(@"Proj1\My Project\AssemblyInfo.vb", Resources.SourceFiles.VisualBasic.AssemblyInfo)
-                .WithFile(@"Proj1\My Project\Resources.Designer.vb", Resources.SourceFiles.VisualBasic.Resources_Designer)
-                .WithFile(@"Proj1\My Project\Resources.resx", Resources.SourceFiles.VisualBasic.Resources)
-                .WithFile(@"Proj1\My Project\Settings.Designer.vb", Resources.SourceFiles.VisualBasic.Settings_Designer)
-                .WithFile(@"Proj1\My Project\Settings.settings", Resources.SourceFiles.VisualBasic.Settings)
-                .WithFile(@"Proj2\ClassLibrary2.vbproj", Resources.ProjectFiles.VisualBasic.Issue29122_ClassLibrary2)
-                .WithFile(@"Proj2\Class1.vb", Resources.SourceFiles.VisualBasic.VisualBasicClass)
-                .WithFile(@"Proj2\My Project\Application.Designer.vb", Resources.SourceFiles.VisualBasic.Application_Designer)
-                .WithFile(@"Proj2\My Project\Application.myapp", Resources.SourceFiles.VisualBasic.Application)
-                .WithFile(@"Proj2\My Project\AssemblyInfo.vb", Resources.SourceFiles.VisualBasic.AssemblyInfo)
-                .WithFile(@"Proj2\My Project\Resources.Designer.vb", Resources.SourceFiles.VisualBasic.Resources_Designer)
-                .WithFile(@"Proj2\My Project\Resources.resx", Resources.SourceFiles.VisualBasic.Resources)
-                .WithFile(@"Proj2\My Project\Settings.Designer.vb", Resources.SourceFiles.VisualBasic.Settings_Designer)
-                .WithFile(@"Proj2\My Project\Settings.settings", Resources.SourceFiles.VisualBasic.Settings));
-
-            var solutionFilePath = GetSolutionFileName(@"TestVB2.sln");
-
-            using (var workspace = CreateMSBuildWorkspace())
-            {
-                var solution = await workspace.OpenSolutionAsync(solutionFilePath);
-
-                // Neither project should contain any unresolved metadata references
-                foreach (var project in solution.Projects)
-                {
-                    Assert.DoesNotContain(project.MetadataReferences, mr => mr is UnresolvedMetadataReference);
-                }
             }
         }
 

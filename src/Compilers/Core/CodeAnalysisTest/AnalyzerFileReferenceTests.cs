@@ -330,7 +330,7 @@ public class TestAnalyzer : DiagnosticAnalyzer
 
         public class SomeType
         {
-            
+
             public class NestedAnalyzer : DiagnosticAnalyzer
             {
                 public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get { throw new NotImplementedException(); } }
@@ -349,7 +349,7 @@ public class TestAnalyzer : DiagnosticAnalyzer
         public class NotAnAnalyzer { }
     }
 
-    
+
     public class TestAnalyzerCSVB : DiagnosticAnalyzer
     {
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get { throw new NotImplementedException(); } }
@@ -359,14 +359,14 @@ public class TestAnalyzer : DiagnosticAnalyzer
     public class TestAnalyzerNone
     { }
 
-    
+
     public abstract class AbstractAnalyzer : DiagnosticAnalyzer
     {
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get { throw new NotImplementedException(); } }
         public override void Initialize(AnalysisContext context) { throw new NotImplementedException(); }
     }
 
-    
+
     public class OpenGenericAnalyzer<T> : DiagnosticAnalyzer
     {
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get { throw new NotImplementedException(); } }

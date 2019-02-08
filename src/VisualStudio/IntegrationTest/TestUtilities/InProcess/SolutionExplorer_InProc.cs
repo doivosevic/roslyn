@@ -47,7 +47,6 @@ namespace Microsoft.VisualStudio.IntegrationTest.Utilities.InProcess
                 [WellKnownProjectTemplates.WebApplication] = "WebApplicationProject40"
             };
         }
-        
         public void AddMetadataReference(string assemblyName, string projectName)
         {
             var project = GetProject(projectName);
@@ -305,12 +304,6 @@ namespace Microsoft.VisualStudio.IntegrationTest.Utilities.InProcess
                _csharpProjectTemplates.TryGetValue(projectTemplate, out var csharpProjectTemplate))
             {
                 return _solution.GetProjectTemplate(csharpProjectTemplate, languageName);
-            }
-
-            if (languageName.Equals("visualbasic", StringComparison.OrdinalIgnoreCase) &&
-               _visualBasicProjectTemplates.TryGetValue(projectTemplate, out var visualBasicProjectTemplate))
-            {
-                return _solution.GetProjectTemplate(visualBasicProjectTemplate, languageName);
             }
 
             return _solution.GetProjectTemplate(projectTemplate, languageName);

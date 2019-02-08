@@ -34,8 +34,7 @@ Namespace Microsoft.VisualStudio.LanguageServices.UnitTests.Diagnostics
                 installedExtensionMock.SetupGet(Function(m) m.Content).Returns(
                     New MockContent() {
                         New MockContent(_contentType, location),
-                        New MockContent(_contentType, VisualStudioWorkspaceDiagnosticAnalyzerProviderService.MicrosoftCodeAnalysisCSharp),
-                        New MockContent(_contentType, VisualStudioWorkspaceDiagnosticAnalyzerProviderService.MicrosoftCodeAnalysisVisualBasic)
+                        New MockContent(_contentType, VisualStudioWorkspaceDiagnosticAnalyzerProviderService.MicrosoftCodeAnalysisCSharp)
                     })
 
                 installedExtensionMock.Setup(Function(m) m.GetContentLocation(It.IsAny(Of MockContent))).Returns(Function(content As MockContent)

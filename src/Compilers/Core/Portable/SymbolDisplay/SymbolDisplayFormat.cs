@@ -58,7 +58,7 @@ namespace Microsoft.CodeAnalysis
                     SymbolDisplayMiscellaneousOptions.UseAsterisksInMultiDimensionalArrays |
                     SymbolDisplayMiscellaneousOptions.UseErrorTypeSymbolName |
                     SymbolDisplayMiscellaneousOptions.IncludeNullableReferenceTypeModifier);
-        
+
         /// <summary>
         /// Formats the names of all types and namespaces in a fully qualified style (including the global alias).
         /// </summary>

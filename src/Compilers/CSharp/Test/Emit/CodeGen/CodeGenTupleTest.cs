@@ -5875,7 +5875,7 @@ class C
             Assert.All(tupleWithoutNames.GetMembers().OfType<IFieldSymbol>().Select(f => f.Locations.FirstOrDefault()),
                 loc => Assert.Equal(loc, null));
         }
-        
+
         [Fact]
         public void CreateTupleTypeSymbol_BadNames()
         {
@@ -6158,7 +6158,7 @@ class C
             var tuple3 = comp.CreateTupleTypeSymbol(ImmutableArray.Create(intType, intType), ImmutableArray.Create("return", "class"));
             Assert.Equal(new[] { "return", "class" }, GetTupleElementNames(tuple3));
         }
-        
+
         [Fact]
         public void CreateTupleTypeSymbol_ComparingSymbols()
         {

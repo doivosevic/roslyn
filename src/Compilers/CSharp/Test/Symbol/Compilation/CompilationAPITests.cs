@@ -945,7 +945,7 @@ var a = new C2();
             });
             assembly.VerifyEmitDiagnostics(Diagnostic(ErrorCode.ERR_NetModuleNameMustBeUnique).WithArguments("a1.netmodule"));
         }
-        
+
         [Fact]
         public void NegGetCompilationNamespace()
         {
@@ -1148,7 +1148,7 @@ var a = new C2();
             Assert.Throws<ArgumentException>(() => (comp.AddSyntaxTrees(t1, t1)));
             Assert.Equal(0, comp.SyntaxTrees.Length);
         }
-        
+
         [Fact]
         public void GetEntryPoint_Exe()
         {

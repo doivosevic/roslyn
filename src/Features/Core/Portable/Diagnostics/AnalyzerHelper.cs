@@ -106,7 +106,7 @@ namespace Microsoft.CodeAnalysis.Diagnostics
             {
                 return true;
             }
-            
+
             return false;
         }
 

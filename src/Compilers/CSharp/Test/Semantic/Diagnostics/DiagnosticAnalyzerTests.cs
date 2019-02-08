@@ -850,7 +850,7 @@ public class B
                      .WithLocation(1, 1));
         }
 
-        
+
         public class AnalyzerReportingUnsupportedDiagnostic : DiagnosticAnalyzer
         {
             public static readonly DiagnosticDescriptor SupportedDescriptor =

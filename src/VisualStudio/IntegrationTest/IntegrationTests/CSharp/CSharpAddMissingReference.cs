@@ -106,7 +106,7 @@ class Program
             : base(instanceFactory)
         {
         }
-        
+
         [WpfFact, Trait(Traits.Feature, Traits.Features.AddMissingReference)]
         public void VerifyAvailableCodeActions()
         {

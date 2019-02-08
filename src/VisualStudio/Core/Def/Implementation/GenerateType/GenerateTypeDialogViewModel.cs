@@ -34,7 +34,7 @@ namespace Microsoft.VisualStudio.LanguageServices.Implementation.GenerateType
         private Dictionary<string, TypeKind> _typeKindMap;
         private List<string> _csharpAccessList;
         private List<string> _csharpTypeKindList;
-        
+
         // reserved names that cannot be a folder name or filename
         private string[] _reservedKeywords = new string[]
                                                 {
@@ -424,16 +424,16 @@ namespace Microsoft.VisualStudio.LanguageServices.Implementation.GenerateType
                     // Update the TypeKindList if required
                     if (previousProject != null && previousProject.Language != _selectedProject.Language)
                     {
-                            var previousSelectedIndex = _kindSelectIndex;
-                            this.KindList = _csharpTypeKindList;
-                            if (_shouldChangeTypeKindListSelectedIndex)
-                            {
-                                this.KindSelectIndex = 0;
-                            }
-                            else
-                            {
-                                this.KindSelectIndex = previousSelectedIndex;
-                            }
+                        var previousSelectedIndex = _kindSelectIndex;
+                        this.KindList = _csharpTypeKindList;
+                        if (_shouldChangeTypeKindListSelectedIndex)
+                        {
+                            this.KindSelectIndex = 0;
+                        }
+                        else
+                        {
+                            this.KindSelectIndex = previousSelectedIndex;
+                        }
                     }
 
                     // Update File Extension

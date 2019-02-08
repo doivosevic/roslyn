@@ -68,7 +68,9 @@ namespace Microsoft.CodeAnalysis.Editor.Implementation.LineSeparators
                 TaggerEventSources.OnTextChanged(subjectBuffer, TaggerDelay.NearImmediate));
         }
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         protected override async Task ProduceTagsAsync(TaggerContext<LineSeparatorTag> context, DocumentSnapshotSpan documentSnapshotSpan, int? caretPosition)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             return;
         }

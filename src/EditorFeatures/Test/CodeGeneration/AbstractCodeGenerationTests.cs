@@ -62,7 +62,7 @@ namespace Microsoft.CodeAnalysis.Editor.UnitTests.CodeGeneration
                     })
                 );
         }
-        
+
         protected static ITypeSymbol CreateClass(string name)
         {
             return CodeGenerationSymbolFactory.CreateNamedTypeSymbol(

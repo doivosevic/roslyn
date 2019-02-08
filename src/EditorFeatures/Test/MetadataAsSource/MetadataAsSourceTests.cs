@@ -503,7 +503,7 @@ public class [|C|]
                 context.VerifyDocumentReused(a, b);
             }
         }
-        
+
         [WorkItem(546311, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/546311")]
         [Fact, Trait(Traits.Feature, Traits.Features.MetadataAsSource)]
         public async Task FormatMetadataAsSource()
@@ -576,7 +576,7 @@ public class [|C|]
             var symbolName = "C";
             await GenerateAndVerifySourceAsync(metadataSource, symbolName, LanguageNames.CSharp, expected);
         }
-        
+
         [WorkItem(530923, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/530923")]
         [Fact, Trait(Traits.Feature, Traits.Features.MetadataAsSource)]
         public async Task TestEmptyLineBetweenMembers()
@@ -771,7 +771,7 @@ public static class ObjectExtensions
                 context.VerifyResult(metadataAsSourceFile, expected);
             }
         }
-        
+
         [Fact, Trait(Traits.Feature, Traits.Features.MetadataAsSource)]
         public async Task TestIndexersAndOperators()
         {
@@ -1038,7 +1038,7 @@ class C
 
             await GenerateAndVerifySourceLineAsync(source, LanguageNames.CSharp, expected);
         }
-        
+
         [WorkItem(29786, "https://github.com/dotnet/roslyn/issues/29786")]
         [Fact, Trait(Traits.Feature, Traits.Features.MetadataAsSource)]
         public async Task TestInt16MinValue()
@@ -1053,7 +1053,7 @@ class C
 
             await GenerateAndVerifySourceLineAsync(source, LanguageNames.CSharp, expected);
         }
-        
+
         [WorkItem(29786, "https://github.com/dotnet/roslyn/issues/29786")]
         [Fact, Trait(Traits.Feature, Traits.Features.MetadataAsSource)]
         public async Task TestInt32MinValue()
@@ -1068,7 +1068,7 @@ class C
 
             await GenerateAndVerifySourceLineAsync(source, LanguageNames.CSharp, expected);
         }
-        
+
         [WorkItem(29786, "https://github.com/dotnet/roslyn/issues/29786")]
         [Fact, Trait(Traits.Feature, Traits.Features.MetadataAsSource)]
         public async Task TestInt64MinValue()

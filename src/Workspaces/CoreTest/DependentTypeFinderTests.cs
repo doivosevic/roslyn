@@ -130,7 +130,7 @@ namespace M
             var derivedDependentType = derivedFromBase.Single();
             Assert.Equal(derivedClassSymbol, derivedDependentType.Symbol);
         }
-        
+
         [WorkItem(4973, "https://github.com/dotnet/roslyn/issues/4973")]
         [Fact]
         public async Task ImmediatelyDerivedInterfaces_CSharp()

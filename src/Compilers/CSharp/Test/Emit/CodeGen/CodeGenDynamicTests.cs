@@ -11138,7 +11138,7 @@ public class C
 }
 ");
         }
-        
+
         [Fact]
         public void GetIndex_IndexerWithByRefParam()
         {

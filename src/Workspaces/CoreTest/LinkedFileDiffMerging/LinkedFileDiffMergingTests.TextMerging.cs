@@ -220,25 +220,6 @@ A",
 
         [Fact]
         [Trait(Traits.Feature, Traits.Features.LinkedFileDiffMerging)]
-        public void TestCommentsAddedCodeVB()
-        {
-            TestLinkedFileSet(
-                @"",
-                new List<string>
-                {
-                    @"A",
-                    @"B",
-                },
-                @"
-' " + string.Format(WorkspacesResources.Unmerged_change_from_project_0, "ProjectName1") + @" 
-' " + WorkspacesResources.Added_colon + @"
-' B
-A",
-                LanguageNames.VisualBasic);
-        }
-
-        [Fact]
-        [Trait(Traits.Feature, Traits.Features.LinkedFileDiffMerging)]
         public void TestCommentsRemovedCodeCSharp()
         {
             TestLinkedFileSet(

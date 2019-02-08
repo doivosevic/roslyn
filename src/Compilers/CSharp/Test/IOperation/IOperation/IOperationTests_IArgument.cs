@@ -2748,7 +2748,7 @@ IInvocationOperation (void P.M2(System.Int32 x, [G<S>? s = null])) (OperationKin
 
             VerifyOperationTreeAndDiagnosticsForTest<InvocationExpressionSyntax>(source, expectedOperationTree, expectedDiagnostics);
         }
-        
+
         [Fact]
         public void DirectlyBindArgument_InvocationExpression()
         {

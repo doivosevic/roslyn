@@ -103,7 +103,7 @@ namespace Microsoft.CodeAnalysis.Emit
         /// followed by types forwarded to another assembly.
         /// </summary>
         public abstract ImmutableArray<Cci.ExportedType> GetExportedTypes(DiagnosticBag diagnostics);
-        
+
         /// <summary>
         /// Linked assembly names to be stored to native PDB (VB only).
         /// </summary>

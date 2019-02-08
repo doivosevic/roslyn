@@ -666,7 +666,7 @@ public class Goo
         }
 
         #endregion
-        
+
         [Fact, Trait(Traits.Feature, Traits.Features.SignatureHelp)]
         public async Task FieldUnavailableInOneLinkedFile()
         {

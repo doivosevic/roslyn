@@ -193,7 +193,7 @@ namespace Microsoft.CodeAnalysis.Editor.UnitTests.MetadataAsSource
 
                 return null;
             }
-            
+
             private static string DeduceLanguageString(string input)
             {
                 return ContainsVisualBasicKeywords(input)

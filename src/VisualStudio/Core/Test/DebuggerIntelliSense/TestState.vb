@@ -89,24 +89,14 @@ Namespace Microsoft.VisualStudio.LanguageServices.UnitTests.DebuggerIntelliSense
 
             Dim componentModel = New MockComponentModel(Workspace.ExportProvider)
 
-            If language = LanguageNames.CSharp Then
-                _context = New CSharpDebuggerIntelliSenseContext(
+            _context = New CSharpDebuggerIntelliSenseContext(
                     Workspace.Projects.First().Documents.First().GetTextView(),
                     Workspace.Projects.First().Documents.Last().GetTextBuffer(),
                     span,
                     componentModel,
                     isImmediateWindow)
-            Else
-                ' VB
-                _context = New VisualBasicDebuggerIntelliSenseContext(
-                    Workspace.Projects.First().Documents.First().GetTextView(),
-                    Workspace.Projects.First().Documents.Last().GetTextBuffer(),
-                    span,
-                    componentModel,
-                    isImmediateWindow)
-            End If
 
-            _context.TryInitialize()
+                _context.TryInitialize()
         End Sub
 
         Private Shared Function CombineExcludedTypes() As IList(Of Type)

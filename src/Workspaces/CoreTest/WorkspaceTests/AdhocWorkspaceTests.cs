@@ -111,48 +111,6 @@ namespace Microsoft.CodeAnalysis.UnitTests
         }
 
         [Fact, Trait(Traits.Feature, Traits.Features.Workspace)]
-        public void TestAddProjects()
-        {
-            var id1 = ProjectId.CreateNewId();
-            var info1 = ProjectInfo.Create(
-                id1,
-                version: VersionStamp.Default,
-                name: "TestProject1",
-                assemblyName: "TestProject1.dll",
-                language: LanguageNames.CSharp);
-
-            var id2 = ProjectId.CreateNewId();
-            var info2 = ProjectInfo.Create(
-                id2,
-                version: VersionStamp.Default,
-                name: "TestProject2",
-                assemblyName: "TestProject2.dll",
-                language: LanguageNames.VisualBasic,
-                projectReferences: new[] { new ProjectReference(id1) });
-
-            using (var ws = new AdhocWorkspace())
-            {
-                ws.AddProjects(new[] { info1, info2 });
-                var solution = ws.CurrentSolution;
-                Assert.Equal(2, solution.ProjectIds.Count);
-
-                var project1 = solution.GetProject(id1);
-                Assert.Equal(info1.Name, project1.Name);
-                Assert.Equal(info1.Id, project1.Id);
-                Assert.Equal(info1.AssemblyName, project1.AssemblyName);
-                Assert.Equal(info1.Language, project1.Language);
-
-                var project2 = solution.GetProject(id2);
-                Assert.Equal(info2.Name, project2.Name);
-                Assert.Equal(info2.Id, project2.Id);
-                Assert.Equal(info2.AssemblyName, project2.AssemblyName);
-                Assert.Equal(info2.Language, project2.Language);
-                Assert.Equal(1, project2.ProjectReferences.Count());
-                Assert.Equal(id1, project2.ProjectReferences.First().ProjectId);
-            }
-        }
-
-        [Fact, Trait(Traits.Feature, Traits.Features.Workspace)]
         public void TestAddProject_TryApplyChanges()
         {
             using (var ws = new AdhocWorkspace())

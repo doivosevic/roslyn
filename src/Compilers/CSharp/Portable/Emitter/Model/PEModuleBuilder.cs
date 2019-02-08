@@ -150,7 +150,7 @@ namespace Microsoft.CodeAnalysis.CSharp.Emit
         {
             get { return SourceModule.ContainingSourceAssembly.CorLibrary; }
         }
-        
+
         // C# doesn't emit linked assembly names into PDBs.
         public sealed override IEnumerable<string> LinkedAssembliesDebugInfo => SpecializedCollections.EmptyEnumerable<string>();
 

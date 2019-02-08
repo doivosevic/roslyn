@@ -106,7 +106,7 @@ namespace MyNamespace
                 hints.Do(v => v.Close());
             }
         }
-        
+
         [WpfFact, Trait(Traits.Feature, Traits.Features.Outlining)]
         public async Task OutliningTaggerTooltipText()
         {

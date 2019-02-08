@@ -32,7 +32,7 @@ namespace Microsoft.CodeAnalysis.Editor.UnitTests.ExtractInterface
                 expectedUpdatedOriginalDocumentCode,
                 expectedInterfaceCode);
         }
-        
+
         private static async Task TestExtractInterfaceCommandAsync(
             string markup,
             string languageName,

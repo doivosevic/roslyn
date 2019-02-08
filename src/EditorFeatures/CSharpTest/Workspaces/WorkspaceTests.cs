@@ -458,7 +458,7 @@ class D { }
                 var classC = classD.BaseType;
             }
         }
-        
+
         [Fact]
         public async Task TestOpenAndChangeDocument()
         {

@@ -126,26 +126,6 @@ class MyClass
         End Function
 
         <Fact, Trait(Traits.Feature, Traits.Features.RQName)>
-        <WorkItem(608534, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/608534")>
-        Public Async Function TestRQNameClassInModule() As Task
-            Dim markup = <Text><![CDATA[
-Module Module1
-    Sub Main()
-    End Sub
-
-    Partial Class Partial_Generic_Event(Of GT)
-
-        Private Sub $$Partial_Generic_Event_E5(ByVal x As ii(Of class2)) Handles Me.E5
-        End Sub
-    End Class
-End Module
-"]]></Text>
-            Dim expectedRQName = "Meth(Agg(AggName(Module1,TypeVarCnt(0)),AggName(Partial_Generic_Event,TypeVarCnt(1))),MethName(Partial_Generic_Event_E5),TypeVarCnt(0),Params(Param(AggType(Agg(AggName(ii,TypeVarCnt(0))),TypeParams()))))"
-
-            Await TestWorkerAsync(markup, LanguageNames.VisualBasic, expectedRQName)
-        End Function
-
-        <Fact, Trait(Traits.Feature, Traits.Features.RQName)>
         Public Async Function TestRQNameForIndexer() As Task
             Dim markup = <Text><![CDATA[
 class MyClass

@@ -6255,7 +6255,7 @@ public interface Goo
                 referencedLanguage: LanguageNames.CSharp,
                 hideAdvancedMembers: true);
         }
-        
+
         [WorkItem(7336, "DevDiv_Projects/Roslyn")]
         [Fact, Trait(Traits.Feature, Traits.Features.Completion)]
         public async Task EditorBrowsable_TypeLibType_NotHidden()
@@ -6840,7 +6840,7 @@ class C
 
             await VerifyItemExistsAsync(markup, "Console");
         }
-        
+
         [WorkItem(546841, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/546841")]
         [Fact, Trait(Traits.Feature, Traits.Features.Completion)]
         public async Task TestDeclarationAmbiguity()

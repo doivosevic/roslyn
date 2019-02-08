@@ -1383,7 +1383,7 @@ class C
                 //         d.M(); //CS1501
                 Diagnostic(ErrorCode.ERR_NoCorrespondingArgument, "M").WithArguments("o", "D.M(ref object)").WithLocation(25, 11));
         }
-        
+
         [WorkItem(545337, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/545337")]
         [Fact]
         public void TestCSharpDecimalAndDateTimeDefaultParameters()

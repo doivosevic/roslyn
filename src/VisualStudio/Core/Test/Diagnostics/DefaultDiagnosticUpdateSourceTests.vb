@@ -218,31 +218,6 @@ class 123 { }
         End Function
 
         <Fact>
-        Public Async Function TestMiscVBErrorSource() As Task
-            Dim code = <code>
-Class 123
-End Class
-                       </code>
-            Using workspace = TestWorkspace.CreateVisualBasic(code.Value)
-                Dim miscService = New DefaultDiagnosticAnalyzerService(New TestDiagnosticAnalyzerService(DiagnosticExtensions.GetCompilerDiagnosticAnalyzersMap()), New MockDiagnosticUpdateSourceRegistrationService())
-
-                DiagnosticProvider.Enable(workspace, DiagnosticProvider.Options.Syntax)
-
-                Dim buildTool = String.Empty
-
-                AddHandler miscService.DiagnosticsUpdated, Sub(e, a)
-                                                               Dim id = DirectCast(a.Id, BuildToolId)
-                                                               buildTool = id.BuildTool
-                                                           End Sub
-
-                Dim analyzer = miscService.CreateIncrementalAnalyzer(workspace)
-                Await analyzer.AnalyzeSyntaxAsync(workspace.CurrentSolution.Projects.First().Documents.First(), InvocationReasons.Empty, CancellationToken.None)
-
-                Assert.Equal(PredefinedBuildTools.Live, buildTool)
-            End Using
-        End Function
-
-        <Fact>
         Public Async Function TestMiscDocumentWithNoCompilationWithScriptSemantic() As Task
             Dim test =
                 <Workspace>

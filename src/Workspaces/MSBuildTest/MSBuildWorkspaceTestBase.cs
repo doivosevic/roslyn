@@ -57,7 +57,7 @@ namespace Microsoft.CodeAnalysis.MSBuild.UnitTests
                 return (CS.CSharpParseOptions)project.ParseOptions;
             }
         }
-        
+
         protected async Task PrepareCrossLanguageProjectWithEmittedMetadataAsync()
         {
             // Now try variant of CSharpProject that has an emitted assembly 

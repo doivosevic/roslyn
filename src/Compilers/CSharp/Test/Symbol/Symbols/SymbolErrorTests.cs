@@ -15664,7 +15664,7 @@ namespace NS
                 //         NS.MyStruct S = new NS.MyStruct();
                 Diagnostic(ErrorCode.ERR_InteropStructContainsMethods, "new NS.MyStruct()").WithArguments("NS.MyStruct"));
         }
-        
+
         [Fact]
         public void CS1763ERR_NotNullRefDefaultParameter()
         {

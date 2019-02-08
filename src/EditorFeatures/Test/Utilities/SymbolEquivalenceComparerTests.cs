@@ -12,7 +12,6 @@ using Roslyn.Test.Utilities;
 using Xunit;
 using static Roslyn.Test.Utilities.SigningTestHelpers;
 using CS = Microsoft.CodeAnalysis.CSharp;
-using VB = Microsoft.CodeAnalysis.VisualBasic;
 
 namespace Microsoft.CodeAnalysis.Editor.UnitTests.Utilities
 {
@@ -96,73 +95,6 @@ namespace Microsoft.CodeAnalysis.Editor.UnitTests.Utilities
         }
 
         [Fact]
-        public async Task TestArraysInDifferentLanguagesAreEquivalent()
-        {
-            var csharpCode =
-@"class C
-{
-    int intField1;
-    int[] intArrayField1;
-    string[] stringArrayField1;
-    int[][] intArrayArrayField1;
-    int[,] intArrayRank2Field1;
-    System.Int32 int32Field1;
-}";
-            var vbCode =
-@"class C
-    dim intField1 as Integer;
-    dim intArrayField1 as Integer()
-    dim stringArrayField1 as String()
-    dim intArrayArrayField1 as Integer()()
-    dim intArrayRank2Field1 as Integer(,)
-    dim int32Field1 as System.Int32
-end class";
-
-            using (var csharpWorkspace = TestWorkspace.CreateCSharp(csharpCode))
-            using (var vbWorkspace = TestWorkspace.CreateVisualBasic(vbCode))
-            {
-                var csharpType = (ITypeSymbol)(await csharpWorkspace.CurrentSolution.Projects.Single().GetCompilationAsync()).GlobalNamespace.GetTypeMembers("C").Single();
-                var vbType = (await vbWorkspace.CurrentSolution.Projects.Single().GetCompilationAsync()).GlobalNamespace.GetTypeMembers("C").Single();
-
-                var csharpIntField1 = (IFieldSymbol)csharpType.GetMembers("intField1").Single();
-                var csharpIntArrayField1 = (IFieldSymbol)csharpType.GetMembers("intArrayField1").Single();
-                var csharpStringArrayField1 = (IFieldSymbol)csharpType.GetMembers("stringArrayField1").Single();
-                var csharpIntArrayArrayField1 = (IFieldSymbol)csharpType.GetMembers("intArrayArrayField1").Single();
-                var csharpIntArrayRank2Field1 = (IFieldSymbol)csharpType.GetMembers("intArrayRank2Field1").Single();
-                var csharpInt32Field1 = (IFieldSymbol)csharpType.GetMembers("int32Field1").Single();
-
-                var vbIntField1 = (IFieldSymbol)vbType.GetMembers("intField1").Single();
-                var vbIntArrayField1 = (IFieldSymbol)vbType.GetMembers("intArrayField1").Single();
-                var vbStringArrayField1 = (IFieldSymbol)vbType.GetMembers("stringArrayField1").Single();
-                var vbIntArrayArrayField1 = (IFieldSymbol)vbType.GetMembers("intArrayArrayField1").Single();
-                var vbIntArrayRank2Field1 = (IFieldSymbol)vbType.GetMembers("intArrayRank2Field1").Single();
-                var vbInt32Field1 = (IFieldSymbol)vbType.GetMembers("int32Field1").Single();
-
-                Assert.True(SymbolEquivalenceComparer.Instance.Equals(csharpIntField1.Type, vbIntField1.Type));
-                Assert.True(SymbolEquivalenceComparer.Instance.Equals(csharpIntArrayField1.Type, vbIntArrayField1.Type));
-                Assert.True(SymbolEquivalenceComparer.Instance.Equals(csharpStringArrayField1.Type, vbStringArrayField1.Type));
-                Assert.True(SymbolEquivalenceComparer.Instance.Equals(csharpIntArrayArrayField1.Type, vbIntArrayArrayField1.Type));
-                Assert.True(SymbolEquivalenceComparer.Instance.Equals(csharpInt32Field1.Type, vbInt32Field1.Type));
-
-                Assert.False(SymbolEquivalenceComparer.Instance.Equals(csharpIntField1.Type, vbIntArrayField1.Type));
-                Assert.False(SymbolEquivalenceComparer.Instance.Equals(vbIntArrayField1.Type, csharpStringArrayField1.Type));
-                Assert.False(SymbolEquivalenceComparer.Instance.Equals(csharpStringArrayField1.Type, vbIntArrayArrayField1.Type));
-                Assert.False(SymbolEquivalenceComparer.Instance.Equals(vbIntArrayArrayField1.Type, csharpIntArrayRank2Field1.Type));
-                Assert.False(SymbolEquivalenceComparer.Instance.Equals(csharpIntArrayRank2Field1.Type, vbInt32Field1.Type));
-
-                Assert.True(SymbolEquivalenceComparer.Instance.Equals(csharpInt32Field1.Type, vbIntField1.Type));
-
-                Assert.False(SymbolEquivalenceComparer.Instance.Equals(vbIntField1.Type, csharpIntArrayField1.Type));
-                Assert.False(SymbolEquivalenceComparer.Instance.Equals(csharpIntArrayField1.Type, vbStringArrayField1.Type));
-                Assert.False(SymbolEquivalenceComparer.Instance.Equals(vbStringArrayField1.Type, csharpIntArrayArrayField1.Type));
-                Assert.False(SymbolEquivalenceComparer.Instance.Equals(csharpIntArrayArrayField1.Type, vbIntArrayRank2Field1.Type));
-                Assert.False(SymbolEquivalenceComparer.Instance.Equals(vbIntArrayRank2Field1.Type, csharpInt32Field1.Type));
-
-                Assert.True(SymbolEquivalenceComparer.Instance.Equals(vbInt32Field1.Type, csharpIntField1.Type));
-            }
-        }
-
-        [Fact]
         public async Task TestFields()
         {
             var csharpCode1 =
@@ -211,57 +143,6 @@ class Type2
                 Assert.Equal(SymbolEquivalenceComparer.Instance.GetHashCode(field1_v1),
                              SymbolEquivalenceComparer.Instance.GetHashCode(field1_v2));
 
-                Assert.False(SymbolEquivalenceComparer.Instance.Equals(field2_v1, field2_v2));
-                Assert.True(SymbolEquivalenceComparer.Instance.Equals(field3_v1, field3_v2));
-                Assert.False(SymbolEquivalenceComparer.Instance.Equals(field4_v1, field4_v2));
-            }
-        }
-
-        [WorkItem(538124, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/538124")]
-        [Fact]
-        public async Task TestFieldsAcrossLanguages()
-        {
-            var csharpCode1 =
-@"class Type1
-{
-    int field1;
-    string field2;
-}
-
-class Type2
-{
-    bool field3;
-    short field4;
-}";
-
-            var vbCode1 =
-@"class Type1
-    dim field1 as Integer;
-    dim field4 as Short;
-end class
-
-class Type2
-    dim field3 as Boolean;
-    dim field2 as String;
-end class";
-            using (var workspace1 = TestWorkspace.CreateCSharp(csharpCode1))
-            using (var workspace2 = TestWorkspace.CreateVisualBasic(vbCode1))
-            {
-                var type1_v1 = (await workspace1.CurrentSolution.Projects.Single().GetCompilationAsync()).GlobalNamespace.GetTypeMembers("Type1").Single();
-                var type2_v1 = (await workspace1.CurrentSolution.Projects.Single().GetCompilationAsync()).GlobalNamespace.GetTypeMembers("Type2").Single();
-                var type1_v2 = (await workspace2.CurrentSolution.Projects.Single().GetCompilationAsync()).GlobalNamespace.GetTypeMembers("Type1").Single();
-                var type2_v2 = (await workspace2.CurrentSolution.Projects.Single().GetCompilationAsync()).GlobalNamespace.GetTypeMembers("Type2").Single();
-
-                var field1_v1 = type1_v1.GetMembers("field1").Single();
-                var field1_v2 = type1_v2.GetMembers("field1").Single();
-                var field2_v1 = type1_v1.GetMembers("field2").Single();
-                var field2_v2 = type2_v2.GetMembers("field2").Single();
-                var field3_v1 = type2_v1.GetMembers("field3").Single();
-                var field3_v2 = type2_v2.GetMembers("field3").Single();
-                var field4_v1 = type2_v1.GetMembers("field4").Single();
-                var field4_v2 = type1_v2.GetMembers("field4").Single();
-
-                Assert.True(SymbolEquivalenceComparer.Instance.Equals(field1_v1, field1_v2));
                 Assert.False(SymbolEquivalenceComparer.Instance.Equals(field2_v1, field2_v2));
                 Assert.True(SymbolEquivalenceComparer.Instance.Equals(field3_v1, field3_v2));
                 Assert.False(SymbolEquivalenceComparer.Instance.Equals(field4_v1, field4_v2));
@@ -619,100 +500,6 @@ class D
                 var method_v2 = type1_v2.GetMembers("Goo").Single();
 
                 Assert.False(SymbolEquivalenceComparer.Instance.Equals(method_v1, method_v2));
-            }
-        }
-
-        [Fact]
-        public async Task TestMethodsAcrossLanguages()
-        {
-            var csharpCode1 =
-@"
-using System.Collections.Generic;
-
-class Type1
-{
-    T Goo<T>(IList<T> list, int a) {}
-    void Bar() { }
-}";
-
-            var vbCode1 =
-@"
-Imports System.Collections.Generic
-
-class Type1
-    function Goo(of U)(list as IList(of U), a as Integer) as U
-    end function
-    sub Quux()
-    end sub
-end class";
-            using (var workspace1 = TestWorkspace.CreateCSharp(csharpCode1))
-            using (var workspace2 = TestWorkspace.CreateVisualBasic(vbCode1))
-            {
-                var csharpType1 = (await workspace1.CurrentSolution.Projects.Single().GetCompilationAsync()).GlobalNamespace.GetTypeMembers("Type1").Single();
-                var vbType1 = (await workspace2.CurrentSolution.Projects.Single().GetCompilationAsync()).GlobalNamespace.GetTypeMembers("Type1").Single();
-
-                var csharpGooMethod = csharpType1.GetMembers("Goo").Single();
-                var csharpBarMethod = csharpType1.GetMembers("Bar").Single();
-                var vbGooMethod = vbType1.GetMembers("Goo").Single();
-                var vbQuuxMethod = vbType1.GetMembers("Quux").Single();
-
-                Assert.True(SymbolEquivalenceComparer.Instance.Equals(csharpGooMethod, vbGooMethod));
-                Assert.Equal(SymbolEquivalenceComparer.Instance.GetHashCode(csharpGooMethod),
-                             SymbolEquivalenceComparer.Instance.GetHashCode(vbGooMethod));
-
-                Assert.False(SymbolEquivalenceComparer.Instance.Equals(csharpGooMethod, csharpBarMethod));
-                Assert.False(SymbolEquivalenceComparer.Instance.Equals(csharpGooMethod, vbQuuxMethod));
-
-                Assert.False(SymbolEquivalenceComparer.Instance.Equals(csharpBarMethod, csharpGooMethod));
-                Assert.False(SymbolEquivalenceComparer.Instance.Equals(csharpBarMethod, vbGooMethod));
-                Assert.False(SymbolEquivalenceComparer.Instance.Equals(csharpBarMethod, vbQuuxMethod));
-            }
-        }
-
-        [Fact]
-        public async Task TestMethodsInGenericTypesAcrossLanguages()
-        {
-            var csharpCode1 =
-@"
-using System.Collections.Generic;
-
-class Type1<X>
-{
-    T Goo<T>(IList<T> list, X a) {}
-    void Bar(X x) { }
-}";
-
-            var vbCode1 =
-@"
-Imports System.Collections.Generic
-
-class Type1(of M)
-    function Goo(of U)(list as IList(of U), a as M) as U
-    end function
-    sub Bar(x as Object)
-    end sub
-end class";
-            using (var workspace1 = TestWorkspace.CreateCSharp(csharpCode1))
-            using (var workspace2 = TestWorkspace.CreateVisualBasic(vbCode1))
-            {
-                var csharpType1 = (await workspace1.CurrentSolution.Projects.Single().GetCompilationAsync()).GlobalNamespace.GetTypeMembers("Type1").Single();
-                var vbType1 = (await workspace2.CurrentSolution.Projects.Single().GetCompilationAsync()).GlobalNamespace.GetTypeMembers("Type1").Single();
-
-                var csharpGooMethod = csharpType1.GetMembers("Goo").Single();
-                var csharpBarMethod = csharpType1.GetMembers("Bar").Single();
-                var vbGooMethod = vbType1.GetMembers("Goo").Single();
-                var vbBarMethod = vbType1.GetMembers("Bar").Single();
-
-                Assert.True(SymbolEquivalenceComparer.Instance.Equals(csharpGooMethod, vbGooMethod));
-                Assert.Equal(SymbolEquivalenceComparer.Instance.GetHashCode(csharpGooMethod),
-                             SymbolEquivalenceComparer.Instance.GetHashCode(vbGooMethod));
-
-                Assert.False(SymbolEquivalenceComparer.Instance.Equals(csharpGooMethod, csharpBarMethod));
-                Assert.False(SymbolEquivalenceComparer.Instance.Equals(csharpGooMethod, vbBarMethod));
-
-                Assert.False(SymbolEquivalenceComparer.Instance.Equals(csharpBarMethod, csharpGooMethod));
-                Assert.False(SymbolEquivalenceComparer.Instance.Equals(csharpBarMethod, vbGooMethod));
-                Assert.False(SymbolEquivalenceComparer.Instance.Equals(csharpBarMethod, vbBarMethod));
             }
         }
 
@@ -1254,7 +1041,7 @@ class Test
                 TestReducedExtension<CS.Syntax.InvocationExpressionSyntax>(comp1, comp2, "Test", "GenericThisAndOther");
             }
         }
-        
+
         [Fact]
         public async Task TestDifferentModules()
         {

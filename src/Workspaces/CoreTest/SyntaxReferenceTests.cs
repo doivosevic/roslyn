@@ -23,7 +23,7 @@ namespace Microsoft.CodeAnalysis.UnitTests
                            .AddProject(pid, "Test", "Test.dll", LanguageNames.CSharp)
                            .AddDocument(did, "Test.cs", SourceText.From(source));
         }
-        
+
         private static Solution CreateEmptySolutionUsingRecoverableSyntaxTrees()
         {
             var workspace = new AdhocWorkspace(MefHostServices.Create(TestHost.Assemblies), workspaceKind: "NotKeptAlive");
@@ -53,7 +53,7 @@ public class C<>
 
             Assert.Equal(node, refNode);
         }
-        
+
         [Fact, Trait(Traits.Feature, Traits.Features.Workspace)]
         public void TestCSharpReferenceToNodeInStructuredTrivia()
         {
@@ -77,7 +77,7 @@ public class C
 
             Assert.Equal(node, refNode);
         }
-        
+
         [Fact, Trait(Traits.Feature, Traits.Features.Workspace)]
         public void TestCSharpReferenceToZeroWidthNodeInStructuredTrivia()
         {

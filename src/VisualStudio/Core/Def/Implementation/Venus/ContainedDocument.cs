@@ -978,7 +978,7 @@ namespace Microsoft.VisualStudio.LanguageServices.Implementation.Venus
                             }
                         }
                     }
-                    
+
                     return _workspace.Options.GetOption(FormattingOptions.IndentationSize, _project.Language);
                 }
             }
@@ -1029,7 +1029,7 @@ namespace Microsoft.VisualStudio.LanguageServices.Implementation.Venus
                 return CheckCode(surfaceSnapshot, position, ch, CSharpRazorBlock) ||
                        CheckCode(surfaceSnapshot, position, ch, FunctionsRazor, CSharpRazorBlock);
             }
-            
+
             return false;
         }
 
