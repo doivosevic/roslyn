@@ -20,7 +20,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Compilers\CSharp\csc\csc.csproj" PrivateAssets="All" />
-    <ProjectReference Include="..\..\Interactive\csi\csi.csproj" PrivateAssets="All" />
     <ProjectReference Include="..\..\Compilers\Core\MSBuildTask\Microsoft.Build.Tasks.CodeAnalysis.csproj" PrivateAssets="All" />
   </ItemGroup>
 

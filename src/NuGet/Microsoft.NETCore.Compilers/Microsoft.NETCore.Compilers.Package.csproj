@@ -16,7 +16,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Compilers\CSharp\csc\csc.csproj" />
-    <ProjectReference Include="..\..\Interactive\csi\csi.csproj" />
     <ProjectReference Include="..\..\Compilers\Core\MSBuildTask\Microsoft.Build.Tasks.CodeAnalysis.csproj" />
   </ItemGroup>
 
