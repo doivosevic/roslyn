@@ -237,24 +237,5 @@ A
 B",
                 LanguageNames.CSharp);
         }
-
-        [Fact]
-        [Trait(Traits.Feature, Traits.Features.LinkedFileDiffMerging)]
-        public void TestCommentsRemovedCodeVB()
-        {
-            TestLinkedFileSet(
-                @"A",
-                new List<string>
-                {
-                    @"B",
-                    @"",
-                },
-                @"
-' " + string.Format(WorkspacesResources.Unmerged_change_from_project_0, "ProjectName1") + @" 
-' " + WorkspacesResources.Removed_colon + @"
-' A
-B",
-                LanguageNames.VisualBasic);
-        }
     }
 }

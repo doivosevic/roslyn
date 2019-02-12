@@ -196,8 +196,7 @@ namespace Microsoft.CodeAnalysis.Editor.UnitTests.MetadataAsSource
 
             private static string DeduceLanguageString(string input)
             {
-                return ContainsVisualBasicKeywords(input)
-                    ? LanguageNames.VisualBasic : LanguageNames.CSharp;
+                return LanguageNames.CSharp;
             }
 
             private static TestWorkspace CreateWorkspace(

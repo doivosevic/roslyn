@@ -33,17 +33,7 @@ namespace Microsoft.CodeAnalysis.UnitTests.Diagnostics
 
         private static TestWorkspace CreateWorkspaceFromFile(string source, string language, string rootNamespace)
         {
-            if (language == LanguageNames.CSharp)
-            {
-                return TestWorkspace.CreateCSharp(source);
-            }
-            else
-            {
-                return TestWorkspace.CreateVisualBasic(
-                    source,
-                    compilationOptions: new VisualBasic.VisualBasicCompilationOptions(
-                        OutputKind.DynamicallyLinkedLibrary, rootNamespace: rootNamespace));
-            }
+            return TestWorkspace.CreateCSharp(source);
         }
 
         protected override bool ConsiderArgumentsForComparingDiagnostics

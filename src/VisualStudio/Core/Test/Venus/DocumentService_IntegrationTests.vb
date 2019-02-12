@@ -3,6 +3,7 @@
 Imports System.Collections.Immutable
 Imports System.ComponentModel.Composition
 Imports System.Threading
+Imports System.Threading.Tasks
 Imports System.Windows
 Imports System.Windows.Controls
 Imports System.Windows.Media
