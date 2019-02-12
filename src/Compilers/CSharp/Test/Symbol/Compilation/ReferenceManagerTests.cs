@@ -1346,39 +1346,6 @@ public class A
             var a2 = c2.SourceAssembly;
         }
 
-        // TODO: make x-plat (https://github.com/dotnet/roslyn/issues/6465)
-        [ConditionalFact(typeof(WindowsOnly))]
-        public void ReferenceResolution_RelativePaths()
-        {
-            var t1 = Parse(@"
-#r ""lib.dll"" 
-", filename: @"C:\A\a.csx", options: TestOptions.Script);
-
-            var rd1 = (ReferenceDirectiveTriviaSyntax)t1.GetRoot().GetDirectives().Single();
-
-            var t2 = Parse(@"
-#r ""lib.dll""
-", filename: @"C:\B\b.csx", options: TestOptions.Script);
-
-            var rd2 = (ReferenceDirectiveTriviaSyntax)t2.GetRoot().GetDirectives().Single();
-
-            var c = CreateCompilationWithMscorlib45(new[] { t1, t2 }, options: TestOptions.ReleaseDll.WithMetadataReferenceResolver(
-                new TestMetadataReferenceResolver(
-                    pathResolver: new VirtualizedRelativePathResolver(new[]
-                    {
-                        @"C:\A\lib.dll",
-                        @"C:\B\lib.dll"
-                    }),
-                    files: new Dictionary<string, PortableExecutableReference>()
-                    {
-                        { @"C:\A\lib.dll", TestReferences.NetFx.v4_0_30319.Microsoft_CSharp },
-                    })));
-
-            c.VerifyDiagnostics();
-
-            Assert.Same(TestReferences.NetFx.v4_0_30319.Microsoft_CSharp, c.GetDirectiveReference(rd1));
-        }
-
         [Fact]
         public void CyclesInReferences()
         {

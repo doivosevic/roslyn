@@ -721,51 +721,6 @@ class C
         }
 
         [Fact, WorkItem(31370, "https://github.com/dotnet/roslyn/issues/31370")]
-        public void SuppressNullableWarning_AccessPropertyWithoutArguments()
-        {
-            string source1 = @"
-Imports System
-Imports System.Runtime.InteropServices
-<Assembly: PrimaryInteropAssembly(0, 0)>
-<Assembly: Guid(""165F752D-E9C4-4F7E-B0D0-CDFD7A36E210"")>
-<ComImport()>
-<Guid(""165F752D-E9C4-4F7E-B0D0-CDFD7A36E211"")>
-Public Interface IB
-    Property Value(Optional index As Object = Nothing) As Object
-End Interface
-";
-
-            var reference = BasicCompilationUtils.CompileToMetadata(source1);
-
-            string source2 = @"
-class CIB : IB
-{
-    public dynamic get_Value(object index = null)
-    {
-        return ""Test"";
-    }
-
-    public void set_Value(object index = null, object Value = null)
-    {
-    }
-}
-
-class Test
-{
-    static void Main()
-    {
-        IB x = new CIB();
-        System.Console.WriteLine(x.Value!.Length);
-    }
-}
-";
-
-            var compilation2 = CreateCompilation(source2, new[] { reference.WithEmbedInteropTypes(true), CSharpRef }, options: TestOptions.ReleaseExe);
-
-            CompileAndVerify(compilation2, expectedOutput: @"4");
-        }
-
-        [Fact, WorkItem(31370, "https://github.com/dotnet/roslyn/issues/31370")]
         public void SuppressNullableWarning_CollectionInitializerProperty()
         {
             var source = @"
@@ -37500,51 +37455,6 @@ class B5 : A<int>
                 Diagnostic(ErrorCode.ERR_MethGrpToNonDel, "F").WithArguments("F", "object").WithLocation(5, 46));
         }
 
-        [Fact, WorkItem(31370, "https://github.com/dotnet/roslyn/issues/31370")]
-        public void SuppressNullableWarning_IndexedProperty()
-        {
-            var source0 =
-@"Imports System
-Imports System.Runtime.InteropServices
-<Assembly: PrimaryInteropAssembly(0, 0)> 
-<Assembly: Guid(""165F752D-E9C4-4F7E-B0D0-CDFD7A36E210"")>
-<ComImport()>
-<Guid(""165F752D-E9C4-4F7E-B0D0-CDFD7A36E211"")>
-Public Class A
-    Public ReadOnly Property P(i As Integer) As Object
-        Get
-            Return Nothing
-        End Get
-    End Property
-    Public ReadOnly Property Q(Optional i As Integer = 0) As Object
-        Get
-            Return Nothing
-        End Get
-    End Property
-End Class";
-            var ref0 = BasicCompilationUtils.CompileToMetadata(source0);
-            var source =
-@"class B
-{
-    static object F(A a, int i)
-    {
-        if (i > 0)
-        {
-            return a.P!;
-        }
-        return a.Q!;
-    }
-}";
-            var comp = CreateCompilation(
-                new[] { source },
-                new[] { ref0 },
-                parseOptions: TestOptions.Regular8, options: WithNonNullTypesTrue());
-            comp.VerifyDiagnostics(
-                // (7,20): error CS0856: Indexed property 'A.P' has non-optional arguments which must be provided
-                //             return a.P!;
-                Diagnostic(ErrorCode.ERR_IndexedPropertyRequiresParams, "a.P").WithArguments("A.P").WithLocation(7, 20));
-        }
-
         [Fact]
         public void LocalTypeInference()
         {
@@ -61373,39 +61283,6 @@ interface I2
             Assert.Equal(TypeKind.Class, compilation7.GetTypeByMetadataName("C").TypeKind);
             Assert.Equal(TypeKind.Delegate, compilation7.GetTypeByMetadataName("D").TypeKind);
             Assert.Equal(TypeKind.Interface, compilation7.GetTypeByMetadataName("I1").TypeKind);
-        }
-
-        [Fact]
-        public void AccessPropertyWithoutArguments()
-        {
-            var source1 =
-@"Imports System
-Imports System.Runtime.InteropServices
-<Assembly: PrimaryInteropAssembly(0, 0)> 
-<Assembly: Guid(""165F752D-E9C4-4F7E-B0D0-CDFD7A36E210"")>
-<ComImport()>
-<Guid(""165F752D-E9C4-4F7E-B0D0-CDFD7A36E211"")>
-Public Interface I
-    Property Value(Optional index As Object = Nothing) As Object
-End Interface";
-            var ref1 = BasicCompilationUtils.CompileToMetadata(source1);
-
-            var source2 =
-@"class C : I
-{
-    public dynamic get_Value(object index = null) => ""Test"";
-    public void set_Value(object index = null, object value = null) { }
-}
-class Test
-{
-    static void Main()
-    {
-        I x = new C();
-        System.Console.WriteLine(x.Value.Length);
-    }
-}";
-            var comp = CreateCompilation(source2, new[] { ref1.WithEmbedInteropTypes(true), CSharpRef }, options: WithNonNullTypesTrue(TestOptions.ReleaseExe));
-            CompileAndVerify(comp, expectedOutput: "4");
         }
 
         [Fact]

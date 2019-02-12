@@ -351,57 +351,6 @@ namespace A.B {
             Assert.Equal(0, compCollection.ExternalReferences.Length);
         }
 
-        [Fact]
-        public void ReferenceDirectiveTests()
-        {
-            var t1 = Parse(@"
-#r ""a.dll"" 
-#r ""a.dll""
-", filename: "1.csx", options: TestOptions.Script);
-
-            var rd1 = t1.GetRoot().GetDirectives().Cast<ReferenceDirectiveTriviaSyntax>().ToArray();
-            Assert.Equal(2, rd1.Length);
-
-            var t2 = Parse(@"
-#r ""a.dll""
-#r ""b.dll""
-", options: TestOptions.Script);
-
-            var rd2 = t2.GetRoot().GetDirectives().Cast<ReferenceDirectiveTriviaSyntax>().ToArray();
-            Assert.Equal(2, rd2.Length);
-
-            var t3 = Parse(@"
-#r ""a.dll""
-", filename: "1.csx", options: TestOptions.Script);
-
-            var rd3 = t3.GetRoot().GetDirectives().Cast<ReferenceDirectiveTriviaSyntax>().ToArray();
-            Assert.Equal(1, rd3.Length);
-
-            var t4 = Parse(@"
-#r ""a.dll""
-", filename: "4.csx", options: TestOptions.Script);
-
-            var rd4 = t4.GetRoot().GetDirectives().Cast<ReferenceDirectiveTriviaSyntax>().ToArray();
-            Assert.Equal(1, rd4.Length);
-
-            var c = CreateCompilationWithMscorlib45(new[] { t1, t2 }, options: TestOptions.ReleaseDll.WithMetadataReferenceResolver(
-                new TestMetadataReferenceResolver(files: new Dictionary<string, PortableExecutableReference>()
-                {
-                    { @"a.dll", TestReferences.NetFx.v4_0_30319.Microsoft_CSharp },
-                })));
-
-            c.VerifyDiagnostics();
-
-            // same containing script file name and directive string
-            Assert.Same(TestReferences.NetFx.v4_0_30319.Microsoft_CSharp, c.GetDirectiveReference(rd1[0]));
-            Assert.Same(TestReferences.NetFx.v4_0_30319.Microsoft_CSharp, c.GetDirectiveReference(rd1[1]));
-            Assert.Same(TestReferences.NetFx.v4_0_30319.Microsoft_CSharp, c.GetDirectiveReference(rd2[0]));
-            Assert.Same(TestReferences.NetFx.v4_0_30319.Microsoft_CSharp, c.GetDirectiveReference(rd3[0]));
-
-            // different script name or directive string:
-            Assert.Null(c.GetDirectiveReference(rd4[0]));
-        }
-
         [Fact, WorkItem(530131, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/530131")]
         public void MetadataReferenceWithInvalidAlias()
         {

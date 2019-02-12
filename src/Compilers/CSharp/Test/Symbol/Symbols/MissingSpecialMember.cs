@@ -821,7 +821,7 @@ namespace System
             }
 
             // There were 204 well-known types prior to CSharp7
-            Assert.Equal(204, (int)(WellKnownType.CSharp7Sentinel - WellKnownType.First));
+            Assert.Equal(180, (int)(WellKnownType.CSharp7Sentinel - WellKnownType.First));
         }
 
         [Fact]

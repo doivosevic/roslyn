@@ -3171,31 +3171,7 @@ class Test
                 // (9,11): error CS1061: 'object' does not contain a definition for 'MI' and no extension method 'MI' accepting a first argument of type 'object' could be found (are you missing a using directive or an assembly reference?)
                 Diagnostic(ErrorCode.ERR_NoSuchMemberOrExtension, "MI").WithArguments("object", "MI").WithLocation(9, 11));
         }
-
-        [WorkItem(546093, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/546093")]
-        [ClrOnlyFact]
-        public void VBExtensionMethod()
-        {
-            var source1 =
-@"Imports System.Runtime.CompilerServices
-Public Module M
-    <Extension()>
-    Public Sub F(o As Object)
-    End Sub
-End Module";
-            var reference1 = BasicCompilationUtils.CompileToMetadata(source1, references: new[] { MscorlibRef, SystemCoreRef, MsvbRef });
-            var source2 =
-@"class C
-{
-    static void M(object o)
-    {
-        o.F();
-    }
-}";
-            var compilation2 = CreateCompilation(source2, new[] { reference1 });
-            compilation2.VerifyDiagnostics();
-        }
-
+        
         [WorkItem(602893, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/602893")]
         [ClrOnlyFact]
         public void Bug602893()

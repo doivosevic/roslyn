@@ -82,15 +82,11 @@ namespace Microsoft.CodeAnalysis.UnitTests
         {
             AnalyzerFileReference reference = CreateAnalyzerFileReference(Assembly.GetExecutingAssembly().Location);
             var analyzerTypeNameMap = reference.GetAnalyzerTypeNameMap();
-            Assert.Equal(2, analyzerTypeNameMap.Keys.Count());
+            Assert.Equal(1, analyzerTypeNameMap.Keys.Count());
 
-            Assert.Equal(6, analyzerTypeNameMap[LanguageNames.CSharp].Count);
+            Assert.Equal(2, analyzerTypeNameMap[LanguageNames.CSharp].Count);
             Assert.Contains("Microsoft.CodeAnalysis.UnitTests.AnalyzerFileReferenceTests+TestAnalyzerCS", analyzerTypeNameMap[LanguageNames.CSharp]);
-            Assert.Contains("Microsoft.CodeAnalysis.UnitTests.TestAnalyzerCSVB", analyzerTypeNameMap[LanguageNames.CSharp]);
             Assert.Contains("Microsoft.CodeAnalysis.UnitTests.AnalyzerFileReferenceTests+TestAnalyzer", analyzerTypeNameMap[LanguageNames.CSharp]);
-            Assert.Contains("Microsoft.CodeAnalysis.UnitTests.AnalyzerFileReferenceTests+SomeType+NestedAnalyzer", analyzerTypeNameMap[LanguageNames.CSharp]);
-            Assert.Contains("Microsoft.CodeAnalysis.UnitTests.AbstractAnalyzer", analyzerTypeNameMap[LanguageNames.CSharp]);
-            Assert.Contains("Microsoft.CodeAnalysis.UnitTests.OpenGenericAnalyzer`1", analyzerTypeNameMap[LanguageNames.CSharp]);
             Assert.DoesNotContain("Microsoft.CodeAnalysis.UnitTests.Test.NotAnAnalyzer", analyzerTypeNameMap[LanguageNames.CSharp]);
         }
 
@@ -99,31 +95,10 @@ namespace Microsoft.CodeAnalysis.UnitTests
         {
             AnalyzerFileReference reference = CreateAnalyzerFileReference(Assembly.GetExecutingAssembly().Location);
             var analyzers = reference.GetAnalyzers(LanguageNames.CSharp);
-            Assert.Equal(4, analyzers.Length);
+            Assert.Equal(2, analyzers.Length);
             var analyzerNames = analyzers.Select(a => a.GetType().Name);
             Assert.Contains("TestAnalyzer", analyzerNames);
             Assert.Contains("TestAnalyzerCS", analyzerNames);
-            Assert.Contains("TestAnalyzerCSVB", analyzerNames);
-            Assert.Contains("NestedAnalyzer", analyzerNames);
-        }
-
-        [Fact]
-        public void TestLoadErrors1()
-        {
-            AnalyzerFileReference reference = CreateAnalyzerFileReference(Assembly.GetExecutingAssembly().Location);
-
-            List<AnalyzerLoadFailureEventArgs> errors = new List<AnalyzerLoadFailureEventArgs>();
-            EventHandler<AnalyzerLoadFailureEventArgs> errorHandler = (o, e) => errors.Add(e);
-            reference.AnalyzerLoadFailed += errorHandler;
-            var builder = ImmutableArray.CreateBuilder<DiagnosticAnalyzer>();
-            reference.AddAnalyzers(builder, LanguageNames.CSharp);
-            var analyzers = builder.ToImmutable();
-            reference.AnalyzerLoadFailed -= errorHandler;
-
-            Assert.Equal(2, errors.Count);
-            var failedTypes = errors.Where(e => e.ErrorCode == AnalyzerLoadFailureEventArgs.FailureErrorCode.UnableToCreateAnalyzer).Select(e => e.TypeName);
-            Assert.Contains("Microsoft.CodeAnalysis.UnitTests.AbstractAnalyzer", failedTypes);
-            Assert.Contains("Microsoft.CodeAnalysis.UnitTests.OpenGenericAnalyzer`1", failedTypes);
         }
 
         [Fact]

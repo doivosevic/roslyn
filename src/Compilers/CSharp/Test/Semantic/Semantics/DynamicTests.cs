@@ -3618,51 +3618,6 @@ class Program
             Assert.Equal("dynamic Program.Goo<dynamic>(System.Func<dynamic, dynamic> x)", model.GetSymbolInfo(node).Symbol.ToTestDisplayString());
         }
 
-        [Fact, WorkItem(1149588, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/1149588")]
-        public void AccessPropertyWithoutArguments()
-        {
-            string source1 = @"
-Imports System
-Imports System.Runtime.InteropServices
-<Assembly: PrimaryInteropAssembly(0, 0)>
-<Assembly: Guid(""165F752D-E9C4-4F7E-B0D0-CDFD7A36E210"")>
-<ComImport()>
-<Guid(""165F752D-E9C4-4F7E-B0D0-CDFD7A36E211"")>
-Public Interface IB
-    Property Value(Optional index As Object = Nothing) As Object
-End Interface
-";
-
-            var reference = BasicCompilationUtils.CompileToMetadata(source1);
-
-            string source2 = @"
-class CIB : IB
-{
-    public dynamic get_Value(object index = null)
-    {
-        return ""Test"";
-    }
-
-    public void set_Value(object index = null, object Value = null)
-    {
-    }
-}
-
-class Test
-{
-    static void Main()
-    {
-        IB x = new CIB();
-        System.Console.WriteLine(x.Value.Length);
-    }
-}
-";
-
-            var compilation2 = CreateCompilation(source2, new[] { reference.WithEmbedInteropTypes(true), CSharpRef }, options: TestOptions.ReleaseExe);
-
-            CompileAndVerify(compilation2, expectedOutput: @"4");
-        }
-
         [Fact, WorkItem(9945, "https://github.com/dotnet/roslyn/issues/9945")]
         public void DynamicGetOnlyProperty()
         {

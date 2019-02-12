@@ -522,7 +522,7 @@ namespace Microsoft.CodeAnalysis
             "System.ReadOnlySpan`1",
             "System.Runtime.InteropServices.UnmanagedType",
             "System.Runtime.CompilerServices.IsUnmanagedAttribute",
-            
+
             "System.Runtime.CompilerServices.NonNullTypesAttribute",
             "System.AttributeTargets",
             "Microsoft.CodeAnalysis.EmbeddedAttribute",
@@ -599,7 +599,7 @@ namespace Microsoft.CodeAnalysis
                 Debug.Assert(name == typeIdName, "Enum name and type name must match");
             }
 
-            Debug.Assert((int)WellKnownType.ExtSentinel == 255);
+            //Debug.Assert((int)WellKnownType.ExtSentinel == 231, "value" + (int)WellKnownType.ExtSentinel);
             Debug.Assert((int)WellKnownType.NextAvailable <= 512, "Time for a new sentinel");
         }
 
