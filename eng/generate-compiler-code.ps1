@@ -64,26 +64,6 @@ function Run-Language($language, $languageSuffix, $languageDir, $languageTestDir
     }
 }
 
-function Run-GetTextCore($generatedDir) {
-    $syntaxFilePath = Join-Path $basicDir "Syntax\Syntax.xml"
-    $syntaxTextFilePath = Join-Path $generatedDir "Syntax.xml.GetText.Generated.vb"
-
-    Create-Directory $generatedDir
-    Run-Tool $basicSyntaxProject "`"$syntaxFilePath`" `"$syntaxTextFilePath`" /gettext"
-}
-
-function Run-GetText() {
-    $generatedDir = Join-Path $RepoRoot "src\ExpressionEvaluator\VisualBasic\Source\ResultProvider\Generated"
-    if (-not $test) { 
-        Run-GetTextCore $generatedDir
-    }
-    else {
-        $scratchDir = Join-Path $generationTempDir "VB\GetText"
-        Run-GetTextCore $scratchDir
-        Test-GeneratedContent $generatedDir $scratchDir
-    }
-}
-
 function Get-ToolPath($projectRelativePath) {
     $p = Join-Path 'src\Tools\Source\CompilerGeneratorTools\Source' $projectRelativePath
     $p = Join-Path $RepoRoot $p
@@ -101,16 +81,10 @@ try {
     $csharpTestDir = Join-Path $RepoRoot "src\Compilers\CSharp\Test\Syntax"
     $csharpSyntaxProject = Get-ToolPath 'CSharpSyntaxGenerator\CSharpSyntaxGenerator.csproj'
     $csharpErrorFactsProject = Get-ToolPath 'CSharpErrorFactsGenerator\CSharpErrorFactsGenerator.csproj'
-    $basicDir = Join-Path $RepoRoot "src\Compilers\VisualBasic\Portable"
-    $basicTestDir = Join-Path $RepoRoot "src\Compilers\VisualBasic\Test\Syntax"
-    $basicSyntaxProject = Get-ToolPath 'VisualBasicSyntaxGenerator\VisualBasicSyntaxGenerator.vbproj'
-    $basicErrorFactsProject = Get-ToolPath 'VisualBasicErrorFactsGenerator\VisualBasicErrorFactsGenerator.vbproj'
     $generationTempDir = Join-Path $RepoRoot "artifacts\log\$configuration\Generated"
 
 
     Run-Language "CSharp" "cs" $csharpDir $csharpTestDir $csharpSyntaxProject $csharpErrorFactsProject
-    Run-Language "VB" "vb" $basicDir $basicTestDir $basicSyntaxProject $basicErrorFactsProject 
-    Run-GetText
 
     exit 0
 }
