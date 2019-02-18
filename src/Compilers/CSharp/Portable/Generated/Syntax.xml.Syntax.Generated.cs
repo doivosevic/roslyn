@@ -4572,6 +4572,103 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax
   }
 
   /// <summary>Class which represents the syntax node for initializer expression.</summary>
+  public sealed partial class InitializerExpression2Syntax : ExpressionSyntax
+  {
+    private SyntaxNode expressions;
+
+    internal InitializerExpression2Syntax(Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.CSharpSyntaxNode green, SyntaxNode parent, int position)
+        : base(green, parent, position)
+    {
+    }
+
+    /// <summary>SyntaxToken representing the open brace.</summary>
+    public SyntaxToken OpenBracketToken 
+    {
+      get { return new SyntaxToken(this, ((Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.InitializerExpression2Syntax)this.Green).openBracketToken, this.Position, 0); }
+    }
+
+    /// <summary>SeparatedSyntaxList of ExpressionSyntax representing the list of expressions in the initializer expression.</summary>
+    public SeparatedSyntaxList<ExpressionSyntax> Expressions 
+    {
+        get
+        {
+            var red = this.GetRed(ref this.expressions, 1);
+            if (red != null)
+                return new SeparatedSyntaxList<ExpressionSyntax>(red, this.GetChildIndex(1));
+
+            return default(SeparatedSyntaxList<ExpressionSyntax>);
+        }
+    }
+
+    /// <summary>SyntaxToken representing the close brace.</summary>
+    public SyntaxToken CloseBracketToken 
+    {
+      get { return new SyntaxToken(this, ((Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.InitializerExpression2Syntax)this.Green).closeBracketToken, this.GetChildPosition(2), this.GetChildIndex(2)); }
+    }
+
+    internal override SyntaxNode GetNodeSlot(int index)
+    {
+        switch (index)
+        {
+            case 1: return this.GetRed(ref this.expressions, 1);
+            default: return null;
+        }
+    }
+    internal override SyntaxNode GetCachedSlot(int index)
+    {
+        switch (index)
+        {
+            case 1: return this.expressions;
+            default: return null;
+        }
+    }
+
+    public override TResult Accept<TResult>(CSharpSyntaxVisitor<TResult> visitor)
+    {
+        return visitor.VisitInitializerExpression2(this);
+    }
+
+    public override void Accept(CSharpSyntaxVisitor visitor)
+    {
+        visitor.VisitInitializerExpression2(this);
+    }
+
+    public InitializerExpression2Syntax Update(SyntaxToken openBracketToken, SeparatedSyntaxList<ExpressionSyntax> expressions, SyntaxToken closeBracketToken)
+    {
+        if (openBracketToken != this.OpenBracketToken || expressions != this.Expressions || closeBracketToken != this.CloseBracketToken)
+        {
+            var newNode = SyntaxFactory.InitializerExpression2(openBracketToken, expressions, closeBracketToken);
+            var annotations = this.GetAnnotations();
+            if (annotations != null && annotations.Length > 0)
+               return newNode.WithAnnotations(annotations);
+            return newNode;
+        }
+
+        return this;
+    }
+
+    public InitializerExpression2Syntax WithOpenBracketToken(SyntaxToken openBracketToken)
+    {
+        return this.Update(openBracketToken, this.Expressions, this.CloseBracketToken);
+    }
+
+    public InitializerExpression2Syntax WithExpressions(SeparatedSyntaxList<ExpressionSyntax> expressions)
+    {
+        return this.Update(this.OpenBracketToken, expressions, this.CloseBracketToken);
+    }
+
+    public InitializerExpression2Syntax WithCloseBracketToken(SyntaxToken closeBracketToken)
+    {
+        return this.Update(this.OpenBracketToken, this.Expressions, closeBracketToken);
+    }
+
+    public InitializerExpression2Syntax AddExpressions(params ExpressionSyntax[] items)
+    {
+        return this.WithExpressions(this.Expressions.AddRange(items));
+    }
+  }
+
+  /// <summary>Class which represents the syntax node for initializer expression.</summary>
   public sealed partial class InitializerExpressionSyntax : ExpressionSyntax
   {
     private SyntaxNode expressions;
@@ -5071,6 +5168,77 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax
     public ArrayCreationExpressionSyntax AddTypeRankSpecifiers(params ArrayRankSpecifierSyntax[] items)
     {
         return this.WithType(this.Type.WithRankSpecifiers(this.Type.RankSpecifiers.AddRange(items)));
+    }
+  }
+
+  /// <summary>Class which represents the syntax node for implicit array creation expression 2.</summary>
+  public sealed partial class ImplicitArrayCreationExpression2Syntax : ExpressionSyntax
+  {
+    private InitializerExpression2Syntax initializer;
+
+    internal ImplicitArrayCreationExpression2Syntax(Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.CSharpSyntaxNode green, SyntaxNode parent, int position)
+        : base(green, parent, position)
+    {
+    }
+
+    /// <summary>InitializerExpressionSyntax representing the initializer expression of the implicit array creation expression.</summary>
+    public InitializerExpression2Syntax Initializer 
+    {
+        get
+        {
+            return this.GetRedAtZero(ref this.initializer);
+        }
+    }
+
+    internal override SyntaxNode GetNodeSlot(int index)
+    {
+        switch (index)
+        {
+            case 0: return this.GetRedAtZero(ref this.initializer);
+            default: return null;
+        }
+    }
+    internal override SyntaxNode GetCachedSlot(int index)
+    {
+        switch (index)
+        {
+            case 0: return this.initializer;
+            default: return null;
+        }
+    }
+
+    public override TResult Accept<TResult>(CSharpSyntaxVisitor<TResult> visitor)
+    {
+        return visitor.VisitImplicitArrayCreationExpression2(this);
+    }
+
+    public override void Accept(CSharpSyntaxVisitor visitor)
+    {
+        visitor.VisitImplicitArrayCreationExpression2(this);
+    }
+
+    public ImplicitArrayCreationExpression2Syntax Update(InitializerExpression2Syntax initializer)
+    {
+        if (initializer != this.Initializer)
+        {
+            var newNode = SyntaxFactory.ImplicitArrayCreationExpression2(initializer);
+            var annotations = this.GetAnnotations();
+            if (annotations != null && annotations.Length > 0)
+               return newNode.WithAnnotations(annotations);
+            return newNode;
+        }
+
+        return this;
+    }
+
+    public ImplicitArrayCreationExpression2Syntax WithInitializer(InitializerExpression2Syntax initializer)
+    {
+        return this.Update(initializer);
+    }
+
+    public ImplicitArrayCreationExpression2Syntax AddInitializerExpressions(params ExpressionSyntax[] items)
+    {
+        return this.WithInitializer(this.Initializer.WithExpressions(this.Initializer.Expressions.AddRange(items)));
     }
   }
 

@@ -1347,6 +1347,32 @@
       <summary>Creates a ParenthesizedLambdaExpressionSyntax node.</summary>
     </FactoryComment>
   </Node>
+  <Node Name="InitializerExpression2Syntax" Base="ExpressionSyntax">
+    <Kind Name="ArrayInitializerExpression"/>
+    <Field Name="OpenBracketToken" Type="SyntaxToken">
+      <Kind Name="OpenBracketToken"/>
+      <PropertyComment>
+        <summary>SyntaxToken representing the open brace.</summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="Expressions" Type="SeparatedSyntaxList&lt;ExpressionSyntax&gt;">
+      <PropertyComment>
+        <summary>SeparatedSyntaxList of ExpressionSyntax representing the list of expressions in the initializer expression.</summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="CloseBracketToken" Type="SyntaxToken">
+      <Kind Name="CloseBracketToken"/>
+      <PropertyComment>
+        <summary>SyntaxToken representing the close brace.</summary>
+      </PropertyComment>
+    </Field>
+    <TypeComment>
+      <summary>Class which represents the syntax node for initializer expression.</summary>
+    </TypeComment>
+    <FactoryComment>
+      <summary>Creates an InitializerExpressionSyntax node.</summary>
+    </FactoryComment>
+  </Node>
   <Node Name="InitializerExpressionSyntax" Base="ExpressionSyntax">
     <Kind Name="ObjectInitializerExpression"/>
     <Kind Name="CollectionInitializerExpression"/>
@@ -1477,6 +1503,20 @@
     </TypeComment>
     <FactoryComment>
       <summary>Creates an ArrayCreationExpressionSyntax node.</summary>
+    </FactoryComment>
+  </Node>
+  <Node Name="ImplicitArrayCreationExpression2Syntax" Base="ExpressionSyntax">
+    <Kind Name="ImplicitArrayCreationExpression2"/>
+    <Field Name="Initializer" Type="InitializerExpression2Syntax">
+      <PropertyComment>
+        <summary>InitializerExpressionSyntax representing the initializer expression of the implicit array creation expression.</summary>
+      </PropertyComment>
+    </Field>
+    <TypeComment>
+      <summary>Class which represents the syntax node for implicit array creation expression 2.</summary>
+    </TypeComment>
+    <FactoryComment>
+      <summary>Creates an ImplicitArrayCreationExpressionSyntax2 node.</summary>
     </FactoryComment>
   </Node>
   <Node Name="ImplicitArrayCreationExpressionSyntax" Base="ExpressionSyntax">

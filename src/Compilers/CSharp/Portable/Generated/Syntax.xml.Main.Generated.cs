@@ -316,6 +316,12 @@ namespace Microsoft.CodeAnalysis.CSharp
       return this.DefaultVisit(node);
     }
 
+    /// <summary>Called when the visitor visits a InitializerExpression2Syntax node.</summary>
+    public virtual TResult VisitInitializerExpression2(InitializerExpression2Syntax node)
+    {
+      return this.DefaultVisit(node);
+    }
+
     /// <summary>Called when the visitor visits a InitializerExpressionSyntax node.</summary>
     public virtual TResult VisitInitializerExpression(InitializerExpressionSyntax node)
     {
@@ -342,6 +348,12 @@ namespace Microsoft.CodeAnalysis.CSharp
 
     /// <summary>Called when the visitor visits a ArrayCreationExpressionSyntax node.</summary>
     public virtual TResult VisitArrayCreationExpression(ArrayCreationExpressionSyntax node)
+    {
+      return this.DefaultVisit(node);
+    }
+
+    /// <summary>Called when the visitor visits a ImplicitArrayCreationExpression2Syntax node.</summary>
+    public virtual TResult VisitImplicitArrayCreationExpression2(ImplicitArrayCreationExpression2Syntax node)
     {
       return this.DefaultVisit(node);
     }
@@ -1609,6 +1621,12 @@ namespace Microsoft.CodeAnalysis.CSharp
       this.DefaultVisit(node);
     }
 
+    /// <summary>Called when the visitor visits a InitializerExpression2Syntax node.</summary>
+    public virtual void VisitInitializerExpression2(InitializerExpression2Syntax node)
+    {
+      this.DefaultVisit(node);
+    }
+
     /// <summary>Called when the visitor visits a InitializerExpressionSyntax node.</summary>
     public virtual void VisitInitializerExpression(InitializerExpressionSyntax node)
     {
@@ -1635,6 +1653,12 @@ namespace Microsoft.CodeAnalysis.CSharp
 
     /// <summary>Called when the visitor visits a ArrayCreationExpressionSyntax node.</summary>
     public virtual void VisitArrayCreationExpression(ArrayCreationExpressionSyntax node)
+    {
+      this.DefaultVisit(node);
+    }
+
+    /// <summary>Called when the visitor visits a ImplicitArrayCreationExpression2Syntax node.</summary>
+    public virtual void VisitImplicitArrayCreationExpression2(ImplicitArrayCreationExpression2Syntax node)
     {
       this.DefaultVisit(node);
     }
@@ -2987,6 +3011,14 @@ namespace Microsoft.CodeAnalysis.CSharp
       return node.Update(asyncKeyword, parameterList, arrowToken, body);
     }
 
+    public override SyntaxNode VisitInitializerExpression2(InitializerExpression2Syntax node)
+    {
+      var openBracketToken = this.VisitToken(node.OpenBracketToken);
+      var expressions = this.VisitList(node.Expressions);
+      var closeBracketToken = this.VisitToken(node.CloseBracketToken);
+      return node.Update(openBracketToken, expressions, closeBracketToken);
+    }
+
     public override SyntaxNode VisitInitializerExpression(InitializerExpressionSyntax node)
     {
       var openBraceToken = this.VisitToken(node.OpenBraceToken);
@@ -3026,6 +3058,12 @@ namespace Microsoft.CodeAnalysis.CSharp
       var type = (ArrayTypeSyntax)this.Visit(node.Type);
       var initializer = (InitializerExpressionSyntax)this.Visit(node.Initializer);
       return node.Update(newKeyword, type, initializer);
+    }
+
+    public override SyntaxNode VisitImplicitArrayCreationExpression2(ImplicitArrayCreationExpression2Syntax node)
+    {
+      var initializer = (InitializerExpression2Syntax)this.Visit(node.Initializer);
+      return node.Update(initializer);
     }
 
     public override SyntaxNode VisitImplicitArrayCreationExpression(ImplicitArrayCreationExpressionSyntax node)
@@ -6077,6 +6115,35 @@ namespace Microsoft.CodeAnalysis.CSharp
       return SyntaxFactory.ParenthesizedLambdaExpression(default(SyntaxToken), SyntaxFactory.ParameterList(), SyntaxFactory.Token(SyntaxKind.EqualsGreaterThanToken), body);
     }
 
+    /// <summary>Creates a new InitializerExpression2Syntax instance.</summary>
+    public static InitializerExpression2Syntax InitializerExpression2(SyntaxToken openBracketToken, SeparatedSyntaxList<ExpressionSyntax> expressions, SyntaxToken closeBracketToken)
+    {
+      switch (openBracketToken.Kind())
+      {
+        case SyntaxKind.OpenBracketToken:
+          break;
+        default:
+          throw new ArgumentException(nameof(openBracketToken));
+      }
+      switch (closeBracketToken.Kind())
+      {
+        case SyntaxKind.CloseBracketToken:
+          break;
+        default:
+          throw new ArgumentException(nameof(closeBracketToken));
+      }
+      return (InitializerExpression2Syntax)Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.SyntaxFactory.InitializerExpression2((Syntax.InternalSyntax.SyntaxToken)openBracketToken.Node, expressions.Node.ToGreenSeparatedList<Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.ExpressionSyntax>(), (Syntax.InternalSyntax.SyntaxToken)closeBracketToken.Node).CreateRed();
+    }
+
+
+#pragma warning disable RS0027 // Public API with optional parameter(s) should have the most parameters amongst its public overloads.
+                              /// <summary>Creates a new InitializerExpression2Syntax instance.</summary>
+        public static InitializerExpression2Syntax InitializerExpression2(SeparatedSyntaxList<ExpressionSyntax> expressions = default(SeparatedSyntaxList<ExpressionSyntax>))
+#pragma warning restore RS0027 // Public API with optional parameter(s) should have the most parameters amongst its public overloads.
+        {
+      return SyntaxFactory.InitializerExpression2(SyntaxFactory.Token(SyntaxKind.OpenBracketToken), expressions, SyntaxFactory.Token(SyntaxKind.CloseBracketToken));
+    }
+
     /// <summary>Creates a new InitializerExpressionSyntax instance.</summary>
     public static InitializerExpressionSyntax InitializerExpression(SyntaxKind kind, SyntaxToken openBraceToken, SeparatedSyntaxList<ExpressionSyntax> expressions, SyntaxToken closeBraceToken)
     {
@@ -6217,6 +6284,21 @@ namespace Microsoft.CodeAnalysis.CSharp
     public static ArrayCreationExpressionSyntax ArrayCreationExpression(ArrayTypeSyntax type)
     {
       return SyntaxFactory.ArrayCreationExpression(SyntaxFactory.Token(SyntaxKind.NewKeyword), type, default(InitializerExpressionSyntax));
+    }
+
+    /// <summary>Creates a new ImplicitArrayCreationExpression2Syntax instance.</summary>
+    public static ImplicitArrayCreationExpression2Syntax ImplicitArrayCreationExpression2(InitializerExpression2Syntax initializer)
+    {
+      if (initializer == null)
+        throw new ArgumentNullException(nameof(initializer));
+      return (ImplicitArrayCreationExpression2Syntax)Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.SyntaxFactory.ImplicitArrayCreationExpression2(initializer == null ? null : (Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.InitializerExpression2Syntax)initializer.Green).CreateRed();
+    }
+
+
+    /// <summary>Creates a new ImplicitArrayCreationExpression2Syntax instance.</summary>
+    public static ImplicitArrayCreationExpression2Syntax ImplicitArrayCreationExpression2()
+    {
+      return SyntaxFactory.ImplicitArrayCreationExpression2(SyntaxFactory.InitializerExpression2());
     }
 
     /// <summary>Creates a new ImplicitArrayCreationExpressionSyntax instance.</summary>

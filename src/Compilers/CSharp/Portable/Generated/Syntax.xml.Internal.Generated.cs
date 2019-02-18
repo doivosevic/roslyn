@@ -7257,6 +7257,159 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
   }
 
   /// <summary>Class which represents the syntax node for initializer expression.</summary>
+  internal sealed partial class InitializerExpression2Syntax : ExpressionSyntax
+  {
+    internal readonly SyntaxToken openBracketToken;
+    internal readonly GreenNode expressions;
+    internal readonly SyntaxToken closeBracketToken;
+
+    internal InitializerExpression2Syntax(SyntaxKind kind, SyntaxToken openBracketToken, GreenNode expressions, SyntaxToken closeBracketToken, DiagnosticInfo[] diagnostics, SyntaxAnnotation[] annotations)
+        : base(kind, diagnostics, annotations)
+    {
+        this.SlotCount = 3;
+        this.AdjustFlagsAndWidth(openBracketToken);
+        this.openBracketToken = openBracketToken;
+        if (expressions != null)
+        {
+            this.AdjustFlagsAndWidth(expressions);
+            this.expressions = expressions;
+        }
+        this.AdjustFlagsAndWidth(closeBracketToken);
+        this.closeBracketToken = closeBracketToken;
+    }
+
+
+    internal InitializerExpression2Syntax(SyntaxKind kind, SyntaxToken openBracketToken, GreenNode expressions, SyntaxToken closeBracketToken, SyntaxFactoryContext context)
+        : base(kind)
+    {
+        this.SetFactoryContext(context);
+        this.SlotCount = 3;
+        this.AdjustFlagsAndWidth(openBracketToken);
+        this.openBracketToken = openBracketToken;
+        if (expressions != null)
+        {
+            this.AdjustFlagsAndWidth(expressions);
+            this.expressions = expressions;
+        }
+        this.AdjustFlagsAndWidth(closeBracketToken);
+        this.closeBracketToken = closeBracketToken;
+    }
+
+
+    internal InitializerExpression2Syntax(SyntaxKind kind, SyntaxToken openBracketToken, GreenNode expressions, SyntaxToken closeBracketToken)
+        : base(kind)
+    {
+        this.SlotCount = 3;
+        this.AdjustFlagsAndWidth(openBracketToken);
+        this.openBracketToken = openBracketToken;
+        if (expressions != null)
+        {
+            this.AdjustFlagsAndWidth(expressions);
+            this.expressions = expressions;
+        }
+        this.AdjustFlagsAndWidth(closeBracketToken);
+        this.closeBracketToken = closeBracketToken;
+    }
+
+    /// <summary>SyntaxToken representing the open brace.</summary>
+    public SyntaxToken OpenBracketToken { get { return this.openBracketToken; } }
+    /// <summary>SeparatedSyntaxList of ExpressionSyntax representing the list of expressions in the initializer expression.</summary>
+    public Microsoft.CodeAnalysis.Syntax.InternalSyntax.SeparatedSyntaxList<ExpressionSyntax> Expressions { get { return new Microsoft.CodeAnalysis.Syntax.InternalSyntax.SeparatedSyntaxList<ExpressionSyntax>(new Microsoft.CodeAnalysis.Syntax.InternalSyntax.SyntaxList<CSharpSyntaxNode>(this.expressions)); } }
+    /// <summary>SyntaxToken representing the close brace.</summary>
+    public SyntaxToken CloseBracketToken { get { return this.closeBracketToken; } }
+
+    internal override GreenNode GetSlot(int index)
+    {
+        switch (index)
+        {
+            case 0: return this.openBracketToken;
+            case 1: return this.expressions;
+            case 2: return this.closeBracketToken;
+            default: return null;
+        }
+    }
+
+    internal override SyntaxNode CreateRed(SyntaxNode parent, int position)
+    {
+      return new CSharp.Syntax.InitializerExpression2Syntax(this, parent, position);
+    }
+
+    public override TResult Accept<TResult>(CSharpSyntaxVisitor<TResult> visitor)
+    {
+        return visitor.VisitInitializerExpression2(this);
+    }
+
+    public override void Accept(CSharpSyntaxVisitor visitor)
+    {
+        visitor.VisitInitializerExpression2(this);
+    }
+
+    public InitializerExpression2Syntax Update(SyntaxToken openBracketToken, Microsoft.CodeAnalysis.Syntax.InternalSyntax.SeparatedSyntaxList<ExpressionSyntax> expressions, SyntaxToken closeBracketToken)
+    {
+        if (openBracketToken != this.OpenBracketToken || expressions != this.Expressions || closeBracketToken != this.CloseBracketToken)
+        {
+            var newNode = SyntaxFactory.InitializerExpression2(openBracketToken, expressions, closeBracketToken);
+            var diags = this.GetDiagnostics();
+            if (diags != null && diags.Length > 0)
+               newNode = newNode.WithDiagnosticsGreen(diags);
+            var annotations = this.GetAnnotations();
+            if (annotations != null && annotations.Length > 0)
+               newNode = newNode.WithAnnotationsGreen(annotations);
+            return newNode;
+        }
+
+        return this;
+    }
+
+    internal override GreenNode SetDiagnostics(DiagnosticInfo[] diagnostics)
+    {
+         return new InitializerExpression2Syntax(this.Kind, this.openBracketToken, this.expressions, this.closeBracketToken, diagnostics, GetAnnotations());
+    }
+
+    internal override GreenNode SetAnnotations(SyntaxAnnotation[] annotations)
+    {
+         return new InitializerExpression2Syntax(this.Kind, this.openBracketToken, this.expressions, this.closeBracketToken, GetDiagnostics(), annotations);
+    }
+
+    internal InitializerExpression2Syntax(ObjectReader reader)
+        : base(reader)
+    {
+      this.SlotCount = 3;
+      var openBracketToken = (SyntaxToken)reader.ReadValue();
+      if (openBracketToken != null)
+      {
+         AdjustFlagsAndWidth(openBracketToken);
+         this.openBracketToken = openBracketToken;
+      }
+      var expressions = (GreenNode)reader.ReadValue();
+      if (expressions != null)
+      {
+         AdjustFlagsAndWidth(expressions);
+         this.expressions = expressions;
+      }
+      var closeBracketToken = (SyntaxToken)reader.ReadValue();
+      if (closeBracketToken != null)
+      {
+         AdjustFlagsAndWidth(closeBracketToken);
+         this.closeBracketToken = closeBracketToken;
+      }
+    }
+
+    internal override void WriteTo(ObjectWriter writer)
+    {
+      base.WriteTo(writer);
+      writer.WriteValue(this.openBracketToken);
+      writer.WriteValue(this.expressions);
+      writer.WriteValue(this.closeBracketToken);
+    }
+
+    static InitializerExpression2Syntax()
+    {
+       ObjectBinder.RegisterTypeReader(typeof(InitializerExpression2Syntax), r => new InitializerExpression2Syntax(r));
+    }
+  }
+
+  /// <summary>Class which represents the syntax node for initializer expression.</summary>
   internal sealed partial class InitializerExpressionSyntax : ExpressionSyntax
   {
     internal readonly SyntaxToken openBraceToken;
@@ -8043,6 +8196,116 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
     static ArrayCreationExpressionSyntax()
     {
        ObjectBinder.RegisterTypeReader(typeof(ArrayCreationExpressionSyntax), r => new ArrayCreationExpressionSyntax(r));
+    }
+  }
+
+  /// <summary>Class which represents the syntax node for implicit array creation expression 2.</summary>
+  internal sealed partial class ImplicitArrayCreationExpression2Syntax : ExpressionSyntax
+  {
+    internal readonly InitializerExpression2Syntax initializer;
+
+    internal ImplicitArrayCreationExpression2Syntax(SyntaxKind kind, InitializerExpression2Syntax initializer, DiagnosticInfo[] diagnostics, SyntaxAnnotation[] annotations)
+        : base(kind, diagnostics, annotations)
+    {
+        this.SlotCount = 1;
+        this.AdjustFlagsAndWidth(initializer);
+        this.initializer = initializer;
+    }
+
+
+    internal ImplicitArrayCreationExpression2Syntax(SyntaxKind kind, InitializerExpression2Syntax initializer, SyntaxFactoryContext context)
+        : base(kind)
+    {
+        this.SetFactoryContext(context);
+        this.SlotCount = 1;
+        this.AdjustFlagsAndWidth(initializer);
+        this.initializer = initializer;
+    }
+
+
+    internal ImplicitArrayCreationExpression2Syntax(SyntaxKind kind, InitializerExpression2Syntax initializer)
+        : base(kind)
+    {
+        this.SlotCount = 1;
+        this.AdjustFlagsAndWidth(initializer);
+        this.initializer = initializer;
+    }
+
+    /// <summary>InitializerExpressionSyntax representing the initializer expression of the implicit array creation expression.</summary>
+    public InitializerExpression2Syntax Initializer { get { return this.initializer; } }
+
+    internal override GreenNode GetSlot(int index)
+    {
+        switch (index)
+        {
+            case 0: return this.initializer;
+            default: return null;
+        }
+    }
+
+    internal override SyntaxNode CreateRed(SyntaxNode parent, int position)
+    {
+      return new CSharp.Syntax.ImplicitArrayCreationExpression2Syntax(this, parent, position);
+    }
+
+    public override TResult Accept<TResult>(CSharpSyntaxVisitor<TResult> visitor)
+    {
+        return visitor.VisitImplicitArrayCreationExpression2(this);
+    }
+
+    public override void Accept(CSharpSyntaxVisitor visitor)
+    {
+        visitor.VisitImplicitArrayCreationExpression2(this);
+    }
+
+    public ImplicitArrayCreationExpression2Syntax Update(InitializerExpression2Syntax initializer)
+    {
+        if (initializer != this.Initializer)
+        {
+            var newNode = SyntaxFactory.ImplicitArrayCreationExpression2(initializer);
+            var diags = this.GetDiagnostics();
+            if (diags != null && diags.Length > 0)
+               newNode = newNode.WithDiagnosticsGreen(diags);
+            var annotations = this.GetAnnotations();
+            if (annotations != null && annotations.Length > 0)
+               newNode = newNode.WithAnnotationsGreen(annotations);
+            return newNode;
+        }
+
+        return this;
+    }
+
+    internal override GreenNode SetDiagnostics(DiagnosticInfo[] diagnostics)
+    {
+         return new ImplicitArrayCreationExpression2Syntax(this.Kind, this.initializer, diagnostics, GetAnnotations());
+    }
+
+    internal override GreenNode SetAnnotations(SyntaxAnnotation[] annotations)
+    {
+         return new ImplicitArrayCreationExpression2Syntax(this.Kind, this.initializer, GetDiagnostics(), annotations);
+    }
+
+    internal ImplicitArrayCreationExpression2Syntax(ObjectReader reader)
+        : base(reader)
+    {
+      this.SlotCount = 1;
+      var initializer = (InitializerExpression2Syntax)reader.ReadValue();
+      if (initializer != null)
+      {
+         AdjustFlagsAndWidth(initializer);
+         this.initializer = initializer;
+      }
+    }
+
+    internal override void WriteTo(ObjectWriter writer)
+    {
+      base.WriteTo(writer);
+      writer.WriteValue(this.initializer);
+    }
+
+    static ImplicitArrayCreationExpression2Syntax()
+    {
+       ObjectBinder.RegisterTypeReader(typeof(ImplicitArrayCreationExpression2Syntax), r => new ImplicitArrayCreationExpression2Syntax(r));
     }
   }
 
@@ -35772,6 +36035,11 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
       return this.DefaultVisit(node);
     }
 
+    public virtual TResult VisitInitializerExpression2(InitializerExpression2Syntax node)
+    {
+      return this.DefaultVisit(node);
+    }
+
     public virtual TResult VisitInitializerExpression(InitializerExpressionSyntax node)
     {
       return this.DefaultVisit(node);
@@ -35793,6 +36061,11 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
     }
 
     public virtual TResult VisitArrayCreationExpression(ArrayCreationExpressionSyntax node)
+    {
+      return this.DefaultVisit(node);
+    }
+
+    public virtual TResult VisitImplicitArrayCreationExpression2(ImplicitArrayCreationExpression2Syntax node)
     {
       return this.DefaultVisit(node);
     }
@@ -36851,6 +37124,11 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
       this.DefaultVisit(node);
     }
 
+    public virtual void VisitInitializerExpression2(InitializerExpression2Syntax node)
+    {
+      this.DefaultVisit(node);
+    }
+
     public virtual void VisitInitializerExpression(InitializerExpressionSyntax node)
     {
       this.DefaultVisit(node);
@@ -36872,6 +37150,11 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
     }
 
     public virtual void VisitArrayCreationExpression(ArrayCreationExpressionSyntax node)
+    {
+      this.DefaultVisit(node);
+    }
+
+    public virtual void VisitImplicitArrayCreationExpression2(ImplicitArrayCreationExpression2Syntax node)
     {
       this.DefaultVisit(node);
     }
@@ -38064,6 +38347,14 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
       return node.Update(asyncKeyword, parameterList, arrowToken, body);
     }
 
+    public override CSharpSyntaxNode VisitInitializerExpression2(InitializerExpression2Syntax node)
+    {
+      var openBracketToken = (SyntaxToken)this.Visit(node.OpenBracketToken);
+      var expressions = this.VisitList(node.Expressions);
+      var closeBracketToken = (SyntaxToken)this.Visit(node.CloseBracketToken);
+      return node.Update(openBracketToken, expressions, closeBracketToken);
+    }
+
     public override CSharpSyntaxNode VisitInitializerExpression(InitializerExpressionSyntax node)
     {
       var openBraceToken = (SyntaxToken)this.Visit(node.OpenBraceToken);
@@ -38103,6 +38394,12 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
       var type = (ArrayTypeSyntax)this.Visit(node.Type);
       var initializer = (InitializerExpressionSyntax)this.Visit(node.Initializer);
       return node.Update(newKeyword, type, initializer);
+    }
+
+    public override CSharpSyntaxNode VisitImplicitArrayCreationExpression2(ImplicitArrayCreationExpression2Syntax node)
+    {
+      var initializer = (InitializerExpression2Syntax)this.Visit(node.Initializer);
+      return node.Update(initializer);
     }
 
     public override CSharpSyntaxNode VisitImplicitArrayCreationExpression(ImplicitArrayCreationExpressionSyntax node)
@@ -41246,6 +41543,42 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
       return new ParenthesizedLambdaExpressionSyntax(SyntaxKind.ParenthesizedLambdaExpression, asyncKeyword, parameterList, arrowToken, body, this.context);
     }
 
+    public InitializerExpression2Syntax InitializerExpression2(SyntaxToken openBracketToken, Microsoft.CodeAnalysis.Syntax.InternalSyntax.SeparatedSyntaxList<ExpressionSyntax> expressions, SyntaxToken closeBracketToken)
+    {
+#if DEBUG
+      if (openBracketToken == null)
+        throw new ArgumentNullException(nameof(openBracketToken));
+      switch (openBracketToken.Kind)
+      {
+        case SyntaxKind.OpenBracketToken:
+          break;
+        default:
+          throw new ArgumentException(nameof(openBracketToken));
+      }
+      if (closeBracketToken == null)
+        throw new ArgumentNullException(nameof(closeBracketToken));
+      switch (closeBracketToken.Kind)
+      {
+        case SyntaxKind.CloseBracketToken:
+          break;
+        default:
+          throw new ArgumentException(nameof(closeBracketToken));
+      }
+#endif
+
+      int hash;
+      var cached = CSharpSyntaxNodeCache.TryGetNode((int)SyntaxKind.ArrayInitializerExpression, openBracketToken, expressions.Node, closeBracketToken, this.context, out hash);
+      if (cached != null) return (InitializerExpression2Syntax)cached;
+
+      var result = new InitializerExpression2Syntax(SyntaxKind.ArrayInitializerExpression, openBracketToken, expressions.Node, closeBracketToken, this.context);
+      if (hash >= 0)
+      {
+          SyntaxNodeCache.AddNode(result, hash);
+      }
+
+      return result;
+    }
+
     public InitializerExpressionSyntax InitializerExpression(SyntaxKind kind, SyntaxToken openBraceToken, Microsoft.CodeAnalysis.Syntax.InternalSyntax.SeparatedSyntaxList<ExpressionSyntax> expressions, SyntaxToken closeBraceToken)
     {
       switch (kind)
@@ -41387,6 +41720,26 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
       if (cached != null) return (ArrayCreationExpressionSyntax)cached;
 
       var result = new ArrayCreationExpressionSyntax(SyntaxKind.ArrayCreationExpression, newKeyword, type, initializer, this.context);
+      if (hash >= 0)
+      {
+          SyntaxNodeCache.AddNode(result, hash);
+      }
+
+      return result;
+    }
+
+    public ImplicitArrayCreationExpression2Syntax ImplicitArrayCreationExpression2(InitializerExpression2Syntax initializer)
+    {
+#if DEBUG
+      if (initializer == null)
+        throw new ArgumentNullException(nameof(initializer));
+#endif
+
+      int hash;
+      var cached = CSharpSyntaxNodeCache.TryGetNode((int)SyntaxKind.ImplicitArrayCreationExpression2, initializer, this.context, out hash);
+      if (cached != null) return (ImplicitArrayCreationExpression2Syntax)cached;
+
+      var result = new ImplicitArrayCreationExpression2Syntax(SyntaxKind.ImplicitArrayCreationExpression2, initializer, this.context);
       if (hash >= 0)
       {
           SyntaxNodeCache.AddNode(result, hash);
@@ -48576,6 +48929,42 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
       return new ParenthesizedLambdaExpressionSyntax(SyntaxKind.ParenthesizedLambdaExpression, asyncKeyword, parameterList, arrowToken, body);
     }
 
+    public static InitializerExpression2Syntax InitializerExpression2(SyntaxToken openBracketToken, Microsoft.CodeAnalysis.Syntax.InternalSyntax.SeparatedSyntaxList<ExpressionSyntax> expressions, SyntaxToken closeBracketToken)
+    {
+#if DEBUG
+      if (openBracketToken == null)
+        throw new ArgumentNullException(nameof(openBracketToken));
+      switch (openBracketToken.Kind)
+      {
+        case SyntaxKind.OpenBracketToken:
+          break;
+        default:
+          throw new ArgumentException(nameof(openBracketToken));
+      }
+      if (closeBracketToken == null)
+        throw new ArgumentNullException(nameof(closeBracketToken));
+      switch (closeBracketToken.Kind)
+      {
+        case SyntaxKind.CloseBracketToken:
+          break;
+        default:
+          throw new ArgumentException(nameof(closeBracketToken));
+      }
+#endif
+
+      int hash;
+      var cached = SyntaxNodeCache.TryGetNode((int)SyntaxKind.ArrayInitializerExpression, openBracketToken, expressions.Node, closeBracketToken, out hash);
+      if (cached != null) return (InitializerExpression2Syntax)cached;
+
+      var result = new InitializerExpression2Syntax(SyntaxKind.ArrayInitializerExpression, openBracketToken, expressions.Node, closeBracketToken);
+      if (hash >= 0)
+      {
+          SyntaxNodeCache.AddNode(result, hash);
+      }
+
+      return result;
+    }
+
     public static InitializerExpressionSyntax InitializerExpression(SyntaxKind kind, SyntaxToken openBraceToken, Microsoft.CodeAnalysis.Syntax.InternalSyntax.SeparatedSyntaxList<ExpressionSyntax> expressions, SyntaxToken closeBraceToken)
     {
       switch (kind)
@@ -48717,6 +49106,26 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
       if (cached != null) return (ArrayCreationExpressionSyntax)cached;
 
       var result = new ArrayCreationExpressionSyntax(SyntaxKind.ArrayCreationExpression, newKeyword, type, initializer);
+      if (hash >= 0)
+      {
+          SyntaxNodeCache.AddNode(result, hash);
+      }
+
+      return result;
+    }
+
+    public static ImplicitArrayCreationExpression2Syntax ImplicitArrayCreationExpression2(InitializerExpression2Syntax initializer)
+    {
+#if DEBUG
+      if (initializer == null)
+        throw new ArgumentNullException(nameof(initializer));
+#endif
+
+      int hash;
+      var cached = SyntaxNodeCache.TryGetNode((int)SyntaxKind.ImplicitArrayCreationExpression2, initializer, out hash);
+      if (cached != null) return (ImplicitArrayCreationExpression2Syntax)cached;
+
+      var result = new ImplicitArrayCreationExpression2Syntax(SyntaxKind.ImplicitArrayCreationExpression2, initializer);
       if (hash >= 0)
       {
           SyntaxNodeCache.AddNode(result, hash);
@@ -54245,11 +54654,13 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
            typeof(SimpleLambdaExpressionSyntax),
            typeof(RefExpressionSyntax),
            typeof(ParenthesizedLambdaExpressionSyntax),
+           typeof(InitializerExpression2Syntax),
            typeof(InitializerExpressionSyntax),
            typeof(ObjectCreationExpressionSyntax),
            typeof(AnonymousObjectMemberDeclaratorSyntax),
            typeof(AnonymousObjectCreationExpressionSyntax),
            typeof(ArrayCreationExpressionSyntax),
+           typeof(ImplicitArrayCreationExpression2Syntax),
            typeof(ImplicitArrayCreationExpressionSyntax),
            typeof(StackAllocArrayCreationExpressionSyntax),
            typeof(ImplicitStackAllocArrayCreationExpressionSyntax),

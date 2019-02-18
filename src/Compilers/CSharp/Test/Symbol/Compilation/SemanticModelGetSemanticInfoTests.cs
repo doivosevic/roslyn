@@ -11536,6 +11536,42 @@ namespace Test
         }
 
         [Fact]
+        public void ImplicitArrayCreationExpression2_IdentifierNameSyntax()
+        {
+            string sourceCode = @"
+using System;
+
+namespace Test
+{
+    public class Program
+    {
+        public static int Main()
+        {
+            var a = [ 1, 2, 3 ];
+
+            return /*<bind>*/a/*</bind>*/[0];
+        }
+    }
+}
+";
+            var semanticInfo = GetSemanticInfoForTest<IdentifierNameSyntax>(sourceCode);
+
+            Assert.Equal("System.Int32[]", semanticInfo.Type.ToTestDisplayString());
+            Assert.Equal(TypeKind.Array, semanticInfo.Type.TypeKind);
+            Assert.Equal("System.Int32[]", semanticInfo.ConvertedType.ToTestDisplayString());
+            Assert.Equal(TypeKind.Array, semanticInfo.ConvertedType.TypeKind);
+            Assert.Equal(ConversionKind.Identity, semanticInfo.ImplicitConversion.Kind);
+
+            Assert.Equal("System.Int32[] a", semanticInfo.Symbol.ToTestDisplayString());
+            Assert.Equal(SymbolKind.Local, semanticInfo.Symbol.Kind);
+            Assert.Equal(0, semanticInfo.CandidateSymbols.Length);
+
+            Assert.Equal(0, semanticInfo.MethodGroup.Length);
+
+            Assert.False(semanticInfo.IsCompileTimeConstant);
+        }
+
+        [Fact]
         public void ImplicitArrayCreationExpression_IdentifierNameSyntax()
         {
             string sourceCode = @"

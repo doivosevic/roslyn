@@ -2147,6 +2147,9 @@ tryAgain:
                                 return _syntaxFactory.GlobalStatement(ParseExpressionStatement());
                             }
                             break;
+
+                        case SyntaxKind.OpenBracketToken:
+                            return _syntaxFactory.GlobalStatement(ParseExpressionStatement());
                     }
                 }
 
@@ -9429,6 +9432,9 @@ tryAgain:
                 case SyntaxKind.NewKeyword:
                     expr = this.ParseNewExpression();
                     break;
+                case SyntaxKind.OpenBracketToken:
+                    expr = this.ParseImplicitlyTypedArrayCreation2();
+                    break;
                 case SyntaxKind.StackAllocKeyword:
                     expr = this.ParseStackAllocExpression();
                     break;
@@ -10788,6 +10794,54 @@ tryAgain:
             return this.PeekToken(1).Kind == SyntaxKind.OpenBracketToken;
         }
 
+        private ImplicitArrayCreationExpression2Syntax ParseImplicitlyTypedArrayCreation2()
+        {
+            //var @new = this.EatToken(SyntaxKind.NewKeyword);
+            //@new = CheckFeatureAvailability(@new, MessageID.IDS_FeatureImplicitArray);
+            ////var openBracket = this.EatToken(SyntaxKind.OpenBracketToken);
+
+            //var commas = _pool.Allocate();
+            //try
+            //{
+            //    int lastTokenPosition = -1;
+            //    while (IsMakingProgress(ref lastTokenPosition))
+            //    {
+            //        if (this.IsPossibleExpression())
+            //        {
+            //            var size = this.AddError(this.ParseExpressionCore(), ErrorCode.ERR_InvalidArray);
+            //            if (commas.Count == 0)
+            //            {
+            //                openBracket = AddTrailingSkippedSyntax(openBracket, size);
+            //            }
+            //            else
+            //            {
+            //                AddTrailingSkippedSyntax(commas, size);
+            //            }
+            //        }
+
+            //        if (this.CurrentToken.Kind == SyntaxKind.CommaToken)
+            //        {
+            //            commas.Add(this.EatToken());
+            //            continue;
+            //        }
+
+            //        break;
+            //    }
+
+            //    var closeBracket = this.EatToken(SyntaxKind.CloseBracketToken);
+            var initializer = this.ParseArrayInitializer2();
+
+            ////var closeBracket = this.EatToken(SyntaxKind.CloseBracketToken);
+
+            return _syntaxFactory.ImplicitArrayCreationExpression2(initializer);
+
+            //}
+            //finally
+            //{
+            //    _pool.Free(commas);
+            //}
+        }
+
         private ImplicitArrayCreationExpressionSyntax ParseImplicitlyTypedArrayCreation()
         {
             var @new = this.EatToken(SyntaxKind.NewKeyword);
@@ -10830,6 +10884,66 @@ tryAgain:
             finally
             {
                 _pool.Free(commas);
+            }
+        }
+
+        private InitializerExpression2Syntax ParseArrayInitializer2()
+        {
+            var openBrace = this.EatToken(SyntaxKind.OpenBracketToken);
+
+            // NOTE:  This loop allows " { <initexpr>, } " but not " { , } "
+            var list = _pool.AllocateSeparated<ExpressionSyntax>();
+            try
+            {
+                if (this.CurrentToken.Kind != SyntaxKind.CloseBracketToken)
+                {
+tryAgain:
+                    if (this.IsPossibleVariableInitializer() || this.CurrentToken.Kind == SyntaxKind.CommaToken)
+                    {
+                        list.Add(this.ParseVariableInitializer());
+
+                        while (true)
+                        {
+                            if (this.CurrentToken.Kind == SyntaxKind.CloseBracketToken)
+                            {
+                                break;
+                            }
+                            else if (this.IsPossibleVariableInitializer() || this.CurrentToken.Kind == SyntaxKind.CommaToken)
+                            {
+                                list.AddSeparator(this.EatToken(SyntaxKind.CommaToken));
+
+                                // check for exit case after legal trailing comma
+                                if (this.CurrentToken.Kind == SyntaxKind.CloseBracketToken)
+                                {
+                                    break;
+                                }
+                                else if (!this.IsPossibleVariableInitializer())
+                                {
+                                    goto tryAgain;
+                                }
+
+                                list.Add(this.ParseVariableInitializer());
+                                continue;
+                            }
+                            else if (SkipBadArrayInitializerTokens(ref openBrace, list, SyntaxKind.CommaToken) == PostSkipAction.Abort)
+                            {
+                                break;
+                            }
+                        }
+                    }
+                    else if (SkipBadArrayInitializerTokens(ref openBrace, list, SyntaxKind.CommaToken) == PostSkipAction.Continue)
+                    {
+                        goto tryAgain;
+                    }
+                }
+
+                var closeBrace = this.EatToken(SyntaxKind.CloseBracketToken);
+
+                return _syntaxFactory.InitializerExpression2(openBrace, list, closeBrace);
+            }
+            finally
+            {
+                _pool.Free(list);
             }
         }
 
