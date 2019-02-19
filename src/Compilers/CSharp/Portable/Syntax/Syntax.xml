@@ -1613,6 +1613,63 @@
       <summary>Creates an ImplicitStackAllocArrayCreationExpressionSyntax node.</summary>
     </FactoryComment>
   </Node>
+  <!---->
+  <AbstractNode Name="QueryClause2Syntax" Base="CSharpSyntaxNode">
+  </AbstractNode>
+  <Node Name="QueryExpression2Syntax" Base="ExpressionSyntax">
+    <Kind Name="QueryExpression2"/>
+    <Field Name="OpenBracketToken" Type="SyntaxToken">
+      <Kind Name="OpenBracketToken"/>
+      <PropertyComment>
+        <summary>SyntaxToken representing the open brace.</summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="FromClause" Type="FromClause2Syntax"/>
+    <Field Name="Body" Type="QueryBody2Syntax"/>
+    <Field Name="CloseBracketToken" Type="SyntaxToken">
+      <Kind Name="CloseBracketToken"/>
+      <PropertyComment>
+        <summary>SyntaxToken representing the close brace.</summary>
+      </PropertyComment>
+    </Field>
+  </Node>
+  <Node Name="QueryBody2Syntax" Base="CSharpSyntaxNode">
+    <Kind Name="QueryBody2"/>
+    <Field Name="Clauses" Type="SyntaxList&lt;QueryClause2Syntax&gt;"/>
+    <Field Name="SelectOrGroup" Type="SelectClause2Syntax"/>
+  </Node>
+  <Node Name="FromClause2Syntax" Base="QueryClause2Syntax">
+    <Kind Name="FromClause2"/>
+    <Field Name="FromKeyword" Type="SyntaxToken">
+      <Kind Name="FromKeyword"/>
+    </Field>
+    <Field Name="Type" Type="TypeSyntax" Optional="true"/>
+    <Field Name="Identifier" Type="SyntaxToken">
+      <PropertyComment>
+        <summary>Gets the identifier.</summary>
+      </PropertyComment>
+      <Kind Name="IdentifierToken"/>
+    </Field>
+    <Field Name="InKeyword" Type="SyntaxToken">
+      <Kind Name="InKeyword"/>
+    </Field>
+    <Field Name="Expression" Type="ExpressionSyntax"/>
+  </Node>
+  <Node Name="WhereClause2Syntax" Base="QueryClause2Syntax">
+    <Kind Name="WhereClause2"/>
+    <Field Name="WhereKeyword" Type="SyntaxToken">
+      <Kind Name="WhereKeyword"/>
+    </Field>
+    <Field Name="Condition" Type="ExpressionSyntax"/>
+  </Node>
+  <Node Name="SelectClause2Syntax" Base="QueryClause2Syntax">
+    <Kind Name="SelectClause2"/>
+    <Field Name="SelectKeyword" Type="SyntaxToken">
+      <Kind Name="SelectKeyword"/>
+    </Field>
+    <Field Name="Expression" Type="ExpressionSyntax"/>
+  </Node>
+  <!---->
   <AbstractNode Name="QueryClauseSyntax" Base="CSharpSyntaxNode">
   </AbstractNode>
   <AbstractNode Name="SelectOrGroupClauseSyntax" Base="CSharpSyntaxNode">

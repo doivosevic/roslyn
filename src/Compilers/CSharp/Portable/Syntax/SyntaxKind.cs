@@ -442,6 +442,12 @@ namespace Microsoft.CodeAnalysis.CSharp
         GroupClause = 8785,
         QueryContinuation = 8786,
 
+        QueryExpression2 = 8787,
+        QueryBody2 = 8788,
+        FromClause2 = 8789,
+        WhereClause2 = 8790,
+        SelectClause2 = 8791,
+
         // statements
         Block = 8792,
         LocalDeclarationStatement = 8793,

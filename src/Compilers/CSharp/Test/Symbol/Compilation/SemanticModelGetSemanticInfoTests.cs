@@ -8059,6 +8059,37 @@ class P
             Assert.Equal(SpecialType.System_Int32, semanticInfo.Type.SpecialType);
         }
 
+        [Fact]
+        public void WhereDefinedInType2()
+        {
+            var csSource = @"
+using System;
+
+class Y
+{
+    public int Where(Func<int, bool> predicate)
+    {
+        return 45;
+    }
+}
+
+class P
+{
+    static void Main()
+    {
+        var src = new Y();
+        var query = [ from x in src
+                where x > 0
+                select /*<bind>*/ x /*</bind>*/ ];
+    }
+}
+";
+
+            var semanticInfo = GetSemanticInfoForTest<IdentifierNameSyntax>(csSource);
+            Assert.Equal("x", semanticInfo.Symbol.Name);
+            Assert.Equal(SpecialType.System_Int32, semanticInfo.Type.SpecialType);
+        }
+
         [WorkItem(541830, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/541830")]
         [Fact]
         public void AttributeUsageError()

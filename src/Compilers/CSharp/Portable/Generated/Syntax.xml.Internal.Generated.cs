@@ -8810,6 +8810,744 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
     }
   }
 
+  internal abstract partial class QueryClause2Syntax : CSharpSyntaxNode
+  {
+    internal QueryClause2Syntax(SyntaxKind kind, DiagnosticInfo[] diagnostics, SyntaxAnnotation[] annotations)
+      : base(kind, diagnostics, annotations)
+    {
+    }
+    internal QueryClause2Syntax(SyntaxKind kind)
+      : base(kind)
+    {
+    }
+
+    protected QueryClause2Syntax(ObjectReader reader)
+       : base(reader)
+    {
+    }
+  }
+
+  internal sealed partial class QueryExpression2Syntax : ExpressionSyntax
+  {
+    internal readonly SyntaxToken openBracketToken;
+    internal readonly FromClause2Syntax fromClause;
+    internal readonly QueryBody2Syntax body;
+    internal readonly SyntaxToken closeBracketToken;
+
+    internal QueryExpression2Syntax(SyntaxKind kind, SyntaxToken openBracketToken, FromClause2Syntax fromClause, QueryBody2Syntax body, SyntaxToken closeBracketToken, DiagnosticInfo[] diagnostics, SyntaxAnnotation[] annotations)
+        : base(kind, diagnostics, annotations)
+    {
+        this.SlotCount = 4;
+        this.AdjustFlagsAndWidth(openBracketToken);
+        this.openBracketToken = openBracketToken;
+        this.AdjustFlagsAndWidth(fromClause);
+        this.fromClause = fromClause;
+        this.AdjustFlagsAndWidth(body);
+        this.body = body;
+        this.AdjustFlagsAndWidth(closeBracketToken);
+        this.closeBracketToken = closeBracketToken;
+    }
+
+
+    internal QueryExpression2Syntax(SyntaxKind kind, SyntaxToken openBracketToken, FromClause2Syntax fromClause, QueryBody2Syntax body, SyntaxToken closeBracketToken, SyntaxFactoryContext context)
+        : base(kind)
+    {
+        this.SetFactoryContext(context);
+        this.SlotCount = 4;
+        this.AdjustFlagsAndWidth(openBracketToken);
+        this.openBracketToken = openBracketToken;
+        this.AdjustFlagsAndWidth(fromClause);
+        this.fromClause = fromClause;
+        this.AdjustFlagsAndWidth(body);
+        this.body = body;
+        this.AdjustFlagsAndWidth(closeBracketToken);
+        this.closeBracketToken = closeBracketToken;
+    }
+
+
+    internal QueryExpression2Syntax(SyntaxKind kind, SyntaxToken openBracketToken, FromClause2Syntax fromClause, QueryBody2Syntax body, SyntaxToken closeBracketToken)
+        : base(kind)
+    {
+        this.SlotCount = 4;
+        this.AdjustFlagsAndWidth(openBracketToken);
+        this.openBracketToken = openBracketToken;
+        this.AdjustFlagsAndWidth(fromClause);
+        this.fromClause = fromClause;
+        this.AdjustFlagsAndWidth(body);
+        this.body = body;
+        this.AdjustFlagsAndWidth(closeBracketToken);
+        this.closeBracketToken = closeBracketToken;
+    }
+
+    /// <summary>SyntaxToken representing the open brace.</summary>
+    public SyntaxToken OpenBracketToken { get { return this.openBracketToken; } }
+    public FromClause2Syntax FromClause { get { return this.fromClause; } }
+    public QueryBody2Syntax Body { get { return this.body; } }
+    /// <summary>SyntaxToken representing the close brace.</summary>
+    public SyntaxToken CloseBracketToken { get { return this.closeBracketToken; } }
+
+    internal override GreenNode GetSlot(int index)
+    {
+        switch (index)
+        {
+            case 0: return this.openBracketToken;
+            case 1: return this.fromClause;
+            case 2: return this.body;
+            case 3: return this.closeBracketToken;
+            default: return null;
+        }
+    }
+
+    internal override SyntaxNode CreateRed(SyntaxNode parent, int position)
+    {
+      return new CSharp.Syntax.QueryExpression2Syntax(this, parent, position);
+    }
+
+    public override TResult Accept<TResult>(CSharpSyntaxVisitor<TResult> visitor)
+    {
+        return visitor.VisitQueryExpression2(this);
+    }
+
+    public override void Accept(CSharpSyntaxVisitor visitor)
+    {
+        visitor.VisitQueryExpression2(this);
+    }
+
+    public QueryExpression2Syntax Update(SyntaxToken openBracketToken, FromClause2Syntax fromClause, QueryBody2Syntax body, SyntaxToken closeBracketToken)
+    {
+        if (openBracketToken != this.OpenBracketToken || fromClause != this.FromClause || body != this.Body || closeBracketToken != this.CloseBracketToken)
+        {
+            var newNode = SyntaxFactory.QueryExpression2(openBracketToken, fromClause, body, closeBracketToken);
+            var diags = this.GetDiagnostics();
+            if (diags != null && diags.Length > 0)
+               newNode = newNode.WithDiagnosticsGreen(diags);
+            var annotations = this.GetAnnotations();
+            if (annotations != null && annotations.Length > 0)
+               newNode = newNode.WithAnnotationsGreen(annotations);
+            return newNode;
+        }
+
+        return this;
+    }
+
+    internal override GreenNode SetDiagnostics(DiagnosticInfo[] diagnostics)
+    {
+         return new QueryExpression2Syntax(this.Kind, this.openBracketToken, this.fromClause, this.body, this.closeBracketToken, diagnostics, GetAnnotations());
+    }
+
+    internal override GreenNode SetAnnotations(SyntaxAnnotation[] annotations)
+    {
+         return new QueryExpression2Syntax(this.Kind, this.openBracketToken, this.fromClause, this.body, this.closeBracketToken, GetDiagnostics(), annotations);
+    }
+
+    internal QueryExpression2Syntax(ObjectReader reader)
+        : base(reader)
+    {
+      this.SlotCount = 4;
+      var openBracketToken = (SyntaxToken)reader.ReadValue();
+      if (openBracketToken != null)
+      {
+         AdjustFlagsAndWidth(openBracketToken);
+         this.openBracketToken = openBracketToken;
+      }
+      var fromClause = (FromClause2Syntax)reader.ReadValue();
+      if (fromClause != null)
+      {
+         AdjustFlagsAndWidth(fromClause);
+         this.fromClause = fromClause;
+      }
+      var body = (QueryBody2Syntax)reader.ReadValue();
+      if (body != null)
+      {
+         AdjustFlagsAndWidth(body);
+         this.body = body;
+      }
+      var closeBracketToken = (SyntaxToken)reader.ReadValue();
+      if (closeBracketToken != null)
+      {
+         AdjustFlagsAndWidth(closeBracketToken);
+         this.closeBracketToken = closeBracketToken;
+      }
+    }
+
+    internal override void WriteTo(ObjectWriter writer)
+    {
+      base.WriteTo(writer);
+      writer.WriteValue(this.openBracketToken);
+      writer.WriteValue(this.fromClause);
+      writer.WriteValue(this.body);
+      writer.WriteValue(this.closeBracketToken);
+    }
+
+    static QueryExpression2Syntax()
+    {
+       ObjectBinder.RegisterTypeReader(typeof(QueryExpression2Syntax), r => new QueryExpression2Syntax(r));
+    }
+  }
+
+  internal sealed partial class QueryBody2Syntax : CSharpSyntaxNode
+  {
+    internal readonly GreenNode clauses;
+    internal readonly SelectClause2Syntax selectOrGroup;
+
+    internal QueryBody2Syntax(SyntaxKind kind, GreenNode clauses, SelectClause2Syntax selectOrGroup, DiagnosticInfo[] diagnostics, SyntaxAnnotation[] annotations)
+        : base(kind, diagnostics, annotations)
+    {
+        this.SlotCount = 2;
+        if (clauses != null)
+        {
+            this.AdjustFlagsAndWidth(clauses);
+            this.clauses = clauses;
+        }
+        this.AdjustFlagsAndWidth(selectOrGroup);
+        this.selectOrGroup = selectOrGroup;
+    }
+
+
+    internal QueryBody2Syntax(SyntaxKind kind, GreenNode clauses, SelectClause2Syntax selectOrGroup, SyntaxFactoryContext context)
+        : base(kind)
+    {
+        this.SetFactoryContext(context);
+        this.SlotCount = 2;
+        if (clauses != null)
+        {
+            this.AdjustFlagsAndWidth(clauses);
+            this.clauses = clauses;
+        }
+        this.AdjustFlagsAndWidth(selectOrGroup);
+        this.selectOrGroup = selectOrGroup;
+    }
+
+
+    internal QueryBody2Syntax(SyntaxKind kind, GreenNode clauses, SelectClause2Syntax selectOrGroup)
+        : base(kind)
+    {
+        this.SlotCount = 2;
+        if (clauses != null)
+        {
+            this.AdjustFlagsAndWidth(clauses);
+            this.clauses = clauses;
+        }
+        this.AdjustFlagsAndWidth(selectOrGroup);
+        this.selectOrGroup = selectOrGroup;
+    }
+
+    public Microsoft.CodeAnalysis.Syntax.InternalSyntax.SyntaxList<QueryClause2Syntax> Clauses { get { return new Microsoft.CodeAnalysis.Syntax.InternalSyntax.SyntaxList<QueryClause2Syntax>(this.clauses); } }
+    public SelectClause2Syntax SelectOrGroup { get { return this.selectOrGroup; } }
+
+    internal override GreenNode GetSlot(int index)
+    {
+        switch (index)
+        {
+            case 0: return this.clauses;
+            case 1: return this.selectOrGroup;
+            default: return null;
+        }
+    }
+
+    internal override SyntaxNode CreateRed(SyntaxNode parent, int position)
+    {
+      return new CSharp.Syntax.QueryBody2Syntax(this, parent, position);
+    }
+
+    public override TResult Accept<TResult>(CSharpSyntaxVisitor<TResult> visitor)
+    {
+        return visitor.VisitQueryBody2(this);
+    }
+
+    public override void Accept(CSharpSyntaxVisitor visitor)
+    {
+        visitor.VisitQueryBody2(this);
+    }
+
+    public QueryBody2Syntax Update(Microsoft.CodeAnalysis.Syntax.InternalSyntax.SyntaxList<QueryClause2Syntax> clauses, SelectClause2Syntax selectOrGroup)
+    {
+        if (clauses != this.Clauses || selectOrGroup != this.SelectOrGroup)
+        {
+            var newNode = SyntaxFactory.QueryBody2(clauses, selectOrGroup);
+            var diags = this.GetDiagnostics();
+            if (diags != null && diags.Length > 0)
+               newNode = newNode.WithDiagnosticsGreen(diags);
+            var annotations = this.GetAnnotations();
+            if (annotations != null && annotations.Length > 0)
+               newNode = newNode.WithAnnotationsGreen(annotations);
+            return newNode;
+        }
+
+        return this;
+    }
+
+    internal override GreenNode SetDiagnostics(DiagnosticInfo[] diagnostics)
+    {
+         return new QueryBody2Syntax(this.Kind, this.clauses, this.selectOrGroup, diagnostics, GetAnnotations());
+    }
+
+    internal override GreenNode SetAnnotations(SyntaxAnnotation[] annotations)
+    {
+         return new QueryBody2Syntax(this.Kind, this.clauses, this.selectOrGroup, GetDiagnostics(), annotations);
+    }
+
+    internal QueryBody2Syntax(ObjectReader reader)
+        : base(reader)
+    {
+      this.SlotCount = 2;
+      var clauses = (GreenNode)reader.ReadValue();
+      if (clauses != null)
+      {
+         AdjustFlagsAndWidth(clauses);
+         this.clauses = clauses;
+      }
+      var selectOrGroup = (SelectClause2Syntax)reader.ReadValue();
+      if (selectOrGroup != null)
+      {
+         AdjustFlagsAndWidth(selectOrGroup);
+         this.selectOrGroup = selectOrGroup;
+      }
+    }
+
+    internal override void WriteTo(ObjectWriter writer)
+    {
+      base.WriteTo(writer);
+      writer.WriteValue(this.clauses);
+      writer.WriteValue(this.selectOrGroup);
+    }
+
+    static QueryBody2Syntax()
+    {
+       ObjectBinder.RegisterTypeReader(typeof(QueryBody2Syntax), r => new QueryBody2Syntax(r));
+    }
+  }
+
+  internal sealed partial class FromClause2Syntax : QueryClause2Syntax
+  {
+    internal readonly SyntaxToken fromKeyword;
+    internal readonly TypeSyntax type;
+    internal readonly SyntaxToken identifier;
+    internal readonly SyntaxToken inKeyword;
+    internal readonly ExpressionSyntax expression;
+
+    internal FromClause2Syntax(SyntaxKind kind, SyntaxToken fromKeyword, TypeSyntax type, SyntaxToken identifier, SyntaxToken inKeyword, ExpressionSyntax expression, DiagnosticInfo[] diagnostics, SyntaxAnnotation[] annotations)
+        : base(kind, diagnostics, annotations)
+    {
+        this.SlotCount = 5;
+        this.AdjustFlagsAndWidth(fromKeyword);
+        this.fromKeyword = fromKeyword;
+        if (type != null)
+        {
+            this.AdjustFlagsAndWidth(type);
+            this.type = type;
+        }
+        this.AdjustFlagsAndWidth(identifier);
+        this.identifier = identifier;
+        this.AdjustFlagsAndWidth(inKeyword);
+        this.inKeyword = inKeyword;
+        this.AdjustFlagsAndWidth(expression);
+        this.expression = expression;
+    }
+
+
+    internal FromClause2Syntax(SyntaxKind kind, SyntaxToken fromKeyword, TypeSyntax type, SyntaxToken identifier, SyntaxToken inKeyword, ExpressionSyntax expression, SyntaxFactoryContext context)
+        : base(kind)
+    {
+        this.SetFactoryContext(context);
+        this.SlotCount = 5;
+        this.AdjustFlagsAndWidth(fromKeyword);
+        this.fromKeyword = fromKeyword;
+        if (type != null)
+        {
+            this.AdjustFlagsAndWidth(type);
+            this.type = type;
+        }
+        this.AdjustFlagsAndWidth(identifier);
+        this.identifier = identifier;
+        this.AdjustFlagsAndWidth(inKeyword);
+        this.inKeyword = inKeyword;
+        this.AdjustFlagsAndWidth(expression);
+        this.expression = expression;
+    }
+
+
+    internal FromClause2Syntax(SyntaxKind kind, SyntaxToken fromKeyword, TypeSyntax type, SyntaxToken identifier, SyntaxToken inKeyword, ExpressionSyntax expression)
+        : base(kind)
+    {
+        this.SlotCount = 5;
+        this.AdjustFlagsAndWidth(fromKeyword);
+        this.fromKeyword = fromKeyword;
+        if (type != null)
+        {
+            this.AdjustFlagsAndWidth(type);
+            this.type = type;
+        }
+        this.AdjustFlagsAndWidth(identifier);
+        this.identifier = identifier;
+        this.AdjustFlagsAndWidth(inKeyword);
+        this.inKeyword = inKeyword;
+        this.AdjustFlagsAndWidth(expression);
+        this.expression = expression;
+    }
+
+    public SyntaxToken FromKeyword { get { return this.fromKeyword; } }
+    public TypeSyntax Type { get { return this.type; } }
+    /// <summary>Gets the identifier.</summary>
+    public SyntaxToken Identifier { get { return this.identifier; } }
+    public SyntaxToken InKeyword { get { return this.inKeyword; } }
+    public ExpressionSyntax Expression { get { return this.expression; } }
+
+    internal override GreenNode GetSlot(int index)
+    {
+        switch (index)
+        {
+            case 0: return this.fromKeyword;
+            case 1: return this.type;
+            case 2: return this.identifier;
+            case 3: return this.inKeyword;
+            case 4: return this.expression;
+            default: return null;
+        }
+    }
+
+    internal override SyntaxNode CreateRed(SyntaxNode parent, int position)
+    {
+      return new CSharp.Syntax.FromClause2Syntax(this, parent, position);
+    }
+
+    public override TResult Accept<TResult>(CSharpSyntaxVisitor<TResult> visitor)
+    {
+        return visitor.VisitFromClause2(this);
+    }
+
+    public override void Accept(CSharpSyntaxVisitor visitor)
+    {
+        visitor.VisitFromClause2(this);
+    }
+
+    public FromClause2Syntax Update(SyntaxToken fromKeyword, TypeSyntax type, SyntaxToken identifier, SyntaxToken inKeyword, ExpressionSyntax expression)
+    {
+        if (fromKeyword != this.FromKeyword || type != this.Type || identifier != this.Identifier || inKeyword != this.InKeyword || expression != this.Expression)
+        {
+            var newNode = SyntaxFactory.FromClause2(fromKeyword, type, identifier, inKeyword, expression);
+            var diags = this.GetDiagnostics();
+            if (diags != null && diags.Length > 0)
+               newNode = newNode.WithDiagnosticsGreen(diags);
+            var annotations = this.GetAnnotations();
+            if (annotations != null && annotations.Length > 0)
+               newNode = newNode.WithAnnotationsGreen(annotations);
+            return newNode;
+        }
+
+        return this;
+    }
+
+    internal override GreenNode SetDiagnostics(DiagnosticInfo[] diagnostics)
+    {
+         return new FromClause2Syntax(this.Kind, this.fromKeyword, this.type, this.identifier, this.inKeyword, this.expression, diagnostics, GetAnnotations());
+    }
+
+    internal override GreenNode SetAnnotations(SyntaxAnnotation[] annotations)
+    {
+         return new FromClause2Syntax(this.Kind, this.fromKeyword, this.type, this.identifier, this.inKeyword, this.expression, GetDiagnostics(), annotations);
+    }
+
+    internal FromClause2Syntax(ObjectReader reader)
+        : base(reader)
+    {
+      this.SlotCount = 5;
+      var fromKeyword = (SyntaxToken)reader.ReadValue();
+      if (fromKeyword != null)
+      {
+         AdjustFlagsAndWidth(fromKeyword);
+         this.fromKeyword = fromKeyword;
+      }
+      var type = (TypeSyntax)reader.ReadValue();
+      if (type != null)
+      {
+         AdjustFlagsAndWidth(type);
+         this.type = type;
+      }
+      var identifier = (SyntaxToken)reader.ReadValue();
+      if (identifier != null)
+      {
+         AdjustFlagsAndWidth(identifier);
+         this.identifier = identifier;
+      }
+      var inKeyword = (SyntaxToken)reader.ReadValue();
+      if (inKeyword != null)
+      {
+         AdjustFlagsAndWidth(inKeyword);
+         this.inKeyword = inKeyword;
+      }
+      var expression = (ExpressionSyntax)reader.ReadValue();
+      if (expression != null)
+      {
+         AdjustFlagsAndWidth(expression);
+         this.expression = expression;
+      }
+    }
+
+    internal override void WriteTo(ObjectWriter writer)
+    {
+      base.WriteTo(writer);
+      writer.WriteValue(this.fromKeyword);
+      writer.WriteValue(this.type);
+      writer.WriteValue(this.identifier);
+      writer.WriteValue(this.inKeyword);
+      writer.WriteValue(this.expression);
+    }
+
+    static FromClause2Syntax()
+    {
+       ObjectBinder.RegisterTypeReader(typeof(FromClause2Syntax), r => new FromClause2Syntax(r));
+    }
+  }
+
+  internal sealed partial class WhereClause2Syntax : QueryClause2Syntax
+  {
+    internal readonly SyntaxToken whereKeyword;
+    internal readonly ExpressionSyntax condition;
+
+    internal WhereClause2Syntax(SyntaxKind kind, SyntaxToken whereKeyword, ExpressionSyntax condition, DiagnosticInfo[] diagnostics, SyntaxAnnotation[] annotations)
+        : base(kind, diagnostics, annotations)
+    {
+        this.SlotCount = 2;
+        this.AdjustFlagsAndWidth(whereKeyword);
+        this.whereKeyword = whereKeyword;
+        this.AdjustFlagsAndWidth(condition);
+        this.condition = condition;
+    }
+
+
+    internal WhereClause2Syntax(SyntaxKind kind, SyntaxToken whereKeyword, ExpressionSyntax condition, SyntaxFactoryContext context)
+        : base(kind)
+    {
+        this.SetFactoryContext(context);
+        this.SlotCount = 2;
+        this.AdjustFlagsAndWidth(whereKeyword);
+        this.whereKeyword = whereKeyword;
+        this.AdjustFlagsAndWidth(condition);
+        this.condition = condition;
+    }
+
+
+    internal WhereClause2Syntax(SyntaxKind kind, SyntaxToken whereKeyword, ExpressionSyntax condition)
+        : base(kind)
+    {
+        this.SlotCount = 2;
+        this.AdjustFlagsAndWidth(whereKeyword);
+        this.whereKeyword = whereKeyword;
+        this.AdjustFlagsAndWidth(condition);
+        this.condition = condition;
+    }
+
+    public SyntaxToken WhereKeyword { get { return this.whereKeyword; } }
+    public ExpressionSyntax Condition { get { return this.condition; } }
+
+    internal override GreenNode GetSlot(int index)
+    {
+        switch (index)
+        {
+            case 0: return this.whereKeyword;
+            case 1: return this.condition;
+            default: return null;
+        }
+    }
+
+    internal override SyntaxNode CreateRed(SyntaxNode parent, int position)
+    {
+      return new CSharp.Syntax.WhereClause2Syntax(this, parent, position);
+    }
+
+    public override TResult Accept<TResult>(CSharpSyntaxVisitor<TResult> visitor)
+    {
+        return visitor.VisitWhereClause2(this);
+    }
+
+    public override void Accept(CSharpSyntaxVisitor visitor)
+    {
+        visitor.VisitWhereClause2(this);
+    }
+
+    public WhereClause2Syntax Update(SyntaxToken whereKeyword, ExpressionSyntax condition)
+    {
+        if (whereKeyword != this.WhereKeyword || condition != this.Condition)
+        {
+            var newNode = SyntaxFactory.WhereClause2(whereKeyword, condition);
+            var diags = this.GetDiagnostics();
+            if (diags != null && diags.Length > 0)
+               newNode = newNode.WithDiagnosticsGreen(diags);
+            var annotations = this.GetAnnotations();
+            if (annotations != null && annotations.Length > 0)
+               newNode = newNode.WithAnnotationsGreen(annotations);
+            return newNode;
+        }
+
+        return this;
+    }
+
+    internal override GreenNode SetDiagnostics(DiagnosticInfo[] diagnostics)
+    {
+         return new WhereClause2Syntax(this.Kind, this.whereKeyword, this.condition, diagnostics, GetAnnotations());
+    }
+
+    internal override GreenNode SetAnnotations(SyntaxAnnotation[] annotations)
+    {
+         return new WhereClause2Syntax(this.Kind, this.whereKeyword, this.condition, GetDiagnostics(), annotations);
+    }
+
+    internal WhereClause2Syntax(ObjectReader reader)
+        : base(reader)
+    {
+      this.SlotCount = 2;
+      var whereKeyword = (SyntaxToken)reader.ReadValue();
+      if (whereKeyword != null)
+      {
+         AdjustFlagsAndWidth(whereKeyword);
+         this.whereKeyword = whereKeyword;
+      }
+      var condition = (ExpressionSyntax)reader.ReadValue();
+      if (condition != null)
+      {
+         AdjustFlagsAndWidth(condition);
+         this.condition = condition;
+      }
+    }
+
+    internal override void WriteTo(ObjectWriter writer)
+    {
+      base.WriteTo(writer);
+      writer.WriteValue(this.whereKeyword);
+      writer.WriteValue(this.condition);
+    }
+
+    static WhereClause2Syntax()
+    {
+       ObjectBinder.RegisterTypeReader(typeof(WhereClause2Syntax), r => new WhereClause2Syntax(r));
+    }
+  }
+
+  internal sealed partial class SelectClause2Syntax : QueryClause2Syntax
+  {
+    internal readonly SyntaxToken selectKeyword;
+    internal readonly ExpressionSyntax expression;
+
+    internal SelectClause2Syntax(SyntaxKind kind, SyntaxToken selectKeyword, ExpressionSyntax expression, DiagnosticInfo[] diagnostics, SyntaxAnnotation[] annotations)
+        : base(kind, diagnostics, annotations)
+    {
+        this.SlotCount = 2;
+        this.AdjustFlagsAndWidth(selectKeyword);
+        this.selectKeyword = selectKeyword;
+        this.AdjustFlagsAndWidth(expression);
+        this.expression = expression;
+    }
+
+
+    internal SelectClause2Syntax(SyntaxKind kind, SyntaxToken selectKeyword, ExpressionSyntax expression, SyntaxFactoryContext context)
+        : base(kind)
+    {
+        this.SetFactoryContext(context);
+        this.SlotCount = 2;
+        this.AdjustFlagsAndWidth(selectKeyword);
+        this.selectKeyword = selectKeyword;
+        this.AdjustFlagsAndWidth(expression);
+        this.expression = expression;
+    }
+
+
+    internal SelectClause2Syntax(SyntaxKind kind, SyntaxToken selectKeyword, ExpressionSyntax expression)
+        : base(kind)
+    {
+        this.SlotCount = 2;
+        this.AdjustFlagsAndWidth(selectKeyword);
+        this.selectKeyword = selectKeyword;
+        this.AdjustFlagsAndWidth(expression);
+        this.expression = expression;
+    }
+
+    public SyntaxToken SelectKeyword { get { return this.selectKeyword; } }
+    public ExpressionSyntax Expression { get { return this.expression; } }
+
+    internal override GreenNode GetSlot(int index)
+    {
+        switch (index)
+        {
+            case 0: return this.selectKeyword;
+            case 1: return this.expression;
+            default: return null;
+        }
+    }
+
+    internal override SyntaxNode CreateRed(SyntaxNode parent, int position)
+    {
+      return new CSharp.Syntax.SelectClause2Syntax(this, parent, position);
+    }
+
+    public override TResult Accept<TResult>(CSharpSyntaxVisitor<TResult> visitor)
+    {
+        return visitor.VisitSelectClause2(this);
+    }
+
+    public override void Accept(CSharpSyntaxVisitor visitor)
+    {
+        visitor.VisitSelectClause2(this);
+    }
+
+    public SelectClause2Syntax Update(SyntaxToken selectKeyword, ExpressionSyntax expression)
+    {
+        if (selectKeyword != this.SelectKeyword || expression != this.Expression)
+        {
+            var newNode = SyntaxFactory.SelectClause2(selectKeyword, expression);
+            var diags = this.GetDiagnostics();
+            if (diags != null && diags.Length > 0)
+               newNode = newNode.WithDiagnosticsGreen(diags);
+            var annotations = this.GetAnnotations();
+            if (annotations != null && annotations.Length > 0)
+               newNode = newNode.WithAnnotationsGreen(annotations);
+            return newNode;
+        }
+
+        return this;
+    }
+
+    internal override GreenNode SetDiagnostics(DiagnosticInfo[] diagnostics)
+    {
+         return new SelectClause2Syntax(this.Kind, this.selectKeyword, this.expression, diagnostics, GetAnnotations());
+    }
+
+    internal override GreenNode SetAnnotations(SyntaxAnnotation[] annotations)
+    {
+         return new SelectClause2Syntax(this.Kind, this.selectKeyword, this.expression, GetDiagnostics(), annotations);
+    }
+
+    internal SelectClause2Syntax(ObjectReader reader)
+        : base(reader)
+    {
+      this.SlotCount = 2;
+      var selectKeyword = (SyntaxToken)reader.ReadValue();
+      if (selectKeyword != null)
+      {
+         AdjustFlagsAndWidth(selectKeyword);
+         this.selectKeyword = selectKeyword;
+      }
+      var expression = (ExpressionSyntax)reader.ReadValue();
+      if (expression != null)
+      {
+         AdjustFlagsAndWidth(expression);
+         this.expression = expression;
+      }
+    }
+
+    internal override void WriteTo(ObjectWriter writer)
+    {
+      base.WriteTo(writer);
+      writer.WriteValue(this.selectKeyword);
+      writer.WriteValue(this.expression);
+    }
+
+    static SelectClause2Syntax()
+    {
+       ObjectBinder.RegisterTypeReader(typeof(SelectClause2Syntax), r => new SelectClause2Syntax(r));
+    }
+  }
+
   internal abstract partial class QueryClauseSyntax : CSharpSyntaxNode
   {
     internal QueryClauseSyntax(SyntaxKind kind, DiagnosticInfo[] diagnostics, SyntaxAnnotation[] annotations)
@@ -36085,6 +36823,31 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
       return this.DefaultVisit(node);
     }
 
+    public virtual TResult VisitQueryExpression2(QueryExpression2Syntax node)
+    {
+      return this.DefaultVisit(node);
+    }
+
+    public virtual TResult VisitQueryBody2(QueryBody2Syntax node)
+    {
+      return this.DefaultVisit(node);
+    }
+
+    public virtual TResult VisitFromClause2(FromClause2Syntax node)
+    {
+      return this.DefaultVisit(node);
+    }
+
+    public virtual TResult VisitWhereClause2(WhereClause2Syntax node)
+    {
+      return this.DefaultVisit(node);
+    }
+
+    public virtual TResult VisitSelectClause2(SelectClause2Syntax node)
+    {
+      return this.DefaultVisit(node);
+    }
+
     public virtual TResult VisitQueryExpression(QueryExpressionSyntax node)
     {
       return this.DefaultVisit(node);
@@ -37170,6 +37933,31 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
     }
 
     public virtual void VisitImplicitStackAllocArrayCreationExpression(ImplicitStackAllocArrayCreationExpressionSyntax node)
+    {
+      this.DefaultVisit(node);
+    }
+
+    public virtual void VisitQueryExpression2(QueryExpression2Syntax node)
+    {
+      this.DefaultVisit(node);
+    }
+
+    public virtual void VisitQueryBody2(QueryBody2Syntax node)
+    {
+      this.DefaultVisit(node);
+    }
+
+    public virtual void VisitFromClause2(FromClause2Syntax node)
+    {
+      this.DefaultVisit(node);
+    }
+
+    public virtual void VisitWhereClause2(WhereClause2Syntax node)
+    {
+      this.DefaultVisit(node);
+    }
+
+    public virtual void VisitSelectClause2(SelectClause2Syntax node)
     {
       this.DefaultVisit(node);
     }
@@ -38427,6 +39215,46 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
       var closeBracketToken = (SyntaxToken)this.Visit(node.CloseBracketToken);
       var initializer = (InitializerExpressionSyntax)this.Visit(node.Initializer);
       return node.Update(stackAllocKeyword, openBracketToken, closeBracketToken, initializer);
+    }
+
+    public override CSharpSyntaxNode VisitQueryExpression2(QueryExpression2Syntax node)
+    {
+      var openBracketToken = (SyntaxToken)this.Visit(node.OpenBracketToken);
+      var fromClause = (FromClause2Syntax)this.Visit(node.FromClause);
+      var body = (QueryBody2Syntax)this.Visit(node.Body);
+      var closeBracketToken = (SyntaxToken)this.Visit(node.CloseBracketToken);
+      return node.Update(openBracketToken, fromClause, body, closeBracketToken);
+    }
+
+    public override CSharpSyntaxNode VisitQueryBody2(QueryBody2Syntax node)
+    {
+      var clauses = this.VisitList(node.Clauses);
+      var selectOrGroup = (SelectClause2Syntax)this.Visit(node.SelectOrGroup);
+      return node.Update(clauses, selectOrGroup);
+    }
+
+    public override CSharpSyntaxNode VisitFromClause2(FromClause2Syntax node)
+    {
+      var fromKeyword = (SyntaxToken)this.Visit(node.FromKeyword);
+      var type = (TypeSyntax)this.Visit(node.Type);
+      var identifier = (SyntaxToken)this.Visit(node.Identifier);
+      var inKeyword = (SyntaxToken)this.Visit(node.InKeyword);
+      var expression = (ExpressionSyntax)this.Visit(node.Expression);
+      return node.Update(fromKeyword, type, identifier, inKeyword, expression);
+    }
+
+    public override CSharpSyntaxNode VisitWhereClause2(WhereClause2Syntax node)
+    {
+      var whereKeyword = (SyntaxToken)this.Visit(node.WhereKeyword);
+      var condition = (ExpressionSyntax)this.Visit(node.Condition);
+      return node.Update(whereKeyword, condition);
+    }
+
+    public override CSharpSyntaxNode VisitSelectClause2(SelectClause2Syntax node)
+    {
+      var selectKeyword = (SyntaxToken)this.Visit(node.SelectKeyword);
+      var expression = (ExpressionSyntax)this.Visit(node.Expression);
+      return node.Update(selectKeyword, expression);
     }
 
     public override CSharpSyntaxNode VisitQueryExpression(QueryExpressionSyntax node)
@@ -41849,6 +42677,151 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
 #endif
 
       return new ImplicitStackAllocArrayCreationExpressionSyntax(SyntaxKind.ImplicitStackAllocArrayCreationExpression, stackAllocKeyword, openBracketToken, closeBracketToken, initializer, this.context);
+    }
+
+    public QueryExpression2Syntax QueryExpression2(SyntaxToken openBracketToken, FromClause2Syntax fromClause, QueryBody2Syntax body, SyntaxToken closeBracketToken)
+    {
+#if DEBUG
+      if (openBracketToken == null)
+        throw new ArgumentNullException(nameof(openBracketToken));
+      switch (openBracketToken.Kind)
+      {
+        case SyntaxKind.OpenBracketToken:
+          break;
+        default:
+          throw new ArgumentException(nameof(openBracketToken));
+      }
+      if (fromClause == null)
+        throw new ArgumentNullException(nameof(fromClause));
+      if (body == null)
+        throw new ArgumentNullException(nameof(body));
+      if (closeBracketToken == null)
+        throw new ArgumentNullException(nameof(closeBracketToken));
+      switch (closeBracketToken.Kind)
+      {
+        case SyntaxKind.CloseBracketToken:
+          break;
+        default:
+          throw new ArgumentException(nameof(closeBracketToken));
+      }
+#endif
+
+      return new QueryExpression2Syntax(SyntaxKind.QueryExpression2, openBracketToken, fromClause, body, closeBracketToken, this.context);
+    }
+
+    public QueryBody2Syntax QueryBody2(Microsoft.CodeAnalysis.Syntax.InternalSyntax.SyntaxList<QueryClause2Syntax> clauses, SelectClause2Syntax selectOrGroup)
+    {
+#if DEBUG
+      if (selectOrGroup == null)
+        throw new ArgumentNullException(nameof(selectOrGroup));
+#endif
+
+      int hash;
+      var cached = CSharpSyntaxNodeCache.TryGetNode((int)SyntaxKind.QueryBody2, clauses.Node, selectOrGroup, this.context, out hash);
+      if (cached != null) return (QueryBody2Syntax)cached;
+
+      var result = new QueryBody2Syntax(SyntaxKind.QueryBody2, clauses.Node, selectOrGroup, this.context);
+      if (hash >= 0)
+      {
+          SyntaxNodeCache.AddNode(result, hash);
+      }
+
+      return result;
+    }
+
+    public FromClause2Syntax FromClause2(SyntaxToken fromKeyword, TypeSyntax type, SyntaxToken identifier, SyntaxToken inKeyword, ExpressionSyntax expression)
+    {
+#if DEBUG
+      if (fromKeyword == null)
+        throw new ArgumentNullException(nameof(fromKeyword));
+      switch (fromKeyword.Kind)
+      {
+        case SyntaxKind.FromKeyword:
+          break;
+        default:
+          throw new ArgumentException(nameof(fromKeyword));
+      }
+      if (identifier == null)
+        throw new ArgumentNullException(nameof(identifier));
+      switch (identifier.Kind)
+      {
+        case SyntaxKind.IdentifierToken:
+          break;
+        default:
+          throw new ArgumentException(nameof(identifier));
+      }
+      if (inKeyword == null)
+        throw new ArgumentNullException(nameof(inKeyword));
+      switch (inKeyword.Kind)
+      {
+        case SyntaxKind.InKeyword:
+          break;
+        default:
+          throw new ArgumentException(nameof(inKeyword));
+      }
+      if (expression == null)
+        throw new ArgumentNullException(nameof(expression));
+#endif
+
+      return new FromClause2Syntax(SyntaxKind.FromClause2, fromKeyword, type, identifier, inKeyword, expression, this.context);
+    }
+
+    public WhereClause2Syntax WhereClause2(SyntaxToken whereKeyword, ExpressionSyntax condition)
+    {
+#if DEBUG
+      if (whereKeyword == null)
+        throw new ArgumentNullException(nameof(whereKeyword));
+      switch (whereKeyword.Kind)
+      {
+        case SyntaxKind.WhereKeyword:
+          break;
+        default:
+          throw new ArgumentException(nameof(whereKeyword));
+      }
+      if (condition == null)
+        throw new ArgumentNullException(nameof(condition));
+#endif
+
+      int hash;
+      var cached = CSharpSyntaxNodeCache.TryGetNode((int)SyntaxKind.WhereClause2, whereKeyword, condition, this.context, out hash);
+      if (cached != null) return (WhereClause2Syntax)cached;
+
+      var result = new WhereClause2Syntax(SyntaxKind.WhereClause2, whereKeyword, condition, this.context);
+      if (hash >= 0)
+      {
+          SyntaxNodeCache.AddNode(result, hash);
+      }
+
+      return result;
+    }
+
+    public SelectClause2Syntax SelectClause2(SyntaxToken selectKeyword, ExpressionSyntax expression)
+    {
+#if DEBUG
+      if (selectKeyword == null)
+        throw new ArgumentNullException(nameof(selectKeyword));
+      switch (selectKeyword.Kind)
+      {
+        case SyntaxKind.SelectKeyword:
+          break;
+        default:
+          throw new ArgumentException(nameof(selectKeyword));
+      }
+      if (expression == null)
+        throw new ArgumentNullException(nameof(expression));
+#endif
+
+      int hash;
+      var cached = CSharpSyntaxNodeCache.TryGetNode((int)SyntaxKind.SelectClause2, selectKeyword, expression, this.context, out hash);
+      if (cached != null) return (SelectClause2Syntax)cached;
+
+      var result = new SelectClause2Syntax(SyntaxKind.SelectClause2, selectKeyword, expression, this.context);
+      if (hash >= 0)
+      {
+          SyntaxNodeCache.AddNode(result, hash);
+      }
+
+      return result;
     }
 
     public QueryExpressionSyntax QueryExpression(FromClauseSyntax fromClause, QueryBodySyntax body)
@@ -49237,6 +50210,151 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
       return new ImplicitStackAllocArrayCreationExpressionSyntax(SyntaxKind.ImplicitStackAllocArrayCreationExpression, stackAllocKeyword, openBracketToken, closeBracketToken, initializer);
     }
 
+    public static QueryExpression2Syntax QueryExpression2(SyntaxToken openBracketToken, FromClause2Syntax fromClause, QueryBody2Syntax body, SyntaxToken closeBracketToken)
+    {
+#if DEBUG
+      if (openBracketToken == null)
+        throw new ArgumentNullException(nameof(openBracketToken));
+      switch (openBracketToken.Kind)
+      {
+        case SyntaxKind.OpenBracketToken:
+          break;
+        default:
+          throw new ArgumentException(nameof(openBracketToken));
+      }
+      if (fromClause == null)
+        throw new ArgumentNullException(nameof(fromClause));
+      if (body == null)
+        throw new ArgumentNullException(nameof(body));
+      if (closeBracketToken == null)
+        throw new ArgumentNullException(nameof(closeBracketToken));
+      switch (closeBracketToken.Kind)
+      {
+        case SyntaxKind.CloseBracketToken:
+          break;
+        default:
+          throw new ArgumentException(nameof(closeBracketToken));
+      }
+#endif
+
+      return new QueryExpression2Syntax(SyntaxKind.QueryExpression2, openBracketToken, fromClause, body, closeBracketToken);
+    }
+
+    public static QueryBody2Syntax QueryBody2(Microsoft.CodeAnalysis.Syntax.InternalSyntax.SyntaxList<QueryClause2Syntax> clauses, SelectClause2Syntax selectOrGroup)
+    {
+#if DEBUG
+      if (selectOrGroup == null)
+        throw new ArgumentNullException(nameof(selectOrGroup));
+#endif
+
+      int hash;
+      var cached = SyntaxNodeCache.TryGetNode((int)SyntaxKind.QueryBody2, clauses.Node, selectOrGroup, out hash);
+      if (cached != null) return (QueryBody2Syntax)cached;
+
+      var result = new QueryBody2Syntax(SyntaxKind.QueryBody2, clauses.Node, selectOrGroup);
+      if (hash >= 0)
+      {
+          SyntaxNodeCache.AddNode(result, hash);
+      }
+
+      return result;
+    }
+
+    public static FromClause2Syntax FromClause2(SyntaxToken fromKeyword, TypeSyntax type, SyntaxToken identifier, SyntaxToken inKeyword, ExpressionSyntax expression)
+    {
+#if DEBUG
+      if (fromKeyword == null)
+        throw new ArgumentNullException(nameof(fromKeyword));
+      switch (fromKeyword.Kind)
+      {
+        case SyntaxKind.FromKeyword:
+          break;
+        default:
+          throw new ArgumentException(nameof(fromKeyword));
+      }
+      if (identifier == null)
+        throw new ArgumentNullException(nameof(identifier));
+      switch (identifier.Kind)
+      {
+        case SyntaxKind.IdentifierToken:
+          break;
+        default:
+          throw new ArgumentException(nameof(identifier));
+      }
+      if (inKeyword == null)
+        throw new ArgumentNullException(nameof(inKeyword));
+      switch (inKeyword.Kind)
+      {
+        case SyntaxKind.InKeyword:
+          break;
+        default:
+          throw new ArgumentException(nameof(inKeyword));
+      }
+      if (expression == null)
+        throw new ArgumentNullException(nameof(expression));
+#endif
+
+      return new FromClause2Syntax(SyntaxKind.FromClause2, fromKeyword, type, identifier, inKeyword, expression);
+    }
+
+    public static WhereClause2Syntax WhereClause2(SyntaxToken whereKeyword, ExpressionSyntax condition)
+    {
+#if DEBUG
+      if (whereKeyword == null)
+        throw new ArgumentNullException(nameof(whereKeyword));
+      switch (whereKeyword.Kind)
+      {
+        case SyntaxKind.WhereKeyword:
+          break;
+        default:
+          throw new ArgumentException(nameof(whereKeyword));
+      }
+      if (condition == null)
+        throw new ArgumentNullException(nameof(condition));
+#endif
+
+      int hash;
+      var cached = SyntaxNodeCache.TryGetNode((int)SyntaxKind.WhereClause2, whereKeyword, condition, out hash);
+      if (cached != null) return (WhereClause2Syntax)cached;
+
+      var result = new WhereClause2Syntax(SyntaxKind.WhereClause2, whereKeyword, condition);
+      if (hash >= 0)
+      {
+          SyntaxNodeCache.AddNode(result, hash);
+      }
+
+      return result;
+    }
+
+    public static SelectClause2Syntax SelectClause2(SyntaxToken selectKeyword, ExpressionSyntax expression)
+    {
+#if DEBUG
+      if (selectKeyword == null)
+        throw new ArgumentNullException(nameof(selectKeyword));
+      switch (selectKeyword.Kind)
+      {
+        case SyntaxKind.SelectKeyword:
+          break;
+        default:
+          throw new ArgumentException(nameof(selectKeyword));
+      }
+      if (expression == null)
+        throw new ArgumentNullException(nameof(expression));
+#endif
+
+      int hash;
+      var cached = SyntaxNodeCache.TryGetNode((int)SyntaxKind.SelectClause2, selectKeyword, expression, out hash);
+      if (cached != null) return (SelectClause2Syntax)cached;
+
+      var result = new SelectClause2Syntax(SyntaxKind.SelectClause2, selectKeyword, expression);
+      if (hash >= 0)
+      {
+          SyntaxNodeCache.AddNode(result, hash);
+      }
+
+      return result;
+    }
+
     public static QueryExpressionSyntax QueryExpression(FromClauseSyntax fromClause, QueryBodySyntax body)
     {
 #if DEBUG
@@ -54664,6 +55782,11 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
            typeof(ImplicitArrayCreationExpressionSyntax),
            typeof(StackAllocArrayCreationExpressionSyntax),
            typeof(ImplicitStackAllocArrayCreationExpressionSyntax),
+           typeof(QueryExpression2Syntax),
+           typeof(QueryBody2Syntax),
+           typeof(FromClause2Syntax),
+           typeof(WhereClause2Syntax),
+           typeof(SelectClause2Syntax),
            typeof(QueryExpressionSyntax),
            typeof(QueryBodySyntax),
            typeof(FromClauseSyntax),

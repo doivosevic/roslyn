@@ -10794,7 +10794,7 @@ tryAgain:
             return this.PeekToken(1).Kind == SyntaxKind.OpenBracketToken;
         }
 
-        private ImplicitArrayCreationExpression2Syntax ParseImplicitlyTypedArrayCreation2()
+        private ExpressionSyntax ParseImplicitlyTypedArrayCreation2()
         {
             //var @new = this.EatToken(SyntaxKind.NewKeyword);
             //@new = CheckFeatureAvailability(@new, MessageID.IDS_FeatureImplicitArray);
@@ -10829,11 +10829,12 @@ tryAgain:
             //    }
 
             //    var closeBracket = this.EatToken(SyntaxKind.CloseBracketToken);
-            var initializer = this.ParseArrayInitializer2();
+            return this.ParseArrayInitializer2();
+            //var initializer = this.ParseArrayInitializer2();
 
             ////var closeBracket = this.EatToken(SyntaxKind.CloseBracketToken);
 
-            return _syntaxFactory.ImplicitArrayCreationExpression2(initializer);
+            //return _syntaxFactory.ImplicitArrayCreationExpression2(initializer);
 
             //}
             //finally
@@ -10887,9 +10888,14 @@ tryAgain:
             }
         }
 
-        private InitializerExpression2Syntax ParseArrayInitializer2()
+        private ExpressionSyntax ParseArrayInitializer2()
         {
             var openBrace = this.EatToken(SyntaxKind.OpenBracketToken);
+
+            if (IsQueryExpression(false, false))
+            {
+                goto queryParse;
+            }
 
             // NOTE:  This loop allows " { <initexpr>, } " but not " { , } "
             var list = _pool.AllocateSeparated<ExpressionSyntax>();
@@ -10900,7 +10906,9 @@ tryAgain:
 tryAgain:
                     if (this.IsPossibleVariableInitializer() || this.CurrentToken.Kind == SyntaxKind.CommaToken)
                     {
-                        list.Add(this.ParseVariableInitializer());
+                        var firstVariableInitializer = this.ParseVariableInitializer();
+
+                        list.Add(firstVariableInitializer);
 
                         while (true)
                         {
@@ -10939,12 +10947,15 @@ tryAgain:
 
                 var closeBrace = this.EatToken(SyntaxKind.CloseBracketToken);
 
-                return _syntaxFactory.InitializerExpression2(openBrace, list, closeBrace);
+                return _syntaxFactory.ImplicitArrayCreationExpression2(_syntaxFactory.InitializerExpression2(openBrace, list, closeBrace));
             }
             finally
             {
                 _pool.Free(list);
             }
+
+queryParse:
+            return ParseQueryExpression2(0, openBrace);
         }
 
         private InitializerExpressionSyntax ParseArrayInitializer()
@@ -11449,6 +11460,117 @@ tryAgain:
             }
 
             return false;
+        }
+
+        private QueryExpression2Syntax ParseQueryExpression2(Precedence precedence, SyntaxToken openBracket)
+        {
+            this.EnterQuery();
+            var fc = this.ParseFromClause2();
+            fc = CheckFeatureAvailability(fc, MessageID.IDS_FeatureQueryExpression);
+            if (precedence > Precedence.Assignment && IsStrict)
+            {
+                fc = this.AddError(fc, ErrorCode.ERR_InvalidExprTerm, SyntaxFacts.GetText(SyntaxKind.FromKeyword));
+            }
+
+            var body = this.ParseQueryBody2();
+            this.LeaveQuery();
+
+            var closeBrace = this.EatToken(SyntaxKind.CloseBracketToken);
+
+            return _syntaxFactory.QueryExpression2(openBracket, fc, body, closeBrace);
+        }
+
+        private QueryBody2Syntax ParseQueryBody2()
+        {
+            var clauses = _pool.Allocate<QueryClause2Syntax>();
+            try
+            {
+                SelectClause2Syntax selectOrGroupBy = null;
+
+                // from, where
+                while (true)
+                {
+                    switch (this.CurrentToken.ContextualKind)
+                    {
+                        case SyntaxKind.FromKeyword:
+                            var fc = this.ParseFromClause2();
+                            clauses.Add(fc);
+                            continue;
+                        case SyntaxKind.WhereKeyword:
+                            clauses.Add(this.ParseWhereClause2());
+                            continue;
+                    }
+
+                    break;
+                }
+
+                // select or group clause
+                switch (this.CurrentToken.ContextualKind)
+                {
+                    case SyntaxKind.SelectKeyword:
+                        selectOrGroupBy = this.ParseSelectClause2();
+                        break;
+                    default:
+                        selectOrGroupBy = _syntaxFactory.SelectClause2(
+                            this.EatToken(SyntaxKind.SelectKeyword, ErrorCode.ERR_ExpectedSelectOrGroup),
+                            this.CreateMissingIdentifierName());
+                        break;
+                }
+
+                return _syntaxFactory.QueryBody2(clauses, selectOrGroupBy);
+            }
+            finally
+            {
+                _pool.Free(clauses);
+            }
+        }
+
+        private FromClause2Syntax ParseFromClause2()
+        {
+            Debug.Assert(this.CurrentToken.ContextualKind == SyntaxKind.FromKeyword);
+            var @from = this.EatContextualToken(SyntaxKind.FromKeyword);
+            @from = CheckFeatureAvailability(@from, MessageID.IDS_FeatureQueryExpression);
+
+            TypeSyntax type = null;
+            if (this.PeekToken(1).Kind != SyntaxKind.InKeyword)
+            {
+                type = this.ParseType();
+            }
+
+            SyntaxToken name;
+            if (this.PeekToken(1).ContextualKind == SyntaxKind.InKeyword &&
+                (this.CurrentToken.Kind != SyntaxKind.IdentifierToken || SyntaxFacts.IsQueryContextualKeyword(this.CurrentToken.ContextualKind)))
+            {
+                //if this token is a something other than an identifier (someone accidentally used a contextual
+                //keyword or a literal, for example), but we can see that the "in" is in the right place, then
+                //just replace whatever is here with a missing identifier
+                name = this.EatToken();
+                name = WithAdditionalDiagnostics(name, this.GetExpectedTokenError(SyntaxKind.IdentifierToken, name.ContextualKind, name.GetLeadingTriviaWidth(), name.Width));
+                name = this.ConvertToMissingWithTrailingTrivia(name, SyntaxKind.IdentifierToken);
+            }
+            else
+            {
+                name = this.ParseIdentifierToken();
+            }
+            var @in = this.EatToken(SyntaxKind.InKeyword);
+            var expression = this.ParseExpressionCore();
+            return _syntaxFactory.FromClause2(@from, type, name, @in, expression);
+        }
+
+        private WhereClause2Syntax ParseWhereClause2()
+        {
+            Debug.Assert(this.CurrentToken.ContextualKind == SyntaxKind.WhereKeyword);
+            var @where = this.EatContextualToken(SyntaxKind.WhereKeyword);
+            var condition = this.ParseExpressionCore();
+            return _syntaxFactory.WhereClause2(@where, condition);
+        }
+
+        private SelectClause2Syntax ParseSelectClause2()
+        {
+            Debug.Assert(this.CurrentToken.ContextualKind == SyntaxKind.SelectKeyword);
+            var @select = this.EatContextualToken(SyntaxKind.SelectKeyword);
+            var expression = this.ParseExpressionCore();
+            return _syntaxFactory.SelectClause2(@select, expression);
         }
 
         private QueryExpressionSyntax ParseQueryExpression(Precedence precedence)

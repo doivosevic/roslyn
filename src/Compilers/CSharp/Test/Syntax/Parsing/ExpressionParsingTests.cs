@@ -1124,6 +1124,26 @@ namespace Microsoft.CodeAnalysis.CSharp.UnitTests
         }
 
         [Fact]
+        public void TestQuery2()
+        {
+            var text = "[ from b in bs select b ]";
+            var expr = this.ParseExpression(text);
+
+            Assert.NotNull(expr);
+            Assert.Equal(SyntaxKind.QueryExpression2, expr.Kind());
+            Assert.Equal(text, expr.ToString());
+            Assert.Equal(0, expr.Errors().Length);
+            var ac = (QueryExpression2Syntax)expr;
+            Assert.NotNull(ac.Body);
+            Assert.NotNull(ac.OpenBracketToken);
+            Assert.NotNull(ac.CloseBracketToken);
+            Assert.False(ac.OpenBracketToken.IsMissing);
+            Assert.False(ac.CloseBracketToken.IsMissing);
+            Assert.Equal(0, ac.Body.Clauses.Count);
+            Assert.Equal("select b", ac.Body.ToString());
+        }
+
+        [Fact]
         public void TestAnonymousObjectCreation()
         {
             var text = "new {a, b}";

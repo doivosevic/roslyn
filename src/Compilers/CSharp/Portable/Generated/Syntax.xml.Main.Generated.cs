@@ -376,6 +376,36 @@ namespace Microsoft.CodeAnalysis.CSharp
       return this.DefaultVisit(node);
     }
 
+    /// <summary>Called when the visitor visits a QueryExpression2Syntax node.</summary>
+    public virtual TResult VisitQueryExpression2(QueryExpression2Syntax node)
+    {
+      return this.DefaultVisit(node);
+    }
+
+    /// <summary>Called when the visitor visits a QueryBody2Syntax node.</summary>
+    public virtual TResult VisitQueryBody2(QueryBody2Syntax node)
+    {
+      return this.DefaultVisit(node);
+    }
+
+    /// <summary>Called when the visitor visits a FromClause2Syntax node.</summary>
+    public virtual TResult VisitFromClause2(FromClause2Syntax node)
+    {
+      return this.DefaultVisit(node);
+    }
+
+    /// <summary>Called when the visitor visits a WhereClause2Syntax node.</summary>
+    public virtual TResult VisitWhereClause2(WhereClause2Syntax node)
+    {
+      return this.DefaultVisit(node);
+    }
+
+    /// <summary>Called when the visitor visits a SelectClause2Syntax node.</summary>
+    public virtual TResult VisitSelectClause2(SelectClause2Syntax node)
+    {
+      return this.DefaultVisit(node);
+    }
+
     /// <summary>Called when the visitor visits a QueryExpressionSyntax node.</summary>
     public virtual TResult VisitQueryExpression(QueryExpressionSyntax node)
     {
@@ -1677,6 +1707,36 @@ namespace Microsoft.CodeAnalysis.CSharp
 
     /// <summary>Called when the visitor visits a ImplicitStackAllocArrayCreationExpressionSyntax node.</summary>
     public virtual void VisitImplicitStackAllocArrayCreationExpression(ImplicitStackAllocArrayCreationExpressionSyntax node)
+    {
+      this.DefaultVisit(node);
+    }
+
+    /// <summary>Called when the visitor visits a QueryExpression2Syntax node.</summary>
+    public virtual void VisitQueryExpression2(QueryExpression2Syntax node)
+    {
+      this.DefaultVisit(node);
+    }
+
+    /// <summary>Called when the visitor visits a QueryBody2Syntax node.</summary>
+    public virtual void VisitQueryBody2(QueryBody2Syntax node)
+    {
+      this.DefaultVisit(node);
+    }
+
+    /// <summary>Called when the visitor visits a FromClause2Syntax node.</summary>
+    public virtual void VisitFromClause2(FromClause2Syntax node)
+    {
+      this.DefaultVisit(node);
+    }
+
+    /// <summary>Called when the visitor visits a WhereClause2Syntax node.</summary>
+    public virtual void VisitWhereClause2(WhereClause2Syntax node)
+    {
+      this.DefaultVisit(node);
+    }
+
+    /// <summary>Called when the visitor visits a SelectClause2Syntax node.</summary>
+    public virtual void VisitSelectClause2(SelectClause2Syntax node)
     {
       this.DefaultVisit(node);
     }
@@ -3091,6 +3151,46 @@ namespace Microsoft.CodeAnalysis.CSharp
       var closeBracketToken = this.VisitToken(node.CloseBracketToken);
       var initializer = (InitializerExpressionSyntax)this.Visit(node.Initializer);
       return node.Update(stackAllocKeyword, openBracketToken, closeBracketToken, initializer);
+    }
+
+    public override SyntaxNode VisitQueryExpression2(QueryExpression2Syntax node)
+    {
+      var openBracketToken = this.VisitToken(node.OpenBracketToken);
+      var fromClause = (FromClause2Syntax)this.Visit(node.FromClause);
+      var body = (QueryBody2Syntax)this.Visit(node.Body);
+      var closeBracketToken = this.VisitToken(node.CloseBracketToken);
+      return node.Update(openBracketToken, fromClause, body, closeBracketToken);
+    }
+
+    public override SyntaxNode VisitQueryBody2(QueryBody2Syntax node)
+    {
+      var clauses = this.VisitList(node.Clauses);
+      var selectOrGroup = (SelectClause2Syntax)this.Visit(node.SelectOrGroup);
+      return node.Update(clauses, selectOrGroup);
+    }
+
+    public override SyntaxNode VisitFromClause2(FromClause2Syntax node)
+    {
+      var fromKeyword = this.VisitToken(node.FromKeyword);
+      var type = (TypeSyntax)this.Visit(node.Type);
+      var identifier = this.VisitToken(node.Identifier);
+      var inKeyword = this.VisitToken(node.InKeyword);
+      var expression = (ExpressionSyntax)this.Visit(node.Expression);
+      return node.Update(fromKeyword, type, identifier, inKeyword, expression);
+    }
+
+    public override SyntaxNode VisitWhereClause2(WhereClause2Syntax node)
+    {
+      var whereKeyword = this.VisitToken(node.WhereKeyword);
+      var condition = (ExpressionSyntax)this.Visit(node.Condition);
+      return node.Update(whereKeyword, condition);
+    }
+
+    public override SyntaxNode VisitSelectClause2(SelectClause2Syntax node)
+    {
+      var selectKeyword = this.VisitToken(node.SelectKeyword);
+      var expression = (ExpressionSyntax)this.Visit(node.Expression);
+      return node.Update(selectKeyword, expression);
     }
 
     public override SyntaxNode VisitQueryExpression(QueryExpressionSyntax node)
@@ -6405,6 +6505,144 @@ namespace Microsoft.CodeAnalysis.CSharp
     public static ImplicitStackAllocArrayCreationExpressionSyntax ImplicitStackAllocArrayCreationExpression(InitializerExpressionSyntax initializer)
     {
       return SyntaxFactory.ImplicitStackAllocArrayCreationExpression(SyntaxFactory.Token(SyntaxKind.StackAllocKeyword), SyntaxFactory.Token(SyntaxKind.OpenBracketToken), SyntaxFactory.Token(SyntaxKind.CloseBracketToken), initializer);
+    }
+
+    /// <summary>Creates a new QueryExpression2Syntax instance.</summary>
+    public static QueryExpression2Syntax QueryExpression2(SyntaxToken openBracketToken, FromClause2Syntax fromClause, QueryBody2Syntax body, SyntaxToken closeBracketToken)
+    {
+      switch (openBracketToken.Kind())
+      {
+        case SyntaxKind.OpenBracketToken:
+          break;
+        default:
+          throw new ArgumentException(nameof(openBracketToken));
+      }
+      if (fromClause == null)
+        throw new ArgumentNullException(nameof(fromClause));
+      if (body == null)
+        throw new ArgumentNullException(nameof(body));
+      switch (closeBracketToken.Kind())
+      {
+        case SyntaxKind.CloseBracketToken:
+          break;
+        default:
+          throw new ArgumentException(nameof(closeBracketToken));
+      }
+      return (QueryExpression2Syntax)Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.SyntaxFactory.QueryExpression2((Syntax.InternalSyntax.SyntaxToken)openBracketToken.Node, fromClause == null ? null : (Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.FromClause2Syntax)fromClause.Green, body == null ? null : (Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.QueryBody2Syntax)body.Green, (Syntax.InternalSyntax.SyntaxToken)closeBracketToken.Node).CreateRed();
+    }
+
+
+    /// <summary>Creates a new QueryExpression2Syntax instance.</summary>
+    public static QueryExpression2Syntax QueryExpression2(FromClause2Syntax fromClause, QueryBody2Syntax body)
+    {
+      return SyntaxFactory.QueryExpression2(SyntaxFactory.Token(SyntaxKind.OpenBracketToken), fromClause, body, SyntaxFactory.Token(SyntaxKind.CloseBracketToken));
+    }
+
+    /// <summary>Creates a new QueryBody2Syntax instance.</summary>
+    public static QueryBody2Syntax QueryBody2(SyntaxList<QueryClause2Syntax> clauses, SelectClause2Syntax selectOrGroup)
+    {
+      if (selectOrGroup == null)
+        throw new ArgumentNullException(nameof(selectOrGroup));
+      return (QueryBody2Syntax)Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.SyntaxFactory.QueryBody2(clauses.Node.ToGreenList<Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.QueryClause2Syntax>(), selectOrGroup == null ? null : (Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.SelectClause2Syntax)selectOrGroup.Green).CreateRed();
+    }
+
+
+    /// <summary>Creates a new QueryBody2Syntax instance.</summary>
+    public static QueryBody2Syntax QueryBody2(SelectClause2Syntax selectOrGroup)
+    {
+      return SyntaxFactory.QueryBody2(default(SyntaxList<QueryClause2Syntax>), selectOrGroup);
+    }
+
+    /// <summary>Creates a new FromClause2Syntax instance.</summary>
+    public static FromClause2Syntax FromClause2(SyntaxToken fromKeyword, TypeSyntax type, SyntaxToken identifier, SyntaxToken inKeyword, ExpressionSyntax expression)
+    {
+      switch (fromKeyword.Kind())
+      {
+        case SyntaxKind.FromKeyword:
+          break;
+        default:
+          throw new ArgumentException(nameof(fromKeyword));
+      }
+      switch (identifier.Kind())
+      {
+        case SyntaxKind.IdentifierToken:
+          break;
+        default:
+          throw new ArgumentException(nameof(identifier));
+      }
+      switch (inKeyword.Kind())
+      {
+        case SyntaxKind.InKeyword:
+          break;
+        default:
+          throw new ArgumentException(nameof(inKeyword));
+      }
+      if (expression == null)
+        throw new ArgumentNullException(nameof(expression));
+      return (FromClause2Syntax)Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.SyntaxFactory.FromClause2((Syntax.InternalSyntax.SyntaxToken)fromKeyword.Node, type == null ? null : (Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.TypeSyntax)type.Green, (Syntax.InternalSyntax.SyntaxToken)identifier.Node, (Syntax.InternalSyntax.SyntaxToken)inKeyword.Node, expression == null ? null : (Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.ExpressionSyntax)expression.Green).CreateRed();
+    }
+
+
+    /// <summary>Creates a new FromClause2Syntax instance.</summary>
+    public static FromClause2Syntax FromClause2(TypeSyntax type, SyntaxToken identifier, ExpressionSyntax expression)
+    {
+      return SyntaxFactory.FromClause2(SyntaxFactory.Token(SyntaxKind.FromKeyword), type, identifier, SyntaxFactory.Token(SyntaxKind.InKeyword), expression);
+    }
+
+    /// <summary>Creates a new FromClause2Syntax instance.</summary>
+    public static FromClause2Syntax FromClause2(SyntaxToken identifier, ExpressionSyntax expression)
+    {
+      return SyntaxFactory.FromClause2(SyntaxFactory.Token(SyntaxKind.FromKeyword), default(TypeSyntax), identifier, SyntaxFactory.Token(SyntaxKind.InKeyword), expression);
+    }
+
+    /// <summary>Creates a new FromClause2Syntax instance.</summary>
+    public static FromClause2Syntax FromClause2(string identifier, ExpressionSyntax expression)
+    {
+      return SyntaxFactory.FromClause2(SyntaxFactory.Token(SyntaxKind.FromKeyword), default(TypeSyntax), SyntaxFactory.Identifier(identifier), SyntaxFactory.Token(SyntaxKind.InKeyword), expression);
+    }
+
+    /// <summary>Creates a new WhereClause2Syntax instance.</summary>
+    public static WhereClause2Syntax WhereClause2(SyntaxToken whereKeyword, ExpressionSyntax condition)
+    {
+      switch (whereKeyword.Kind())
+      {
+        case SyntaxKind.WhereKeyword:
+          break;
+        default:
+          throw new ArgumentException(nameof(whereKeyword));
+      }
+      if (condition == null)
+        throw new ArgumentNullException(nameof(condition));
+      return (WhereClause2Syntax)Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.SyntaxFactory.WhereClause2((Syntax.InternalSyntax.SyntaxToken)whereKeyword.Node, condition == null ? null : (Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.ExpressionSyntax)condition.Green).CreateRed();
+    }
+
+
+    /// <summary>Creates a new WhereClause2Syntax instance.</summary>
+    public static WhereClause2Syntax WhereClause2(ExpressionSyntax condition)
+    {
+      return SyntaxFactory.WhereClause2(SyntaxFactory.Token(SyntaxKind.WhereKeyword), condition);
+    }
+
+    /// <summary>Creates a new SelectClause2Syntax instance.</summary>
+    public static SelectClause2Syntax SelectClause2(SyntaxToken selectKeyword, ExpressionSyntax expression)
+    {
+      switch (selectKeyword.Kind())
+      {
+        case SyntaxKind.SelectKeyword:
+          break;
+        default:
+          throw new ArgumentException(nameof(selectKeyword));
+      }
+      if (expression == null)
+        throw new ArgumentNullException(nameof(expression));
+      return (SelectClause2Syntax)Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.SyntaxFactory.SelectClause2((Syntax.InternalSyntax.SyntaxToken)selectKeyword.Node, expression == null ? null : (Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.ExpressionSyntax)expression.Green).CreateRed();
+    }
+
+
+    /// <summary>Creates a new SelectClause2Syntax instance.</summary>
+    public static SelectClause2Syntax SelectClause2(ExpressionSyntax expression)
+    {
+      return SyntaxFactory.SelectClause2(SyntaxFactory.Token(SyntaxKind.SelectKeyword), expression);
     }
 
     /// <summary>Creates a new QueryExpressionSyntax instance.</summary>

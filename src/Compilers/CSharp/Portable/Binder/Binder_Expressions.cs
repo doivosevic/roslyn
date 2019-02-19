@@ -528,6 +528,9 @@ namespace Microsoft.CodeAnalysis.CSharp
                 case SyntaxKind.QueryExpression:
                     return this.BindQuery((QueryExpressionSyntax)node, diagnostics);
 
+                case SyntaxKind.QueryExpression2:
+                    return this.BindQuery2((QueryExpression2Syntax)node, diagnostics);
+
                 case SyntaxKind.AnonymousObjectCreationExpression:
                     return BindAnonymousObjectCreation((AnonymousObjectCreationExpressionSyntax)node, diagnostics);
 
