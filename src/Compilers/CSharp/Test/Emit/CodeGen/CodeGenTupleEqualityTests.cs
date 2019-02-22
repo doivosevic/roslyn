@@ -269,6 +269,62 @@ class C
         }
 
         [Fact]
+        public void TestILForSimplePythonFor()
+        {
+            var source = @"
+class C
+{
+    static void M()
+    {
+        for (var i = 0; i < 10; ++i) {}
+    }
+}";
+            var comp = CompileAndVerify(source);
+            comp.VerifyDiagnostics();
+
+            comp.VerifyIL("C.M", @"{
+  // Code size       14 (0xe)
+  .maxstack  2
+  .locals init (int V_0) //i
+  IL_0000:  ldc.i4.0
+  IL_0001:  stloc.0
+  IL_0002:  br.s       IL_0008
+  IL_0004:  ldloc.0
+  IL_0005:  ldc.i4.1
+  IL_0006:  add
+  IL_0007:  stloc.0
+  IL_0008:  ldloc.0
+  IL_0009:  ldc.i4.s   10
+  IL_000b:  blt.s      IL_0004
+  IL_000d:  ret
+}");
+        }
+
+        [Fact]
+        public void TestILForSimplePythonListSugar()
+        {
+            var source = @"
+class C
+{
+    static void M()
+    {
+        var x = new int[] {};
+    }
+}";
+            var comp = CompileAndVerify(source);
+            comp.VerifyDiagnostics();
+
+            comp.VerifyIL("C.M", @"{
+  // Code size        8 (0x8)
+  .maxstack  1
+  IL_0000:  ldc.i4.0
+  IL_0001:  newarr     ""int""
+  IL_0006:  pop
+  IL_0007:  ret
+}");
+        }
+
+        [Fact]
         public void TestILForSimpleEqualOnInTuple()
         {
             var source = @"
