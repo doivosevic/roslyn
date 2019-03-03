@@ -7910,12 +7910,6 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax
         var positionalPatternClause = this.PositionalPatternClause ?? SyntaxFactory.PositionalPatternClause();
         return this.WithPositionalPatternClause(positionalPatternClause.WithSubpatterns(positionalPatternClause.Subpatterns.AddRange(items)));
     }
-
-    public RecursivePatternSyntax AddPropertyPatternClauseSubpatterns(params SubpatternSyntax[] items)
-    {
-        var propertyPatternClause = this.PropertyPatternClause ?? SyntaxFactory.PropertyPatternClause();
-        return this.WithPropertyPatternClause(propertyPatternClause.WithSubpatterns(propertyPatternClause.Subpatterns.AddRange(items)));
-    }
   }
 
   public sealed partial class PositionalPatternClauseSyntax : CSharpSyntaxNode
@@ -8943,12 +8937,6 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax
     public LocalFunctionStatementSyntax AddConstraintClauses(params TypeParameterConstraintClauseSyntax[] items)
     {
         return this.WithConstraintClauses(this.ConstraintClauses.AddRange(items));
-    }
-
-    public LocalFunctionStatementSyntax AddBodyStatements(params StatementSyntax[] items)
-    {
-        var body = this.Body ?? SyntaxFactory.Block();
-        return this.WithBody(body.WithStatements(body.Statements.AddRange(items)));
     }
   }
 
@@ -16722,9 +16710,6 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax
     public BaseMethodDeclarationSyntax WithBody(BlockSyntax body) => WithBodyCore(body);
     internal abstract BaseMethodDeclarationSyntax WithBodyCore(BlockSyntax body);
 
-    public BaseMethodDeclarationSyntax AddBodyStatements(params StatementSyntax[] items) => AddBodyStatementsCore(items);
-    internal abstract BaseMethodDeclarationSyntax AddBodyStatementsCore(params StatementSyntax[] items);
-
     public abstract ArrowExpressionClauseSyntax ExpressionBody { get; }
     public BaseMethodDeclarationSyntax WithExpressionBody(ArrowExpressionClauseSyntax expressionBody) => WithExpressionBodyCore(expressionBody);
     internal abstract BaseMethodDeclarationSyntax WithExpressionBodyCore(ArrowExpressionClauseSyntax expressionBody);
@@ -16993,13 +16978,6 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax
     {
         return this.WithConstraintClauses(this.ConstraintClauses.AddRange(items));
     }
-    internal override BaseMethodDeclarationSyntax AddBodyStatementsCore(params StatementSyntax[] items) => AddBodyStatements(items);
-
-    public new MethodDeclarationSyntax AddBodyStatements(params StatementSyntax[] items)
-    {
-        var body = this.Body ?? SyntaxFactory.Block();
-        return this.WithBody(body.WithStatements(body.Statements.AddRange(items)));
-    }
   }
 
   /// <summary>Operator declaration syntax.</summary>
@@ -17209,13 +17187,6 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax
     public new OperatorDeclarationSyntax AddParameterListParameters(params ParameterSyntax[] items)
     {
         return this.WithParameterList(this.ParameterList.WithParameters(this.ParameterList.Parameters.AddRange(items)));
-    }
-    internal override BaseMethodDeclarationSyntax AddBodyStatementsCore(params StatementSyntax[] items) => AddBodyStatements(items);
-
-    public new OperatorDeclarationSyntax AddBodyStatements(params StatementSyntax[] items)
-    {
-        var body = this.Body ?? SyntaxFactory.Block();
-        return this.WithBody(body.WithStatements(body.Statements.AddRange(items)));
     }
   }
 
@@ -17428,13 +17399,6 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax
     {
         return this.WithParameterList(this.ParameterList.WithParameters(this.ParameterList.Parameters.AddRange(items)));
     }
-    internal override BaseMethodDeclarationSyntax AddBodyStatementsCore(params StatementSyntax[] items) => AddBodyStatements(items);
-
-    public new ConversionOperatorDeclarationSyntax AddBodyStatements(params StatementSyntax[] items)
-    {
-        var body = this.Body ?? SyntaxFactory.Block();
-        return this.WithBody(body.WithStatements(body.Statements.AddRange(items)));
-    }
   }
 
   /// <summary>Constructor declaration syntax.</summary>
@@ -17633,13 +17597,6 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax
     public new ConstructorDeclarationSyntax AddParameterListParameters(params ParameterSyntax[] items)
     {
         return this.WithParameterList(this.ParameterList.WithParameters(this.ParameterList.Parameters.AddRange(items)));
-    }
-    internal override BaseMethodDeclarationSyntax AddBodyStatementsCore(params StatementSyntax[] items) => AddBodyStatements(items);
-
-    public new ConstructorDeclarationSyntax AddBodyStatements(params StatementSyntax[] items)
-    {
-        var body = this.Body ?? SyntaxFactory.Block();
-        return this.WithBody(body.WithStatements(body.Statements.AddRange(items)));
     }
   }
 
@@ -17926,13 +17883,6 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax
     public new DestructorDeclarationSyntax AddParameterListParameters(params ParameterSyntax[] items)
     {
         return this.WithParameterList(this.ParameterList.WithParameters(this.ParameterList.Parameters.AddRange(items)));
-    }
-    internal override BaseMethodDeclarationSyntax AddBodyStatementsCore(params StatementSyntax[] items) => AddBodyStatements(items);
-
-    public new DestructorDeclarationSyntax AddBodyStatements(params StatementSyntax[] items)
-    {
-        var body = this.Body ?? SyntaxFactory.Block();
-        return this.WithBody(body.WithStatements(body.Statements.AddRange(items)));
     }
   }
 
@@ -18899,12 +18849,6 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax
     public AccessorDeclarationSyntax AddModifiers(params SyntaxToken[] items)
     {
         return this.WithModifiers(this.Modifiers.AddRange(items));
-    }
-
-    public AccessorDeclarationSyntax AddBodyStatements(params StatementSyntax[] items)
-    {
-        var body = this.Body ?? SyntaxFactory.Block();
-        return this.WithBody(body.WithStatements(body.Statements.AddRange(items)));
     }
   }
 

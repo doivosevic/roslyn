@@ -39,6 +39,8 @@ namespace Microsoft.CodeAnalysis.CSharp
         HashToken = 8220,
         SlashToken = 8221,
         DotDotToken = 8222,
+        IndentInToken = 8223,
+        IndentOutToken = 8224,
 
         // additional xml tokens
         SlashGreaterThanToken = 8232, // xml empty element end
@@ -598,5 +600,8 @@ namespace Microsoft.CodeAnalysis.CSharp
         ImplicitStackAllocArrayCreationExpression = 9053,
         SuppressNullableWarningExpression = 9054,
         NullableDirectiveTrivia = 9055,
+
+        OpenContext = 9080,
+        CloseContext = 9081
     }
 }

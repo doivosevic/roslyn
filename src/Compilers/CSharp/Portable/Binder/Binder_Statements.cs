@@ -333,7 +333,8 @@ namespace Microsoft.CodeAnalysis.CSharp
                                 // For loop constructs, only warn if we see a block following the statement.
                                 // That indicates code like:  "while (x) ; { }"
                                 // which is most likely a bug.
-                                if (emptyStatement.SemicolonToken.GetNextToken().Kind() != SyntaxKind.OpenBraceToken)
+                                if (emptyStatement.SemicolonToken.GetNextToken().Kind() != SyntaxKind.OpenBraceToken &&
+                                    emptyStatement.SemicolonToken.GetNextToken().Kind() != SyntaxKind.IndentInToken)
                                 {
                                     break;
                                 }
