@@ -654,7 +654,7 @@ tryAgain:
             // would we attempt to parse it as a switch expression here.
             var openBrace = this.EatToken(this.CurrentToken.Kind == SyntaxKind.IndentInToken ? SyntaxKind.IndentInToken : SyntaxKind.OpenBraceToken);
             var arms = this.ParseSwitchExpressionArms();
-            var closeBrace = this.EatToken(this.CurrentToken.Kind == SyntaxKind.IndentOutToken ? SyntaxKind.IndentOutToken : SyntaxKind.CloseBraceToken);
+            var closeBrace = this.EatClosingToken();
             var result = _syntaxFactory.SwitchExpression(governingExpression, switchKeyword, openBrace, arms, closeBrace);
             result = this.CheckFeatureAvailability(result, MessageID.IDS_FeatureRecursivePatterns);
             return result;

@@ -410,7 +410,7 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
             {
                 this.ParseNamespaceBody(ref openBrace, ref body, ref initialBadNodes, SyntaxKind.NamespaceDeclaration);
 
-                var closeBrace = this.EatToken(this.CurrentToken.Kind == SyntaxKind.IndentOutToken ? SyntaxKind.IndentOutToken : SyntaxKind.CloseBraceToken);
+                var closeBrace = this.EatClosingToken();
                 SyntaxToken semicolon = null;
                 if (this.CurrentToken.Kind == SyntaxKind.SemicolonToken)
                 {
@@ -1585,7 +1585,7 @@ tryAgain:
                 }
                 else
                 {
-                    closeBrace = this.EatToken(this.CurrentToken.Kind == SyntaxKind.IndentOutToken ? SyntaxKind.IndentOutToken : SyntaxKind.CloseBraceToken);
+                    closeBrace = this.EatClosingToken();
                 }
 
                 SyntaxToken semicolon = null;
@@ -3149,7 +3149,7 @@ parse_member_name:;
                 }
             }
 
-            var closeBrace = this.EatToken(this.CurrentToken.Kind == SyntaxKind.IndentOutToken ? SyntaxKind.IndentOutToken : SyntaxKind.CloseBraceToken);
+            var closeBrace = this.EatClosingToken();
             return _syntaxFactory.AccessorList(openBrace, accessors, closeBrace);
         }
 
@@ -4743,7 +4743,7 @@ tryAgain:
                 }
             }
 
-            var closeBrace = this.EatToken(this.CurrentToken.Kind == SyntaxKind.IndentOutToken ? SyntaxKind.IndentOutToken : SyntaxKind.CloseBraceToken);
+            var closeBrace = this.EatClosingToken();
 
             SyntaxToken semicolon = null;
             if (this.CurrentToken.Kind == SyntaxKind.SemicolonToken)
@@ -7224,7 +7224,7 @@ done:;
                 CSharpSyntaxNode tmp = openBrace;
                 this.ParseStatements(ref tmp, statements, stopOnSwitchSections: false);
                 openBrace = (SyntaxToken)tmp;
-                var closeBrace = this.EatToken(this.CurrentToken.Kind == SyntaxKind.IndentOutToken ? SyntaxKind.IndentOutToken : SyntaxKind.CloseBraceToken);
+                var closeBrace = this.EatClosingToken();
 
                 SyntaxList<StatementSyntax> statementList;
                 if (isMethodBody && IsLargeEnoughNonEmptyStatementList(statements))
@@ -7466,7 +7466,7 @@ done:;
                 block = _syntaxFactory.Block(
                     this.EatToken(this.CurrentToken.Kind == SyntaxKind.IndentInToken ? SyntaxKind.IndentInToken : SyntaxKind.OpenBraceToken),
                     default(SyntaxList<StatementSyntax>),
-                    this.EatToken(this.CurrentToken.Kind == SyntaxKind.IndentOutToken ? SyntaxKind.IndentOutToken : SyntaxKind.CloseBraceToken));
+                   this.EatClosingToken());
             }
             else
             {
@@ -8080,7 +8080,7 @@ tryAgain:
                     sections.Add(swcase);
                 }
 
-                var closeBrace = this.EatToken(this.CurrentToken.Kind == SyntaxKind.IndentOutToken ? SyntaxKind.IndentOutToken : SyntaxKind.CloseBraceToken);
+                var closeBrace = this.EatClosingToken();
                 return _syntaxFactory.SwitchStatement(@switch, openParen, expression, closeParen, openBrace, sections, closeBrace);
             }
             finally
@@ -10481,7 +10481,7 @@ tryAgain:
             var openBrace = this.EatToken(this.CurrentToken.Kind == SyntaxKind.IndentInToken ? SyntaxKind.IndentInToken : SyntaxKind.OpenBraceToken);
             var expressions = _pool.AllocateSeparated<AnonymousObjectMemberDeclaratorSyntax>();
             this.ParseAnonymousTypeMemberInitializers(ref openBrace, ref expressions);
-            var closeBrace = this.EatToken(this.CurrentToken.Kind == SyntaxKind.IndentOutToken ? SyntaxKind.IndentOutToken : SyntaxKind.CloseBraceToken);
+            var closeBrace = this.EatClosingToken();
             var result = _syntaxFactory.AnonymousObjectCreationExpression(@new, openBrace, expressions, closeBrace);
             _pool.Free(expressions);
 
@@ -10625,7 +10625,7 @@ tryAgain:
 
                 openBrace = CheckFeatureAvailability(openBrace, isObjectInitializer ? MessageID.IDS_FeatureObjectInitializer : MessageID.IDS_FeatureCollectionInitializer);
 
-                var closeBrace = this.EatToken(this.CurrentToken.Kind == SyntaxKind.IndentOutToken ? SyntaxKind.IndentOutToken : SyntaxKind.CloseBraceToken);
+                var closeBrace = this.EatClosingToken();
                 return _syntaxFactory.InitializerExpression(
                     isObjectInitializer ?
                         SyntaxKind.ObjectInitializerExpression :
@@ -10764,7 +10764,7 @@ tryAgain:
             {
                 DiagnosticInfo closeBraceError;
                 this.ParseExpressionsForComplexElementInitializer(ref openBrace, initializers, out closeBraceError);
-                var closeBrace = this.EatToken(this.CurrentToken.Kind == SyntaxKind.IndentOutToken ? SyntaxKind.IndentOutToken : SyntaxKind.CloseBraceToken);
+                var closeBrace = this.EatClosingToken();
                 if (closeBraceError != null)
                 {
                     closeBrace = WithAdditionalDiagnostics(closeBrace, closeBraceError);
@@ -11040,7 +11040,7 @@ tryAgain:
                     }
                 }
 
-                var closeBrace = this.EatToken(this.CurrentToken.Kind == SyntaxKind.IndentOutToken ? SyntaxKind.IndentOutToken : SyntaxKind.CloseBraceToken);
+                var closeBrace = this.EatClosingToken();
 
                 return _syntaxFactory.InitializerExpression(SyntaxKind.ArrayInitializerExpression, openBrace, list, closeBrace);
             }

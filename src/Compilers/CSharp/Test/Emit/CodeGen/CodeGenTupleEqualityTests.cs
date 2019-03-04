@@ -301,6 +301,42 @@ class C
         }
 
         [Fact]
+        public void TestILForSimplePythonFor123()
+        {
+            var source = @"
+class C
+    static void M()
+        for (var i = 0; i < 10; ++i)
+            i += 1;
+    
+";
+            var comp = CompileAndVerify(source);
+            comp.VerifyDiagnostics();
+
+            comp.VerifyIL("C.M", @"
+{
+  // Code size       18 (0x12)
+  .maxstack  2
+  .locals init (int V_0) //i
+  IL_0000:  ldc.i4.0
+  IL_0001:  stloc.0
+  IL_0002:  br.s       IL_000c
+  IL_0004:  ldloc.0
+  IL_0005:  ldc.i4.1
+  IL_0006:  add
+  IL_0007:  stloc.0
+  IL_0008:  ldloc.0
+  IL_0009:  ldc.i4.1
+  IL_000a:  add
+  IL_000b:  stloc.0
+  IL_000c:  ldloc.0
+  IL_000d:  ldc.i4.s   10
+  IL_000f:  blt.s      IL_0004
+  IL_0011:  ret
+}");
+        }
+
+        [Fact]
         public void TestILForSimplePythonListSugar()
         {
             var source = @"

@@ -596,6 +596,24 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
             }
         }
 
+        protected SyntaxToken EatClosingToken()
+        {
+            var current = this.CurrentToken.Kind;
+
+            if (current == SyntaxKind.IndentOutToken || current == SyntaxKind.CloseBraceToken)
+            {
+                return this.EatToken();
+            }
+            else if (current == SyntaxKind.EndOfFileToken)
+            {
+                return CreateMissingToken(SyntaxKind.IndentOutToken, SyntaxKind.EndOfFileToken, reportError: false);
+            }
+            else
+            {
+                return this.EatToken(SyntaxKind.IndentOutToken);
+            }
+        }
+
         protected virtual SyntaxDiagnosticInfo GetExpectedTokenError(SyntaxKind expected, SyntaxKind actual, int offset, int width)
         {
             var code = GetExpectedTokenErrorCode(expected, actual);
