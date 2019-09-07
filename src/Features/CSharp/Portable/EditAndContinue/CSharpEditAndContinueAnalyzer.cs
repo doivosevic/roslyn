@@ -1067,6 +1067,14 @@ namespace Microsoft.CodeAnalysis.CSharp.EditAndContinue
                     return MemberSignaturesEquivalent(oldQueryClauseInfo.CastInfo.Symbol, newQueryClauseInfo.CastInfo.Symbol) &&
                            MemberSignaturesEquivalent(oldQueryClauseInfo.OperationInfo.Symbol, newQueryClauseInfo.OperationInfo.Symbol);
 
+                case SyntaxKind.FromClause2:
+                case SyntaxKind.WhereClause2:
+                    var oldQueryClauseInfo2 = oldModel.GetQueryClauseInfo((QueryClause2Syntax)oldNode, cancellationToken);
+                    var newQueryClauseInfo2 = newModel.GetQueryClauseInfo((QueryClause2Syntax)newNode, cancellationToken);
+
+                    return MemberSignaturesEquivalent(oldQueryClauseInfo2.CastInfo.Symbol, newQueryClauseInfo2.CastInfo.Symbol) &&
+                           MemberSignaturesEquivalent(oldQueryClauseInfo2.OperationInfo.Symbol, newQueryClauseInfo2.OperationInfo.Symbol);
+
                 case SyntaxKind.AscendingOrdering:
                 case SyntaxKind.DescendingOrdering:
                     var oldOrderingInfo = oldModel.GetSymbolInfo(oldNode, cancellationToken);
@@ -1075,6 +1083,7 @@ namespace Microsoft.CodeAnalysis.CSharp.EditAndContinue
                     return MemberSignaturesEquivalent(oldOrderingInfo.Symbol, newOrderingInfo.Symbol);
 
                 case SyntaxKind.SelectClause:
+                case SyntaxKind.SelectClause2:
                     var oldSelectInfo = oldModel.GetSymbolInfo(oldNode, cancellationToken);
                     var newSelectInfo = newModel.GetSymbolInfo(newNode, cancellationToken);
 
@@ -1442,6 +1451,9 @@ namespace Microsoft.CodeAnalysis.CSharp.EditAndContinue
                 case SyntaxKind.FromClause:
                     return ((FromClauseSyntax)node).FromKeyword.Span;
 
+                case SyntaxKind.FromClause2:
+                    return ((FromClause2Syntax)node).FromKeyword.Span;
+
                 case SyntaxKind.JoinClause:
                     return ((JoinClauseSyntax)node).JoinKeyword.Span;
 
@@ -1454,6 +1466,9 @@ namespace Microsoft.CodeAnalysis.CSharp.EditAndContinue
                 case SyntaxKind.WhereClause:
                     return ((WhereClauseSyntax)node).WhereKeyword.Span;
 
+                case SyntaxKind.WhereClause2:
+                    return ((WhereClause2Syntax)node).WhereKeyword.Span;
+
                 case SyntaxKind.OrderByClause:
                     return ((OrderByClauseSyntax)node).OrderByKeyword.Span;
 
@@ -1463,6 +1478,9 @@ namespace Microsoft.CodeAnalysis.CSharp.EditAndContinue
 
                 case SyntaxKind.SelectClause:
                     return ((SelectClauseSyntax)node).SelectKeyword.Span;
+
+                case SyntaxKind.SelectClause2:
+                    return ((SelectClause2Syntax)node).SelectKeyword.Span;
 
                 case SyntaxKind.GroupClause:
                     return ((GroupClauseSyntax)node).GroupKeyword.Span;
@@ -1685,6 +1703,7 @@ namespace Microsoft.CodeAnalysis.CSharp.EditAndContinue
                     return CSharpFeaturesResources.anonymous_method;
 
                 case SyntaxKind.FromClause:
+                case SyntaxKind.FromClause2:
                     return CSharpFeaturesResources.from_clause;
 
                 case SyntaxKind.JoinClause:
@@ -1695,6 +1714,7 @@ namespace Microsoft.CodeAnalysis.CSharp.EditAndContinue
                     return CSharpFeaturesResources.let_clause;
 
                 case SyntaxKind.WhereClause:
+                case SyntaxKind.WhereClause2:
                     return CSharpFeaturesResources.where_clause;
 
                 case SyntaxKind.OrderByClause:
@@ -1703,12 +1723,14 @@ namespace Microsoft.CodeAnalysis.CSharp.EditAndContinue
                     return CSharpFeaturesResources.orderby_clause;
 
                 case SyntaxKind.SelectClause:
+                case SyntaxKind.SelectClause2:
                     return CSharpFeaturesResources.select_clause;
 
                 case SyntaxKind.GroupClause:
                     return CSharpFeaturesResources.groupby_clause;
 
                 case SyntaxKind.QueryBody:
+                case SyntaxKind.QueryBody2:
                     return CSharpFeaturesResources.query_body;
 
                 case SyntaxKind.QueryContinuation:

@@ -103,9 +103,11 @@ namespace Microsoft.CodeAnalysis.CSharp.CodeGeneration
         {
             return SyntaxFactory.NamespaceDeclaration(
                 (NameSyntax)name,
+                openBraceToken: SyntaxFactory.Token(SyntaxKind.IndentInToken),
                 default,
                 this.AsUsingDirectives(declarations),
-                AsNamespaceMembers(declarations));
+                AsNamespaceMembers(declarations),
+                closeBraceToken: SyntaxFactory.Token(SyntaxKind.IndentOutToken));
         }
 
         public override SyntaxNode FieldDeclaration(
@@ -647,7 +649,9 @@ namespace Microsoft.CodeAnalysis.CSharp.CodeGeneration
                 AsTypeParameterList(typeParameters),
                 baseTypes != null ? SyntaxFactory.BaseList(SyntaxFactory.SeparatedList(baseTypes)) : null,
                 default,
-                this.AsClassMembers(name, members));
+                openBraceToken: SyntaxFactory.Token(SyntaxKind.IndentInToken),
+                this.AsClassMembers(name, members),
+                closeBraceToken: SyntaxFactory.Token(SyntaxKind.IndentOutToken));
         }
 
         private SyntaxList<MemberDeclarationSyntax> AsClassMembers(string className, IEnumerable<SyntaxNode> members)
@@ -695,7 +699,9 @@ namespace Microsoft.CodeAnalysis.CSharp.CodeGeneration
                 AsTypeParameterList(typeParameters),
                 itypes != null ? SyntaxFactory.BaseList(SyntaxFactory.SeparatedList(itypes)) : null,
                 default,
-                this.AsClassMembers(name, members));
+                openBraceToken: SyntaxFactory.Token(SyntaxKind.IndentInToken),
+                this.AsClassMembers(name, members),
+                closeBraceToken: SyntaxFactory.Token(SyntaxKind.IndentOutToken));
         }
 
         public override SyntaxNode InterfaceDeclaration(
@@ -718,7 +724,9 @@ namespace Microsoft.CodeAnalysis.CSharp.CodeGeneration
                 AsTypeParameterList(typeParameters),
                 itypes != null ? SyntaxFactory.BaseList(SyntaxFactory.SeparatedList(itypes)) : null,
                 default,
-                this.AsInterfaceMembers(members));
+                openBraceToken: SyntaxFactory.Token(SyntaxKind.IndentInToken),
+                this.AsInterfaceMembers(members),
+                closeBraceToken: SyntaxFactory.Token(SyntaxKind.IndentOutToken));
         }
 
         private SyntaxList<MemberDeclarationSyntax> AsInterfaceMembers(IEnumerable<SyntaxNode> members)
@@ -792,7 +800,9 @@ namespace Microsoft.CodeAnalysis.CSharp.CodeGeneration
                 AsModifierList(accessibility, modifiers, SyntaxKind.EnumDeclaration),
                 name.ToIdentifierToken(),
                 default,
-                this.AsEnumMembers(members));
+                openBraceToken: SyntaxFactory.Token(SyntaxKind.IndentInToken),
+                this.AsEnumMembers(members),
+                closeBraceToken: SyntaxFactory.Token(SyntaxKind.IndentOutToken));
         }
 
         public override SyntaxNode EnumMember(string name, SyntaxNode expression)
@@ -3345,7 +3355,11 @@ namespace Microsoft.CodeAnalysis.CSharp.CodeGeneration
         public override SyntaxNode ArrayCreationExpression(SyntaxNode elementType, IEnumerable<SyntaxNode> elements)
         {
             var arrayType = SyntaxFactory.ArrayType((TypeSyntax)elementType, SyntaxFactory.SingletonList(SyntaxFactory.ArrayRankSpecifier()));
-            var initializer = SyntaxFactory.InitializerExpression(SyntaxKind.ArrayInitializerExpression, AsExpressionList(elements));
+            var initializer = SyntaxFactory.InitializerExpression(
+                SyntaxKind.ArrayInitializerExpression,
+                openBraceToken: SyntaxFactory.Token(SyntaxKind.IndentInToken),
+                AsExpressionList(elements),
+                closeBraceToken: SyntaxFactory.Token(SyntaxKind.IndentOutToken));
             return SyntaxFactory.ArrayCreationExpression(arrayType, initializer);
         }
 
@@ -3391,7 +3405,10 @@ namespace Microsoft.CodeAnalysis.CSharp.CodeGeneration
                 SyntaxFactory.TriviaList());
 
         internal override SyntaxNode Interpolation(SyntaxNode syntaxNode)
-            => SyntaxFactory.Interpolation((ExpressionSyntax)syntaxNode);
+            => SyntaxFactory.Interpolation(
+                openBraceToken: SyntaxFactory.Token(SyntaxKind.IndentInToken),
+                (ExpressionSyntax)syntaxNode,
+                closeBraceToken: SyntaxFactory.Token(SyntaxKind.IndentOutToken));
 
         internal override SyntaxToken NumericLiteralToken(string text, ulong value)
             => SyntaxFactory.Literal(text, value);
@@ -3789,7 +3806,9 @@ namespace Microsoft.CodeAnalysis.CSharp.CodeGeneration
             {
                 return SyntaxFactory.SwitchStatement(
                     (ExpressionSyntax)expression,
-                    caseClauses.Cast<SwitchSectionSyntax>().ToSyntaxList());
+                    openBraceToken: SyntaxFactory.Token(SyntaxKind.IndentInToken),
+                    caseClauses.Cast<SwitchSectionSyntax>().ToSyntaxList(),
+                    closeBraceToken: SyntaxFactory.Token(SyntaxKind.IndentOutToken));
             }
             else
             {
