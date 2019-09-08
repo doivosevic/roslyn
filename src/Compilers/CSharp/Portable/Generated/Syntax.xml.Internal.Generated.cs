@@ -39782,7 +39782,6 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
       switch (openBraceToken.Kind)
       {
         case SyntaxKind.OpenBraceToken:
-        case SyntaxKind.IndentInToken:
           break;
         default:
           throw new ArgumentException(nameof(openBraceToken));
@@ -39792,7 +39791,6 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
       switch (closeBraceToken.Kind)
       {
         case SyntaxKind.CloseBraceToken:
-        case SyntaxKind.IndentOutToken:
           break;
         default:
           throw new ArgumentException(nameof(closeBraceToken));
@@ -47334,7 +47332,6 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
       switch (openBraceToken.Kind)
       {
         case SyntaxKind.OpenBraceToken:
-        case SyntaxKind.IndentInToken:
           break;
         default:
           throw new ArgumentException(nameof(openBraceToken));
@@ -47344,7 +47341,6 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
       switch (closeBraceToken.Kind)
       {
         case SyntaxKind.CloseBraceToken:
-        case SyntaxKind.IndentOutToken:
           break;
         default:
           throw new ArgumentException(nameof(closeBraceToken));

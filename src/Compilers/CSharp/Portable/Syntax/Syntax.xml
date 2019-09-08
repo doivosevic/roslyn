@@ -2066,12 +2066,10 @@
     <Kind Name="Block"/>
     <Field Name="OpenBraceToken" Type="SyntaxToken">
       <Kind Name="OpenBraceToken"/>
-      <Kind Name="IndentInToken"/>
     </Field>
     <Field Name="Statements" Type="SyntaxList&lt;StatementSyntax&gt;"/>
     <Field Name="CloseBraceToken" Type="SyntaxToken">
       <Kind Name="CloseBraceToken"/>
-      <Kind Name="IndentOutToken"/>
     </Field>
   </Node>
   <Node Name="LocalFunctionStatementSyntax" Base="StatementSyntax">

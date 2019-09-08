@@ -3054,7 +3054,7 @@ namespace Microsoft.CodeAnalysis.CSharp
             }
 
             // Element type nullability will be inferred in flow analysis and does not need to be set here.
-            var arrayType = ArrayTypeSymbol.CreateCSharpArray(Compilation.Assembly, TypeSymbolWithAnnotations.Create(bestType), rank: 1);
+            var arrayType = ArrayTypeSymbol.CreateCSharpArray(Compilation.Assembly, TypeWithAnnotations.Create(bestType), rank: 1);
             return BindArrayCreationWithInitializer2(diagnostics, node, initializer, arrayType,
                 sizes: ImmutableArray<BoundExpression>.Empty, boundInitExprOpt: boundInitializerExpressions);
         }
@@ -3383,7 +3383,7 @@ namespace Microsoft.CodeAnalysis.CSharp
             {
                 // We are processing the nth dimension of a rank-n array. We expect that these will
                 // only be values, not array initializers.
-                TypeSymbol elemType = type.ElementType.TypeSymbol;
+                TypeSymbol elemType = type.ElementType;
                 foreach (var expressionSyntax in node.Expressions)
                 {
                     Debug.Assert(boundInitExprIndex >= 0 && boundInitExprIndex < boundInitExpr.Length);

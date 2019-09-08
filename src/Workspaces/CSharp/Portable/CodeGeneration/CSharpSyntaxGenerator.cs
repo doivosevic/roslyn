@@ -103,11 +103,9 @@ namespace Microsoft.CodeAnalysis.CSharp.CodeGeneration
         {
             return SyntaxFactory.NamespaceDeclaration(
                 (NameSyntax)name,
-                openBraceToken: SyntaxFactory.Token(SyntaxKind.IndentInToken),
                 default,
                 this.AsUsingDirectives(declarations),
-                AsNamespaceMembers(declarations),
-                closeBraceToken: SyntaxFactory.Token(SyntaxKind.IndentOutToken));
+                AsNamespaceMembers(declarations));
         }
 
         public override SyntaxNode FieldDeclaration(

@@ -628,7 +628,7 @@ namespace Microsoft.CodeAnalysis.CSharp.Symbols
 
             protected override SourceLocalSymbol CloneWithoutType()
             {
-                return new LocalWithInitializer(_containingSymbol, _scopeBinder, _typeSyntax, _identifierToken, _initializer, _initializerBinder, _declarationKind);
+                return new LocalWithInitializer(_containingSymbol, _scopeBinder, _typeSyntax, _identifierToken, _initializerValue, _initializerBinder, _declarationKind);
             }
         }
 

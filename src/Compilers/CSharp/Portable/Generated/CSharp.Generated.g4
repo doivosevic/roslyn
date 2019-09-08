@@ -169,8 +169,7 @@ argument_list
   ;
 
 block
-  : '{' statement* ('}' | indent_out_token)
-  | indent_in_token statement* ('}' | indent_out_token)
+  : '{' statement* '}'
   ;
 
 arrow_expression_clause
