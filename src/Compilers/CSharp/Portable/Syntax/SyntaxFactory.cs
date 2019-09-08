@@ -2513,7 +2513,7 @@ namespace Microsoft.CodeAnalysis.CSharp
 
         public static NamespaceDeclarationSyntax NamespaceDeclaration(NameSyntax name, SyntaxList<ExternAliasDirectiveSyntax> externs, SyntaxList<UsingDirectiveSyntax> usings, SyntaxList<MemberDeclarationSyntax> members)
             => NamespaceDeclaration(attributeLists: default, modifiers: default,
-                name, externs, usings, members);
+                name, Token(SyntaxKind.OpenBraceToken), externs, usings, members, Token(SyntaxKind.CloseBraceToken));
 
         public static NamespaceDeclarationSyntax NamespaceDeclaration(SyntaxToken namespaceKeyword, NameSyntax name, SyntaxToken openBraceToken, SyntaxList<ExternAliasDirectiveSyntax> externs, SyntaxList<UsingDirectiveSyntax> usings, SyntaxList<MemberDeclarationSyntax> members, SyntaxToken closeBraceToken, SyntaxToken semicolonToken)
             => NamespaceDeclaration(attributeLists: default, modifiers: default,

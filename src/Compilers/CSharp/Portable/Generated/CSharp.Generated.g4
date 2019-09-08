@@ -263,7 +263,7 @@ base_type_declaration
   ;
 
 enum_declaration
-  : attribute_list* modifier* 'enum' identifier_token base_list? '{' (enum_member_declaration (',' enum_member_declaration)* ','?)? '}' ';'?
+  : attribute_list* modifier* 'enum' identifier_token base_list? ('{' | indent_in_token) (enum_member_declaration (',' enum_member_declaration)* ','?)? ('}' | indent_out_token) ';'?
   ;
 
 base_list
@@ -289,15 +289,15 @@ type_declaration
   ;
 
 class_declaration
-  : attribute_list* modifier* 'class' identifier_token type_parameter_list? base_list? type_parameter_constraint_clause* '{' member_declaration* '}' ';'?
+  : attribute_list* modifier* 'class' identifier_token type_parameter_list? base_list? type_parameter_constraint_clause* ('{' | indent_in_token) member_declaration* ('}' | indent_out_token) ';'?
   ;
 
 interface_declaration
-  : attribute_list* modifier* 'interface' identifier_token type_parameter_list? base_list? type_parameter_constraint_clause* '{' member_declaration* '}' ';'?
+  : attribute_list* modifier* 'interface' identifier_token type_parameter_list? base_list? type_parameter_constraint_clause* ('{' | indent_in_token) member_declaration* ('}' | indent_out_token) ';'?
   ;
 
 struct_declaration
-  : attribute_list* modifier* 'struct' identifier_token type_parameter_list? base_list? type_parameter_constraint_clause* '{' member_declaration* '}' ';'?
+  : attribute_list* modifier* 'struct' identifier_token type_parameter_list? base_list? type_parameter_constraint_clause* ('{' | indent_in_token) member_declaration* ('}' | indent_out_token) ';'?
   ;
 
 delegate_declaration
@@ -313,7 +313,7 @@ incomplete_member
   ;
 
 namespace_declaration
-  : attribute_list* modifier* 'namespace' name '{' extern_alias_directive* using_directive* member_declaration* '}' ';'?
+  : attribute_list* modifier* 'namespace' name ('{' | indent_in_token) extern_alias_directive* using_directive* member_declaration* ('}' | indent_out_token) ';'?
   ;
 
 type
@@ -440,7 +440,7 @@ empty_statement
   ;
 
 expression_statement
-  : expression ';'
+  : expression ';'?
   ;
 
 fixed_statement
@@ -468,7 +468,7 @@ labeled_statement
   ;
 
 local_declaration_statement
-  : 'await'? 'using'? modifier* variable_declaration ';'
+  : 'await'? 'using'? modifier* variable_declaration ';'?
   ;
 
 local_function_statement
@@ -484,7 +484,7 @@ return_statement
   ;
 
 switch_statement
-  : 'switch' '('? expression ')'? '{' switch_section* '}'
+  : 'switch' '('? expression ')'? ('{' | indent_in_token) switch_section* ('}' | indent_out_token)
   ;
 
 switch_section
@@ -552,7 +552,8 @@ subpattern
   ;
 
 property_pattern_clause
-  : '{' (subpattern (',' subpattern)* ','?)? '}'
+  : '{' (subpattern (',' subpattern)* ','?)? ('}' | indent_out_token)
+  | indent_in_token (subpattern (',' subpattern)* ','?)? ('}' | indent_out_token)
   ;
 
 var_pattern
@@ -627,9 +628,11 @@ expression
   | element_access_expression
   | element_binding_expression
   | implicit_array_creation_expression
+  | implicit_array_creation_expression_2
   | implicit_element_access
   | implicit_stack_alloc_array_creation_expression
   | initializer_expression
+  | initializer_expression_2
   | instance_expression
   | interpolated_string_expression
   | invocation_expression
@@ -644,6 +647,7 @@ expression
   | postfix_unary_expression
   | prefix_unary_expression
   | query_expression
+  | query_expression_2
   | range_expression
   | ref_expression
   | ref_type_expression
@@ -680,7 +684,7 @@ simple_lambda_expression
   ;
 
 anonymous_object_creation_expression
-  : 'new' '{' (anonymous_object_member_declarator (',' anonymous_object_member_declarator)* ','?)? '}'
+  : 'new' ('{' | indent_in_token) (anonymous_object_member_declarator (',' anonymous_object_member_declarator)* ','?)? ('}' | indent_out_token)
   ;
 
 anonymous_object_member_declarator
@@ -692,7 +696,8 @@ array_creation_expression
   ;
 
 initializer_expression
-  : '{' (expression (',' expression)* ','?)? '}'
+  : '{' (expression (',' expression)* ','?)? ('}' | indent_out_token)
+  | indent_in_token (expression (',' expression)* ','?)? ('}' | indent_out_token)
   ;
 
 assignment_expression
@@ -744,6 +749,14 @@ implicit_array_creation_expression
   : 'new' '[' ','* ']' initializer_expression
   ;
 
+implicit_array_creation_expression_2
+  : initializer_expression_2
+  ;
+
+initializer_expression_2
+  : '[' (expression (',' expression)*)? ']'
+  ;
+
 implicit_element_access
   : bracketed_argument_list
   ;
@@ -780,7 +793,8 @@ interpolated_string_text
   ;
 
 interpolation
-  : '{' expression interpolation_alignment_clause? interpolation_format_clause? '}'
+  : '{' expression interpolation_alignment_clause? interpolation_format_clause? ('}' | indent_out_token)
+  | indent_in_token expression interpolation_alignment_clause? interpolation_format_clause? ('}' | indent_out_token)
   ;
 
 interpolation_alignment_clause
@@ -911,6 +925,32 @@ query_continuation
   : 'into' identifier_token query_body
   ;
 
+query_expression_2
+  : '[' from_clause_2 query_body_2 ']'
+  ;
+
+from_clause_2
+  : 'from' type? identifier_token 'in' expression
+  ;
+
+query_body_2
+  : query_clause_2* select_clause_2
+  ;
+
+query_clause_2
+  : from_clause_2
+  | select_clause_2
+  | where_clause_2
+  ;
+
+select_clause_2
+  : 'select' expression
+  ;
+
+where_clause_2
+  : 'where' expression
+  ;
+
 range_expression
   : expression? '..' expression?
   ;
@@ -936,7 +976,7 @@ stack_alloc_array_creation_expression
   ;
 
 switch_expression
-  : expression 'switch' '{' (switch_expression_arm (',' switch_expression_arm)* ','?)? '}'
+  : expression 'switch' ('{' | indent_in_token) (switch_expression_arm (',' switch_expression_arm)* ','?)? ('}' | indent_out_token)
   ;
 
 switch_expression_arm
@@ -1209,6 +1249,14 @@ character_literal_token
   ;
 
 identifier_token
+  : /* see lexical specification */
+  ;
+
+indent_in_token
+  : /* see lexical specification */
+  ;
+
+indent_out_token
   : /* see lexical specification */
   ;
 

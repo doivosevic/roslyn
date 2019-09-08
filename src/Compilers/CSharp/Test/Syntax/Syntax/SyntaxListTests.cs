@@ -228,7 +228,7 @@ namespace Microsoft.CodeAnalysis.CSharp.UnitTests
         [Fact]
         public void AddNamespaceAttributeListsAndModifiers()
         {
-            var declaration = SyntaxFactory.NamespaceDeclaration(SyntaxFactory.ParseName("M"));
+            var declaration = SyntaxFactory.NamespaceDeclaration(SyntaxFactory.ParseName("M"), SyntaxFactory.Token(SyntaxKind.OpenBraceToken), SyntaxFactory.Token(SyntaxKind.CloseBraceToken));
 
             Assert.True(declaration.AttributeLists.Count == 0);
             Assert.True(declaration.Modifiers.Count == 0);
