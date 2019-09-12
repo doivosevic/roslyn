@@ -6028,8 +6028,11 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
             this.AdjustFlagsAndWidth(parameterList);
             this.parameterList = parameterList;
         }
-        this.AdjustFlagsAndWidth(block);
-        this.block = block;
+        if (block != null)
+        {
+            this.AdjustFlagsAndWidth(block);
+            this.block = block;
+        }
         if (expressionBody != null)
         {
             this.AdjustFlagsAndWidth(expressionBody);
@@ -6055,8 +6058,11 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
             this.AdjustFlagsAndWidth(parameterList);
             this.parameterList = parameterList;
         }
-        this.AdjustFlagsAndWidth(block);
-        this.block = block;
+        if (block != null)
+        {
+            this.AdjustFlagsAndWidth(block);
+            this.block = block;
+        }
         if (expressionBody != null)
         {
             this.AdjustFlagsAndWidth(expressionBody);
@@ -6081,8 +6087,11 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
             this.AdjustFlagsAndWidth(parameterList);
             this.parameterList = parameterList;
         }
-        this.AdjustFlagsAndWidth(block);
-        this.block = block;
+        if (block != null)
+        {
+            this.AdjustFlagsAndWidth(block);
+            this.block = block;
+        }
         if (expressionBody != null)
         {
             this.AdjustFlagsAndWidth(expressionBody);
@@ -38336,8 +38345,6 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
         default:
           throw new ArgumentException(nameof(delegateKeyword));
       }
-      if (block == null)
-        throw new ArgumentNullException(nameof(block));
 #endif
 
       return new AnonymousMethodExpressionSyntax(SyntaxKind.AnonymousMethodExpression, asyncKeyword, delegateKeyword, parameterList, block, expressionBody, this.context);
@@ -39782,6 +39789,7 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
       switch (openBraceToken.Kind)
       {
         case SyntaxKind.OpenBraceToken:
+        case SyntaxKind.IndentInToken:
           break;
         default:
           throw new ArgumentException(nameof(openBraceToken));
@@ -39791,6 +39799,7 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
       switch (closeBraceToken.Kind)
       {
         case SyntaxKind.CloseBraceToken:
+        case SyntaxKind.IndentOutToken:
           break;
         default:
           throw new ArgumentException(nameof(closeBraceToken));
@@ -45886,8 +45895,6 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
         default:
           throw new ArgumentException(nameof(delegateKeyword));
       }
-      if (block == null)
-        throw new ArgumentNullException(nameof(block));
 #endif
 
       return new AnonymousMethodExpressionSyntax(SyntaxKind.AnonymousMethodExpression, asyncKeyword, delegateKeyword, parameterList, block, expressionBody);
@@ -47332,6 +47339,7 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
       switch (openBraceToken.Kind)
       {
         case SyntaxKind.OpenBraceToken:
+        case SyntaxKind.IndentInToken:
           break;
         default:
           throw new ArgumentException(nameof(openBraceToken));
@@ -47341,6 +47349,7 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
       switch (closeBraceToken.Kind)
       {
         case SyntaxKind.CloseBraceToken:
+        case SyntaxKind.IndentOutToken:
           break;
         default:
           throw new ArgumentException(nameof(closeBraceToken));

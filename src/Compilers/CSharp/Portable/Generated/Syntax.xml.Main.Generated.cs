@@ -6114,8 +6114,6 @@ namespace Microsoft.CodeAnalysis.CSharp
         default:
           throw new ArgumentException(nameof(delegateKeyword));
       }
-      if (block == null)
-        throw new ArgumentNullException(nameof(block));
       return (AnonymousMethodExpressionSyntax)Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.SyntaxFactory.AnonymousMethodExpression((Syntax.InternalSyntax.SyntaxToken)asyncKeyword.Node, (Syntax.InternalSyntax.SyntaxToken)delegateKeyword.Node, parameterList == null ? null : (Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.ParameterListSyntax)parameterList.Green, block == null ? null : (Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.BlockSyntax)block.Green, expressionBody == null ? null : (Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.ExpressionSyntax)expressionBody.Green).CreateRed();
     }
 
@@ -7411,6 +7409,7 @@ namespace Microsoft.CodeAnalysis.CSharp
       switch (openBraceToken.Kind())
       {
         case SyntaxKind.OpenBraceToken:
+        case SyntaxKind.IndentInToken:
           break;
         default:
           throw new ArgumentException(nameof(openBraceToken));
@@ -7418,6 +7417,7 @@ namespace Microsoft.CodeAnalysis.CSharp
       switch (closeBraceToken.Kind())
       {
         case SyntaxKind.CloseBraceToken:
+        case SyntaxKind.IndentOutToken:
           break;
         default:
           throw new ArgumentException(nameof(closeBraceToken));
@@ -7427,9 +7427,9 @@ namespace Microsoft.CodeAnalysis.CSharp
 
 
     /// <summary>Creates a new BlockSyntax instance.</summary>
-    public static BlockSyntax Block(SyntaxList<StatementSyntax> statements = default(SyntaxList<StatementSyntax>))
+    public static BlockSyntax Block(SyntaxToken openBraceToken, SyntaxToken closeBraceToken)
     {
-      return SyntaxFactory.Block(SyntaxFactory.Token(SyntaxKind.OpenBraceToken), statements, SyntaxFactory.Token(SyntaxKind.CloseBraceToken));
+      return SyntaxFactory.Block(openBraceToken, default(SyntaxList<StatementSyntax>), closeBraceToken);
     }
 
     /// <summary>Creates a new LocalFunctionStatementSyntax instance.</summary>
@@ -8321,9 +8321,9 @@ namespace Microsoft.CodeAnalysis.CSharp
 
 
     /// <summary>Creates a new CheckedStatementSyntax instance.</summary>
-    public static CheckedStatementSyntax CheckedStatement(SyntaxKind kind, BlockSyntax block = default(BlockSyntax))
+    public static CheckedStatementSyntax CheckedStatement(SyntaxKind kind, BlockSyntax block)
     {
-      return SyntaxFactory.CheckedStatement(kind, SyntaxFactory.Token(GetCheckedStatementKeywordKind(kind)), block ?? SyntaxFactory.Block());
+      return SyntaxFactory.CheckedStatement(kind, SyntaxFactory.Token(GetCheckedStatementKeywordKind(kind)), block);
     }
 
     private static SyntaxKind GetCheckedStatementKeywordKind(SyntaxKind kind)
@@ -8356,9 +8356,9 @@ namespace Microsoft.CodeAnalysis.CSharp
 
 
     /// <summary>Creates a new UnsafeStatementSyntax instance.</summary>
-    public static UnsafeStatementSyntax UnsafeStatement(BlockSyntax block = default(BlockSyntax))
+    public static UnsafeStatementSyntax UnsafeStatement(BlockSyntax block)
     {
-      return SyntaxFactory.UnsafeStatement(SyntaxFactory.Token(SyntaxKind.UnsafeKeyword), block ?? SyntaxFactory.Block());
+      return SyntaxFactory.UnsafeStatement(SyntaxFactory.Token(SyntaxKind.UnsafeKeyword), block);
     }
 
     /// <summary>Creates a new LockStatementSyntax instance.</summary>
@@ -8693,9 +8693,9 @@ namespace Microsoft.CodeAnalysis.CSharp
     }
 
     /// <summary>Creates a new TryStatementSyntax instance.</summary>
-    public static TryStatementSyntax TryStatement(SyntaxList<CatchClauseSyntax> catches = default(SyntaxList<CatchClauseSyntax>))
+    public static TryStatementSyntax TryStatement(BlockSyntax block)
     {
-      return SyntaxFactory.TryStatement(SyntaxFactory.Token(SyntaxKind.TryKeyword), SyntaxFactory.Block(), catches, default(FinallyClauseSyntax));
+      return SyntaxFactory.TryStatement(SyntaxFactory.Token(SyntaxKind.TryKeyword), block, default(SyntaxList<CatchClauseSyntax>), default(FinallyClauseSyntax));
     }
 
     /// <summary>Creates a new CatchClauseSyntax instance.</summary>
@@ -8721,9 +8721,9 @@ namespace Microsoft.CodeAnalysis.CSharp
     }
 
     /// <summary>Creates a new CatchClauseSyntax instance.</summary>
-    public static CatchClauseSyntax CatchClause()
+    public static CatchClauseSyntax CatchClause(BlockSyntax block)
     {
-      return SyntaxFactory.CatchClause(SyntaxFactory.Token(SyntaxKind.CatchKeyword), default(CatchDeclarationSyntax), default(CatchFilterClauseSyntax), SyntaxFactory.Block());
+      return SyntaxFactory.CatchClause(SyntaxFactory.Token(SyntaxKind.CatchKeyword), default(CatchDeclarationSyntax), default(CatchFilterClauseSyntax), block);
     }
 
     /// <summary>Creates a new CatchDeclarationSyntax instance.</summary>
@@ -8822,9 +8822,9 @@ namespace Microsoft.CodeAnalysis.CSharp
 
 
     /// <summary>Creates a new FinallyClauseSyntax instance.</summary>
-    public static FinallyClauseSyntax FinallyClause(BlockSyntax block = default(BlockSyntax))
+    public static FinallyClauseSyntax FinallyClause(BlockSyntax block)
     {
-      return SyntaxFactory.FinallyClause(SyntaxFactory.Token(SyntaxKind.FinallyKeyword), block ?? SyntaxFactory.Block());
+      return SyntaxFactory.FinallyClause(SyntaxFactory.Token(SyntaxKind.FinallyKeyword), block);
     }
 
     /// <summary>Creates a new CompilationUnitSyntax instance.</summary>

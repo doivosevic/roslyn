@@ -5111,45 +5111,6 @@ Convert(Not(Convert(Parameter(x Type:Test+Color) Type:System.Int32) Type:System.
                 expectedOutput: expectedOutput);
         }
 
-        [WorkItem(531382, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/531382")]
-        [ConditionalFact(typeof(WindowsOnly), Reason = ConditionalSkipReason.TestExecutionNeedsDesktopTypes)]
-        public void IndexerIsIndexedProperty()
-        {
-            var source1 =
-@"<System.Runtime.InteropServices.ComImport>
-Public Class Cells
-    Default Public ReadOnly Property Cell(index As Integer) As Integer
-        Get
-            Return 0
-        End Get
-    End Property
-End Class";
-            var reference1 = BasicCompilationUtils.CompileToMetadata(source1, verify: Verification.Passes);
-
-            var source2 =
-@"class A
-{
-    public Cells Cells
-    {
-        get { return null; }
-    }
-}
-
-class Program
-{
-    static void Main(string[] args)
-    {
-        System.Linq.Expressions.Expression<System.Func<A, int>> z2 = a => a.Cells[2];
-        System.Console.WriteLine(z2.ToString());
-    }
-}";
-            var expectedOutput = @"a => a.Cells.get_Cell(2)";
-            CompileAndVerifyUtil(
-                new[] { source2 },
-                new[] { reference1 },
-                expectedOutput: expectedOutput);
-        }
-
         [WorkItem(579711, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/579711")]
         [ConditionalFact(typeof(WindowsDesktopOnly), Reason = "https://github.com/dotnet/roslyn/issues/30160")]
         public void CheckedEnumConversion()

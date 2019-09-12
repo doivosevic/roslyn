@@ -150,7 +150,7 @@ namespace Microsoft.CodeAnalysis.CSharp.UnitTests
             => InternalSyntaxFactory.CastExpression(InternalSyntaxFactory.Token(SyntaxKind.OpenParenToken), GenerateIdentifierName(), InternalSyntaxFactory.Token(SyntaxKind.CloseParenToken), GenerateIdentifierName());
         
         private static Syntax.InternalSyntax.AnonymousMethodExpressionSyntax GenerateAnonymousMethodExpression()
-            => InternalSyntaxFactory.AnonymousMethodExpression(null, InternalSyntaxFactory.Token(SyntaxKind.DelegateKeyword), null, GenerateBlock(), null);
+            => InternalSyntaxFactory.AnonymousMethodExpression(null, InternalSyntaxFactory.Token(SyntaxKind.DelegateKeyword), null, null, null);
         
         private static Syntax.InternalSyntax.SimpleLambdaExpressionSyntax GenerateSimpleLambdaExpression()
             => InternalSyntaxFactory.SimpleLambdaExpression(null, GenerateParameter(), InternalSyntaxFactory.Token(SyntaxKind.EqualsGreaterThanToken), null, null);
@@ -1222,7 +1222,7 @@ namespace Microsoft.CodeAnalysis.CSharp.UnitTests
             Assert.Null(node.AsyncKeyword);
             Assert.Equal(SyntaxKind.DelegateKeyword, node.DelegateKeyword.Kind);
             Assert.Null(node.ParameterList);
-            Assert.NotNull(node.Block);
+            Assert.Null(node.Block);
             Assert.Null(node.ExpressionBody);
             
             AttachAndCheckDiagnostics(node);
@@ -9417,7 +9417,7 @@ namespace Microsoft.CodeAnalysis.CSharp.UnitTests
             => SyntaxFactory.CastExpression(SyntaxFactory.Token(SyntaxKind.OpenParenToken), GenerateIdentifierName(), SyntaxFactory.Token(SyntaxKind.CloseParenToken), GenerateIdentifierName());
         
         private static AnonymousMethodExpressionSyntax GenerateAnonymousMethodExpression()
-            => SyntaxFactory.AnonymousMethodExpression(default(SyntaxToken), SyntaxFactory.Token(SyntaxKind.DelegateKeyword), default(ParameterListSyntax), GenerateBlock(), default(ExpressionSyntax));
+            => SyntaxFactory.AnonymousMethodExpression(default(SyntaxToken), SyntaxFactory.Token(SyntaxKind.DelegateKeyword), default(ParameterListSyntax), default(BlockSyntax), default(ExpressionSyntax));
         
         private static SimpleLambdaExpressionSyntax GenerateSimpleLambdaExpression()
             => SyntaxFactory.SimpleLambdaExpression(default(SyntaxToken), GenerateParameter(), SyntaxFactory.Token(SyntaxKind.EqualsGreaterThanToken), default(BlockSyntax), default(ExpressionSyntax));
@@ -10489,7 +10489,7 @@ namespace Microsoft.CodeAnalysis.CSharp.UnitTests
             Assert.Equal(SyntaxKind.None, node.AsyncKeyword.Kind());
             Assert.Equal(SyntaxKind.DelegateKeyword, node.DelegateKeyword.Kind());
             Assert.Null(node.ParameterList);
-            Assert.NotNull(node.Block);
+            Assert.Null(node.Block);
             Assert.Null(node.ExpressionBody);
             var newNode = node.WithAsyncKeyword(node.AsyncKeyword).WithDelegateKeyword(node.DelegateKeyword).WithParameterList(node.ParameterList).WithBlock(node.Block).WithExpressionBody(node.ExpressionBody);
             Assert.Equal(node, newNode);

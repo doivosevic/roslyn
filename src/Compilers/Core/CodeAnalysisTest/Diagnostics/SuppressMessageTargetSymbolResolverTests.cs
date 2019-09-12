@@ -4,7 +4,6 @@ using System.Linq;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Text;
-using Microsoft.CodeAnalysis.VisualBasic;
 using Roslyn.Test.Utilities;
 using Xunit;
 using System.Collections.Generic;
@@ -1386,11 +1385,7 @@ End Class
             }
             else
             {
-                return VisualBasicCompilation.Create(
-                    projectName,
-                    options: new VisualBasicCompilationOptions(OutputKind.DynamicallyLinkedLibrary, rootNamespace: rootNamespace),
-                    syntaxTrees: new[] { syntaxTree },
-                    references: new[] { TestBase.MscorlibRef });
+                return null;
             }
         }
 
@@ -1405,7 +1400,7 @@ End Class
 
             return language == LanguageNames.CSharp ?
                 CSharpSyntaxTree.ParseText(source, path: fileName) :
-                VisualBasicSyntaxTree.ParseText(source, path: fileName);
+                null;
         }
     }
 }

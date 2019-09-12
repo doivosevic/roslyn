@@ -9,7 +9,6 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.VisualBasic;
 using Roslyn.Test.Utilities;
 using Roslyn.Utilities;
 using Xunit;
@@ -300,37 +299,6 @@ namespace Microsoft.CodeAnalysis.UnitTests
         }
 
         [Fact]
-        public void CompilationReference_VB_WithXxx()
-        {
-            var c = VisualBasicCompilation.Create("vb");
-
-            var r = c.ToMetadataReference();
-            Assert.False(r.Properties.EmbedInteropTypes);
-            Assert.True(r.Properties.Aliases.IsEmpty);
-            Assert.Equal(MetadataImageKind.Assembly, r.Properties.Kind);
-
-            var r1 = r.WithAliases(new[] { "a", "b" });
-            Assert.Same(c, r1.Compilation);
-            Assert.False(r1.Properties.EmbedInteropTypes);
-            AssertEx.Equal(new[] { "a", "b" }, r1.Properties.Aliases);
-            Assert.Equal(MetadataImageKind.Assembly, r1.Properties.Kind);
-
-            var r2 = r.WithEmbedInteropTypes(true);
-            Assert.Same(c, r2.Compilation);
-            Assert.True(r2.Properties.EmbedInteropTypes);
-            Assert.True(r2.Properties.Aliases.IsEmpty);
-            Assert.Equal(MetadataImageKind.Assembly, r2.Properties.Kind);
-
-            var r3 = r.WithProperties(new MetadataReferenceProperties(MetadataImageKind.Assembly, ImmutableArray.Create("x"), embedInteropTypes: true));
-            Assert.Same(c, r3.Compilation);
-            Assert.True(r3.Properties.EmbedInteropTypes);
-            AssertEx.Equal(new[] { "x" }, r3.Properties.Aliases);
-            Assert.Equal(MetadataImageKind.Assembly, r3.Properties.Kind);
-
-            Assert.Throws<ArgumentException>(() => r.WithProperties(new MetadataReferenceProperties(MetadataImageKind.Module)));
-        }
-
-        [Fact]
         public void Module_Path()
         {
             var module = ModuleMetadata.CreateFromImage(TestResources.General.C1);
@@ -381,9 +349,6 @@ namespace Microsoft.CodeAnalysis.UnitTests
             Assert.Equal(@"dddd", r.Display);
 
             r = CS.CSharpCompilation.Create("compilation name").ToMetadataReference();
-            Assert.Equal(@"compilation name", r.Display);
-
-            r = VisualBasic.VisualBasicCompilation.Create("compilation name").ToMetadataReference();
             Assert.Equal(@"compilation name", r.Display);
         }
 

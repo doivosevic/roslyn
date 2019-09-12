@@ -79,12 +79,7 @@ namespace Microsoft.CodeAnalysis.CompilerServer
                         analyzerLoader: AnalyzerAssemblyLoader);
                     return true;
                 case LanguageNames.VisualBasic:
-                    compiler = new VisualBasicCompilerServer(
-                        AssemblyReferenceProvider,
-                        args: request.Arguments,
-                        buildPaths: buildPaths,
-                        libDirectory: request.LibDirectory,
-                        analyzerLoader: AnalyzerAssemblyLoader);
+                    compiler = null;
                     return true;
                 default:
                     compiler = null;

@@ -4048,40 +4048,6 @@ public class C
         }
 
         [Fact]
-        public void TestMethodVB()
-        {
-            var text = @"
-Class A
-   Public Sub Goo(a As Integer)
-   End Sub
-End Class";
-
-            var format = new SymbolDisplayFormat(
-                memberOptions: SymbolDisplayMemberOptions.IncludeParameters | SymbolDisplayMemberOptions.IncludeModifiers | SymbolDisplayMemberOptions.IncludeAccessibility | SymbolDisplayMemberOptions.IncludeType,
-                parameterOptions: SymbolDisplayParameterOptions.IncludeType | SymbolDisplayParameterOptions.IncludeName | SymbolDisplayParameterOptions.IncludeDefaultValue,
-                miscellaneousOptions: SymbolDisplayMiscellaneousOptions.UseSpecialTypes);
-
-            var comp = CreateVisualBasicCompilation("c", text);
-            var a = (ITypeSymbol)comp.GlobalNamespace.GetMembers("A").Single();
-            var goo = a.GetMembers("Goo").Single();
-            var parts = Microsoft.CodeAnalysis.CSharp.SymbolDisplay.ToDisplayParts(goo, format);
-
-            Verify(
-                parts,
-                "public void Goo(int a)",
-                SymbolDisplayPartKind.Keyword,
-                SymbolDisplayPartKind.Space,
-                SymbolDisplayPartKind.Keyword,
-                SymbolDisplayPartKind.Space,
-                SymbolDisplayPartKind.MethodName,
-                SymbolDisplayPartKind.Punctuation,
-                SymbolDisplayPartKind.Keyword,
-                SymbolDisplayPartKind.Space,
-                SymbolDisplayPartKind.ParameterName,
-                SymbolDisplayPartKind.Punctuation);
-        }
-
-        [Fact]
         public void TestWindowsRuntimeEvent()
         {
             var source = @"
@@ -4223,62 +4189,6 @@ namespace N
                 SymbolDisplayPartKind.ClassName,
                 SymbolDisplayPartKind.Punctuation,
                 SymbolDisplayPartKind.EventName);
-        }
-
-        [WorkItem(765287, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/765287")]
-        [Fact]
-        public void TestVbSymbols()
-        {
-            var vbComp = CreateVisualBasicCompilation(@"
-Class Outer
-    Class Inner(Of T)
-    End Class
-
-    Sub M(Of U)()
-    End Sub
-
-    WriteOnly Property P() As String
-        Set(value)
-        End Set
-    End Property
-
-    Private F As Integer
-
-    Event E()
-
-    Delegate Sub D()
-
-    Function [Error]() As Missing
-    End Function
-End Class
-", assemblyName: "VB");
-
-            var outer = (INamedTypeSymbol)vbComp.GlobalNamespace.GetMembers("Outer").Single();
-            var type = outer.GetMembers("Inner").Single();
-            var method = outer.GetMembers("M").Single();
-            var property = outer.GetMembers("P").Single();
-            var field = outer.GetMembers("F").Single();
-            var @event = outer.GetMembers("E").Single();
-            var @delegate = outer.GetMembers("D").Single();
-            var error = outer.GetMembers("Error").Single();
-
-            Assert.False(type is Symbol);
-            Assert.False(method is Symbol);
-            Assert.False(property is Symbol);
-            Assert.False(field is Symbol);
-            Assert.False(@event is Symbol);
-            Assert.False(@delegate is Symbol);
-            Assert.False(error is Symbol);
-
-            // 1) Looks like C#.
-            // 2) Doesn't blow up.
-            Assert.Equal("Outer.Inner<T>", CSharp.SymbolDisplay.ToDisplayString(type, SymbolDisplayFormat.TestFormat));
-            Assert.Equal("void Outer.M<U>()", CSharp.SymbolDisplay.ToDisplayString(method, SymbolDisplayFormat.TestFormat));
-            Assert.Equal("System.String Outer.P { set; }", CSharp.SymbolDisplay.ToDisplayString(property, SymbolDisplayFormat.TestFormat));
-            Assert.Equal("System.Int32 Outer.F", CSharp.SymbolDisplay.ToDisplayString(field, SymbolDisplayFormat.TestFormat));
-            Assert.Equal("event Outer.EEventHandler Outer.E", CSharp.SymbolDisplay.ToDisplayString(@event, SymbolDisplayFormat.TestFormat));
-            Assert.Equal("Outer.D", CSharp.SymbolDisplay.ToDisplayString(@delegate, SymbolDisplayFormat.TestFormat));
-            Assert.Equal("Missing Outer.Error()", CSharp.SymbolDisplay.ToDisplayString(error, SymbolDisplayFormat.TestFormat));
         }
 
         [Fact]
@@ -5433,31 +5343,6 @@ class A
                 SymbolDisplayPartKind.ParameterName);
         }
 
-        [WorkItem(11356, "https://github.com/dotnet/roslyn/issues/11356")]
-        [Fact]
-        public void RefReturn()
-        {
-            var sourceA =
-@"public delegate ref int D();
-public class C
-{
-    public ref int F(ref int i) => ref i;
-    int _p;
-    public ref int P => ref _p;
-    public ref int this[int i] => ref _p;
-}";
-            var compA = CreateEmptyCompilation(sourceA, new[] { MscorlibRef });
-            compA.VerifyDiagnostics();
-            var refA = compA.EmitToImageReference();
-            // From C# symbols.
-            RefReturnInternal(compA);
-
-            var compB = CreateVisualBasicCompilation(GetUniqueName(), "", referencedAssemblies: new[] { MscorlibRef, refA });
-            compB.VerifyDiagnostics();
-            // From VB symbols.
-            RefReturnInternal(compB);
-        }
-
         private static void RefReturnInternal(Compilation comp)
         {
             var formatBase = new SymbolDisplayFormat(
@@ -5610,56 +5495,6 @@ public class C
                 SymbolDisplayPartKind.Space,
                 SymbolDisplayPartKind.Keyword,
                 SymbolDisplayPartKind.Punctuation);
-        }
-
-        [Fact]
-        [CompilerTrait(CompilerFeature.ReadOnlyReferences)]
-        public void RefReadonlyReturn()
-        {
-            var sourceA =
-@"public delegate ref readonly int D();
-public class C
-{
-    public ref readonly int F(in int i) => ref i;
-    int _p;
-    public ref readonly int P => ref _p;
-    public ref readonly int this[in int i] => ref _p;
-}";
-            var compA = CreateCompilation(sourceA);
-            compA.VerifyDiagnostics();
-            var refA = compA.EmitToImageReference();
-            // From C# symbols.
-            RefReadonlyReturnInternal(compA);
-
-            var compB = CreateVisualBasicCompilation(GetUniqueName(), "", referencedAssemblies: new[] { MscorlibRef, refA });
-            compB.VerifyDiagnostics();
-            // From VB symbols.
-            //RefReadonlyReturnInternal(compB);
-        }
-
-        [Fact]
-        [CompilerTrait(CompilerFeature.ReadOnlyReferences)]
-        public void RefReadonlyReturn1()
-        {
-            var sourceA =
-@"public delegate ref readonly int D();
-public class C
-{
-    public ref readonly int F(in int i) => ref i;
-    int _p;
-    public ref readonly int P => ref _p;
-    public ref readonly int this[in int i] => ref _p;
-}";
-            var compA = CreateCompilation(sourceA);
-            compA.VerifyDiagnostics();
-            var refA = compA.EmitToImageReference();
-            // From C# symbols.
-            RefReadonlyReturnInternal(compA);
-
-            var compB = CreateVisualBasicCompilation(GetUniqueName(), "", referencedAssemblies: new[] { MscorlibRef, refA });
-            compB.VerifyDiagnostics();
-            // From VB symbols.
-            //RefReadonlyReturnInternal(compB);
         }
 
         private static void RefReadonlyReturnInternal(Compilation comp)
@@ -7362,27 +7197,6 @@ namespace Nested
                 SymbolDisplayPartKind.MethodName,
                 SymbolDisplayPartKind.Punctuation,
                 SymbolDisplayPartKind.Punctuation);
-        }
-
-
-        [Fact]
-        public void TestPassingVBSymbolsToStructSymbolDisplay()
-        {
-            var source = @"
-Structure X
-End Structure";
-
-            var comp = CreateVisualBasicCompilation(source).VerifyDiagnostics();
-            var semanticModel = comp.GetSemanticModel(comp.SyntaxTrees.Single());
-
-            var structure = semanticModel.SyntaxTree.GetRoot().DescendantNodes().Single(n => n.RawKind == (int)VisualBasic.SyntaxKind.StructureStatement);
-            var format = SymbolDisplayFormat.TestFormat.AddKindOptions(SymbolDisplayKindOptions.IncludeTypeKeyword);
-
-            Verify(SymbolDisplay.ToDisplayParts(semanticModel.GetDeclaredSymbol(structure), format),
-                "struct X",
-                SymbolDisplayPartKind.Keyword,
-                SymbolDisplayPartKind.Space,
-                SymbolDisplayPartKind.StructName);
         }
 
         [Fact]

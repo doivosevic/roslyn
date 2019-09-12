@@ -205,3 +205,8 @@ csharp_space_between_square_brackets = false
 csharp_prefer_braces = true:silent
 csharp_preserve_single_line_blocks = true
 csharp_preserve_single_line_statements = true
+
+[*.vb]
+
+# IDE0001: Simplify Names
+dotnet_diagnostic.IDE0001.severity = none

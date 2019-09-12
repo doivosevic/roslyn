@@ -982,47 +982,6 @@ public class Test
             );
         }
 
-        [Theory]
-        [MemberData(nameof(AllProviderParseOptions))]
-        public void IVTNotBothSigned_VBtoCS(CSharpParseOptions parseOptions)
-        {
-            string s = @"<assembly: System.Runtime.CompilerServices.InternalsVisibleTo(""John, PublicKey=00240000048000009400000006020000002400005253413100040000010001002b986f6b5ea5717d35c72d38561f413e267029efa9b5f107b9331d83df657381325b3a67b75812f63a9436ceccb49494de8f574f8e639d4d26c0fcf8b0e9a1a196b80b6f6ed053628d10d027e032df2ed1d60835e5f47d32c9ef6da10d0366a319573362c821b5f8fa5abc5bb22241de6f666a85d82d6ba8c3090d01636bd2bb"")>
-            Public Class C
-                Friend Sub Goo()
-                End Sub
-            End Class";
-
-            var other = VisualBasic.VisualBasicCompilation.Create(
-                syntaxTrees: new[] { VisualBasic.VisualBasicSyntaxTree.ParseText(s) },
-                references: new[] { MscorlibRef_v4_0_30316_17626 },
-                assemblyName: "Paul",
-                options: new VisualBasic.VisualBasicCompilationOptions(OutputKind.DynamicallyLinkedLibrary).WithStrongNameProvider(DefaultDesktopStrongNameProvider));
-            other.VerifyDiagnostics();
-
-            var requestor = CreateCompilation(
-    @"public class A
-{
-    internal class B
-    {
-        protected B(C o)
-        {
-            o.Goo();
-        }
-    }
-}",
-                references: new[] { MetadataReference.CreateFromImage(other.EmitToArray()) },
-                assemblyName: "John",
-                options: TestOptions.SigningReleaseDll.WithCryptoKeyFile(s_keyPairFile),
-                parseOptions: parseOptions);
-
-            // We allow John to access Paul's internal Goo even though strong-named John should not be referencing weak-named Paul.
-            // Paul has, after all, specifically granted access to John.
-
-            // During emit time we should produce an error that says that a strong-named assembly cannot reference
-            // a weak-named assembly. But the C# compiler doesn't currently do that. See https://github.com/dotnet/roslyn/issues/26722
-            requestor.VerifyDiagnostics();
-        }
-
         [ConditionalTheory(typeof(WindowsOnly), Reason = ConditionalSkipReason.TestExecutionNeedsWindowsTypes)]
         [MemberData(nameof(AllProviderParseOptions))]
         public void IVTDeferredSuccess(CSharpParseOptions parseOptions)

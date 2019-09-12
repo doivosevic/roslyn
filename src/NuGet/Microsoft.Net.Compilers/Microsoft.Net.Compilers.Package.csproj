@@ -18,22 +18,20 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Compilers\CSharp\csc\csc.csproj" PrivateAssets="All"/>
-    <ProjectReference Include="..\..\Compilers\VisualBasic\vbc\vbc.csproj" PrivateAssets="All"/>
-    <ProjectReference Include="..\..\Interactive\csi\csi.csproj" PrivateAssets="All"/>
-    <ProjectReference Include="..\..\Compilers\Core\MSBuildTask\Microsoft.Build.Tasks.CodeAnalysis.csproj" PrivateAssets="All"/>
-    <ProjectReference Include="..\..\Compilers\Server\VBCSCompiler\VBCSCompiler.csproj" PrivateAssets="All"/>
+    <ProjectReference Include="..\..\Compilers\CSharp\csc\csc.csproj" PrivateAssets="All" />
+    <ProjectReference Include="..\..\Compilers\Core\MSBuildTask\Microsoft.Build.Tasks.CodeAnalysis.csproj" PrivateAssets="All" />
+    <ProjectReference Include="..\..\Compilers\Server\VBCSCompiler\VBCSCompiler.csproj" PrivateAssets="All" />
   </ItemGroup>
 
   <Target Name="_GetFilesToPackage" DependsOnTargets="InitializeDesktopCompilerArtifacts">
     <ItemGroup>
-      <_File Include="@(DesktopCompilerArtifact)" TargetDir="tools"/>
-      <_File Include="@(DesktopCompilerResourceArtifact)" TargetDir="tools"/>
+      <_File Include="@(DesktopCompilerArtifact)" TargetDir="tools" />
+      <_File Include="@(DesktopCompilerResourceArtifact)" TargetDir="tools" />
       <_File Include="$(MSBuildProjectDirectory)\build\**\*.*" TargetDir="build" />
 
       <TfmSpecificPackageFile Include="@(_File)" PackagePath="%(_File.TargetDir)/%(_File.RecursiveDir)%(_File.FileName)%(_File.Extension)" />
     </ItemGroup>
   </Target>
 
-  <Import Project="..\Microsoft.Net.Compilers.Toolset\DesktopCompilerArtifacts.targets"/>
+  <Import Project="..\Microsoft.Net.Compilers.Toolset\DesktopCompilerArtifacts.targets" />
 </Project>

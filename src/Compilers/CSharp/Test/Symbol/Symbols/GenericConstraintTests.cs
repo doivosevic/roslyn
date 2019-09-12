@@ -5641,43 +5641,6 @@ class B : A
                 Diagnostic(ErrorCode.ERR_TypeVarCantBeNull, "null").WithArguments("T").WithLocation(6, 16));
         }
 
-        [WorkItem(543710, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/543710")]
-        [ClrOnlyFact]
-        public void InheritedObjectConstraint2()
-        {
-            var csCompilation = CreateCSharpCompilation("InheritedObjectConstraint2CS",
-@"using System;
-public abstract class Base1<T>
-{
-    public virtual void Goo<G>(G d) where G : struct, T { Console.WriteLine(""Base1""); }
-}
-public class Base2 : Base1<Object>
-{
-    public override void Goo<G>(G d) { Console.WriteLine(""Base2""); }
-}",
-                compilationOptions: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
-            var csVerifier = CompileAndVerify(csCompilation);
-            csVerifier.VerifyDiagnostics();
-
-            var vbCompilation = CreateVisualBasicCompilation("InheritedObjectConstraint2VB",
-@"Imports System
-Class Derived : Inherits Base2
-    Public Overrides Sub Goo(Of G As Structure)(ByVal d As G)
-        Console.WriteLine(""Derived"")
-    End Sub
-End Class
-
-Module Program
-    Sub Main
-        Dim x As Base1(Of Object) = New Derived
-        x.Goo(1)
-    End Sub
-End Module",
-                compilationOptions: new Microsoft.CodeAnalysis.VisualBasic.VisualBasicCompilationOptions(OutputKind.ConsoleApplication),
-                referencedCompilations: new[] { csCompilation });
-            vbCompilation.VerifyDiagnostics();
-        }
-
         private static void CheckConstraints(
             TypeParameterSymbol typeParameter,
             TypeParameterConstraintKind constraints,

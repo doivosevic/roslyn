@@ -7,7 +7,6 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Test.Utilities;
 using Microsoft.CodeAnalysis.Text;
-using Microsoft.CodeAnalysis.VisualBasic;
 using Roslyn.Test.Utilities;
 using Xunit;
 
@@ -32,7 +31,7 @@ namespace Microsoft.CodeAnalysis.UnitTests.Diagnostics
 
             var syntaxTree = language == LanguageNames.CSharp ?
                 CSharpSyntaxTree.ParseText(source, path: fileName) :
-                VisualBasicSyntaxTree.ParseText(source, path: fileName);
+                null;
 
             if (language == LanguageNames.CSharp)
             {
@@ -43,13 +42,7 @@ namespace Microsoft.CodeAnalysis.UnitTests.Diagnostics
             }
             else
             {
-                return VisualBasicCompilation.Create(
-                    projectName,
-                    syntaxTrees: new[] { syntaxTree },
-                    references: new[] { TestBase.MscorlibRef },
-                    options: new VisualBasicCompilationOptions(
-                        OutputKind.DynamicallyLinkedLibrary,
-                        rootNamespace: rootNamespace));
+                return null;
             }
         }
 

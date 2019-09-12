@@ -169,7 +169,8 @@ argument_list
   ;
 
 block
-  : '{' statement* '}'
+  : '{' statement* ('}' | indent_out_token)
+  | indent_in_token statement* ('}' | indent_out_token)
   ;
 
 arrow_expression_clause
@@ -667,7 +668,7 @@ anonymous_function_expression
   ;
 
 anonymous_method_expression
-  : 'async'? 'delegate' parameter_list? block expression?
+  : 'async'? 'delegate' parameter_list? (block | expression?)
   ;
 
 lambda_expression

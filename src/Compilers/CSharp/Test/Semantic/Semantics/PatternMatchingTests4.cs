@@ -2656,68 +2656,6 @@ namespace System
         }
 
         [Fact]
-        public void IndexedProperty_01()
-        {
-            var source1 =
-@"Imports System
-Imports System.Runtime.InteropServices
-<Assembly: PrimaryInteropAssembly(0, 0)> 
-<Assembly: Guid(""165F752D-E9C4-4F7E-B0D0-CDFD7A36E210"")> 
-<ComImport()>
-<Guid(""165F752D-E9C4-4F7E-B0D0-CDFD7A36E211"")>
-Public Interface I
-    Property P(x As Object, Optional y As Object = Nothing) As Object
-End Interface";
-            var reference1 = BasicCompilationUtils.CompileToMetadata(source1);
-            var source2 =
-@"class C
-{
-    static void Main(I i)
-    {
-        _ = i is { P: 1 };
-    }
-}";
-            var compilation2 = CreateCompilation(source2, new[] { reference1 });
-            compilation2.VerifyDiagnostics(
-                // (5,20): error CS0857: Indexed property 'I.P' must have all arguments optional
-                //         _ = i is { P: 1 };
-                Diagnostic(ErrorCode.ERR_IndexedPropertyMustHaveAllOptionalParams, "P").WithArguments("I.P").WithLocation(5, 20)
-                );
-        }
-
-        [Fact, WorkItem(31209, "https://github.com/dotnet/roslyn/issues/31209")]
-        public void IndexedProperty_02()
-        {
-            var source1 =
-@"Imports System
-Imports System.Runtime.InteropServices
-<Assembly: PrimaryInteropAssembly(0, 0)> 
-<Assembly: Guid(""165F752D-E9C4-4F7E-B0D0-CDFD7A36E210"")> 
-<ComImport()>
-<Guid(""165F752D-E9C4-4F7E-B0D0-CDFD7A36E211"")>
-Public Interface I
-    Property P(Optional x As Object = Nothing, Optional y As Object = Nothing) As Object
-End Interface";
-            var reference1 = BasicCompilationUtils.CompileToMetadata(source1);
-            var source2 =
-@"class C
-{
-    static void Main(I i)
-    {
-        _ = i is { P: 1 };
-    }
-}";
-            var compilation2 = CreateCompilation(source2, new[] { reference1 });
-            // https://github.com/dotnet/roslyn/issues/31209 asks what the desired behavior is for this case.
-            // This test demonstrates that we at least behave rationally and do not crash.
-            compilation2.VerifyDiagnostics(
-                // (5,20): error CS0154: The property or indexer 'P' cannot be used in this context because it lacks the get accessor
-                //         _ = i is { P: 1 };
-                Diagnostic(ErrorCode.ERR_PropertyLacksGet, "P").WithArguments("P").WithLocation(5, 20)
-                );
-        }
-
-        [Fact]
         public void TestMissingIntegralTypes()
         {
             var source =

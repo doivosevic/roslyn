@@ -5,7 +5,6 @@ using System.Diagnostics;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Operations;
 using Microsoft.CodeAnalysis.Test.Utilities;
-using Microsoft.CodeAnalysis.VisualBasic;
 using Roslyn.Test.Utilities;
 using Xunit;
 
@@ -2747,35 +2746,6 @@ IInvocationOperation (void P.M2(System.Int32 x, [G<S>? s = null])) (OperationKin
             };
 
             VerifyOperationTreeAndDiagnosticsForTest<InvocationExpressionSyntax>(source, expectedOperationTree, expectedDiagnostics);
-        }
-
-
-        [CompilerTrait(CompilerFeature.IOperation)]
-        [Fact]
-        public void GettingInOutConversionFromCSharpArgumentShouldThrowException()
-        {
-            string source = @"
-class P
-{
-    static void M1()
-    {
-        /*<bind>*/M2(1)/*</bind>*/;
-    }
-
-    static void M2(int x)
-    {
-    }
-}
-";
-            var compilation = CreateCompilation(source);
-            var (operation, syntaxNode) = GetOperationAndSyntaxForTest<InvocationExpressionSyntax>(compilation);
-
-            var invocation = (IInvocationOperation)operation;
-            var argument = invocation.Arguments[0];
-
-            // We are calling VB extension methods on IArgument in C# code, therefore exception is expected here.
-            Assert.Throws<ArgumentException>(() => argument.GetInConversion());
-            Assert.Throws<ArgumentException>(() => argument.GetOutConversion());
         }
 
         [Fact]

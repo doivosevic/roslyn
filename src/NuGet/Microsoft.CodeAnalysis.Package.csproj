@@ -18,9 +18,4 @@
       - "Microsoft.CodeAnalysis.VisualBasic (only the VB compiler)
     </PackageDescription>
   </PropertyGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Workspaces\CSharp\Portable\Microsoft.CodeAnalysis.CSharp.Workspaces.csproj" />
-    <ProjectReference Include="..\Workspaces\VisualBasic\Portable\Microsoft.CodeAnalysis.VisualBasic.Workspaces.vbproj" />
-  </ItemGroup>
 </Project>

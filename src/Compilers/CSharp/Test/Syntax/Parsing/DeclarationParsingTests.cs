@@ -6742,6 +6742,8 @@ class C {}
                 {
                     N(SyntaxKind.ClassKeyword);
                     N(SyntaxKind.IdentifierToken, "C");
+                    N(SyntaxKind.OpenBraceToken);
+                    M(SyntaxKind.CloseBraceToken);
                     N(SyntaxKind.TypeParameterList);
                     {
                     }
@@ -6772,8 +6774,6 @@ class C {}
                             }
                         }
                     }
-                    M(SyntaxKind.OpenBraceToken);
-                    M(SyntaxKind.CloseBraceToken);
                 }
                 N(SyntaxKind.EndOfFileToken);
             }

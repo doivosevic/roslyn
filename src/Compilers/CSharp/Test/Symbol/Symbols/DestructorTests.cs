@@ -497,32 +497,6 @@ class Derived : Base
                 Diagnostic(ErrorCode.ERR_CantOverrideSealed, "Derived").WithArguments("Derived.~Derived()", "Base.Finalize()"));
         }
 
-        [WorkItem(528903, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/528903")]
-        [Fact]
-        public void AbstractFinalize()
-        {
-            var vb = @"
-Public MustInherit Class Base
-    Protected MustOverride Overrides Sub Finalize()
-End Class
-";
-
-            var source = @"
-class Derived : Base
-{
-    ~Derived() { }
-}";
-
-            var vbRef = CreateVisualBasicCompilation("VB", vb).EmitToImageReference();
-
-            // In dev11, compilation succeeded, but the finalizer would fail at runtime when it made
-            // a non-virtual call to the abstract method Base.Finalize.
-            CreateCompilation(source, new[] { vbRef }).VerifyDiagnostics(
-                // (2,7): error CS0534: 'Derived' does not implement inherited abstract member 'Base.~Base()'
-                // class Derived : Base
-                Diagnostic(ErrorCode.ERR_UnimplementedAbstractMethod, "Derived").WithArguments("Derived", "Base.~Base()"));
-        }
-
         [WorkItem(647933, "http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/647933")]
         [Fact]
         public void ConditionalAttributeOnDestructor()
