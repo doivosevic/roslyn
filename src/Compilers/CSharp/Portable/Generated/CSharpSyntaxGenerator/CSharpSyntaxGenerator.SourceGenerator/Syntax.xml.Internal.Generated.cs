@@ -6923,6 +6923,135 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
     }
 
     /// <summary>Class which represents the syntax node for initializer expression.</summary>
+    internal sealed partial class InitializerExpression2Syntax : ExpressionSyntax
+    {
+        internal readonly SyntaxToken openBracketToken;
+        internal readonly GreenNode? expressions;
+        internal readonly SyntaxToken closeBracketToken;
+
+        internal InitializerExpression2Syntax(SyntaxKind kind, SyntaxToken openBracketToken, GreenNode? expressions, SyntaxToken closeBracketToken, DiagnosticInfo[]? diagnostics, SyntaxAnnotation[]? annotations)
+          : base(kind, diagnostics, annotations)
+        {
+            this.SlotCount = 3;
+            this.AdjustFlagsAndWidth(openBracketToken);
+            this.openBracketToken = openBracketToken;
+            if (expressions != null)
+            {
+                this.AdjustFlagsAndWidth(expressions);
+                this.expressions = expressions;
+            }
+            this.AdjustFlagsAndWidth(closeBracketToken);
+            this.closeBracketToken = closeBracketToken;
+        }
+
+        internal InitializerExpression2Syntax(SyntaxKind kind, SyntaxToken openBracketToken, GreenNode? expressions, SyntaxToken closeBracketToken, SyntaxFactoryContext context)
+          : base(kind)
+        {
+            this.SetFactoryContext(context);
+            this.SlotCount = 3;
+            this.AdjustFlagsAndWidth(openBracketToken);
+            this.openBracketToken = openBracketToken;
+            if (expressions != null)
+            {
+                this.AdjustFlagsAndWidth(expressions);
+                this.expressions = expressions;
+            }
+            this.AdjustFlagsAndWidth(closeBracketToken);
+            this.closeBracketToken = closeBracketToken;
+        }
+
+        internal InitializerExpression2Syntax(SyntaxKind kind, SyntaxToken openBracketToken, GreenNode? expressions, SyntaxToken closeBracketToken)
+          : base(kind)
+        {
+            this.SlotCount = 3;
+            this.AdjustFlagsAndWidth(openBracketToken);
+            this.openBracketToken = openBracketToken;
+            if (expressions != null)
+            {
+                this.AdjustFlagsAndWidth(expressions);
+                this.expressions = expressions;
+            }
+            this.AdjustFlagsAndWidth(closeBracketToken);
+            this.closeBracketToken = closeBracketToken;
+        }
+
+        /// <summary>SyntaxToken representing the open brace.</summary>
+        public SyntaxToken OpenBracketToken => this.openBracketToken;
+        /// <summary>SeparatedSyntaxList of ExpressionSyntax representing the list of expressions in the initializer expression.</summary>
+        public Microsoft.CodeAnalysis.Syntax.InternalSyntax.SeparatedSyntaxList<ExpressionSyntax> Expressions => new Microsoft.CodeAnalysis.Syntax.InternalSyntax.SeparatedSyntaxList<ExpressionSyntax>(new Microsoft.CodeAnalysis.Syntax.InternalSyntax.SyntaxList<CSharpSyntaxNode>(this.expressions));
+        /// <summary>SyntaxToken representing the close brace.</summary>
+        public SyntaxToken CloseBracketToken => this.closeBracketToken;
+
+        internal override GreenNode? GetSlot(int index)
+            => index switch
+            {
+                0 => this.openBracketToken,
+                1 => this.expressions,
+                2 => this.closeBracketToken,
+                _ => null,
+            };
+
+        internal override SyntaxNode CreateRed(SyntaxNode? parent, int position) => new CSharp.Syntax.InitializerExpression2Syntax(this, parent, position);
+
+        public override void Accept(CSharpSyntaxVisitor visitor) => visitor.VisitInitializerExpression2(this);
+        public override TResult Accept<TResult>(CSharpSyntaxVisitor<TResult> visitor) => visitor.VisitInitializerExpression2(this);
+
+        public InitializerExpression2Syntax Update(SyntaxToken openBracketToken, Microsoft.CodeAnalysis.Syntax.InternalSyntax.SeparatedSyntaxList<ExpressionSyntax> expressions, SyntaxToken closeBracketToken)
+        {
+            if (openBracketToken != this.OpenBracketToken || expressions != this.Expressions || closeBracketToken != this.CloseBracketToken)
+            {
+                var newNode = SyntaxFactory.InitializerExpression2(openBracketToken, expressions, closeBracketToken);
+                var diags = GetDiagnostics();
+                if (diags?.Length > 0)
+                    newNode = newNode.WithDiagnosticsGreen(diags);
+                var annotations = GetAnnotations();
+                if (annotations?.Length > 0)
+                    newNode = newNode.WithAnnotationsGreen(annotations);
+                return newNode;
+            }
+
+            return this;
+        }
+
+        internal override GreenNode SetDiagnostics(DiagnosticInfo[]? diagnostics)
+            => new InitializerExpression2Syntax(this.Kind, this.openBracketToken, this.expressions, this.closeBracketToken, diagnostics, GetAnnotations());
+
+        internal override GreenNode SetAnnotations(SyntaxAnnotation[]? annotations)
+            => new InitializerExpression2Syntax(this.Kind, this.openBracketToken, this.expressions, this.closeBracketToken, GetDiagnostics(), annotations);
+
+        internal InitializerExpression2Syntax(ObjectReader reader)
+          : base(reader)
+        {
+            this.SlotCount = 3;
+            var openBracketToken = (SyntaxToken)reader.ReadValue();
+            AdjustFlagsAndWidth(openBracketToken);
+            this.openBracketToken = openBracketToken;
+            var expressions = (GreenNode?)reader.ReadValue();
+            if (expressions != null)
+            {
+                AdjustFlagsAndWidth(expressions);
+                this.expressions = expressions;
+            }
+            var closeBracketToken = (SyntaxToken)reader.ReadValue();
+            AdjustFlagsAndWidth(closeBracketToken);
+            this.closeBracketToken = closeBracketToken;
+        }
+
+        internal override void WriteTo(ObjectWriter writer)
+        {
+            base.WriteTo(writer);
+            writer.WriteValue(this.openBracketToken);
+            writer.WriteValue(this.expressions);
+            writer.WriteValue(this.closeBracketToken);
+        }
+
+        static InitializerExpression2Syntax()
+        {
+            ObjectBinder.RegisterTypeReader(typeof(InitializerExpression2Syntax), r => new InitializerExpression2Syntax(r));
+        }
+    }
+
+    /// <summary>Class which represents the syntax node for initializer expression.</summary>
     internal sealed partial class InitializerExpressionSyntax : ExpressionSyntax
     {
         internal readonly SyntaxToken openBraceToken;
@@ -7862,6 +7991,91 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
         }
     }
 
+    /// <summary>Class which represents the syntax node for implicit array creation expression 2.</summary>
+    internal sealed partial class ImplicitArrayCreationExpression2Syntax : ExpressionSyntax
+    {
+        internal readonly InitializerExpression2Syntax initializer;
+
+        internal ImplicitArrayCreationExpression2Syntax(SyntaxKind kind, InitializerExpression2Syntax initializer, DiagnosticInfo[]? diagnostics, SyntaxAnnotation[]? annotations)
+          : base(kind, diagnostics, annotations)
+        {
+            this.SlotCount = 1;
+            this.AdjustFlagsAndWidth(initializer);
+            this.initializer = initializer;
+        }
+
+        internal ImplicitArrayCreationExpression2Syntax(SyntaxKind kind, InitializerExpression2Syntax initializer, SyntaxFactoryContext context)
+          : base(kind)
+        {
+            this.SetFactoryContext(context);
+            this.SlotCount = 1;
+            this.AdjustFlagsAndWidth(initializer);
+            this.initializer = initializer;
+        }
+
+        internal ImplicitArrayCreationExpression2Syntax(SyntaxKind kind, InitializerExpression2Syntax initializer)
+          : base(kind)
+        {
+            this.SlotCount = 1;
+            this.AdjustFlagsAndWidth(initializer);
+            this.initializer = initializer;
+        }
+
+        /// <summary>InitializerExpressionSyntax representing the initializer expression of the implicit array creation expression.</summary>
+        public InitializerExpression2Syntax Initializer => this.initializer;
+
+        internal override GreenNode? GetSlot(int index)
+            => index == 0 ? this.initializer : null;
+
+        internal override SyntaxNode CreateRed(SyntaxNode? parent, int position) => new CSharp.Syntax.ImplicitArrayCreationExpression2Syntax(this, parent, position);
+
+        public override void Accept(CSharpSyntaxVisitor visitor) => visitor.VisitImplicitArrayCreationExpression2(this);
+        public override TResult Accept<TResult>(CSharpSyntaxVisitor<TResult> visitor) => visitor.VisitImplicitArrayCreationExpression2(this);
+
+        public ImplicitArrayCreationExpression2Syntax Update(InitializerExpression2Syntax initializer)
+        {
+            if (initializer != this.Initializer)
+            {
+                var newNode = SyntaxFactory.ImplicitArrayCreationExpression2(initializer);
+                var diags = GetDiagnostics();
+                if (diags?.Length > 0)
+                    newNode = newNode.WithDiagnosticsGreen(diags);
+                var annotations = GetAnnotations();
+                if (annotations?.Length > 0)
+                    newNode = newNode.WithAnnotationsGreen(annotations);
+                return newNode;
+            }
+
+            return this;
+        }
+
+        internal override GreenNode SetDiagnostics(DiagnosticInfo[]? diagnostics)
+            => new ImplicitArrayCreationExpression2Syntax(this.Kind, this.initializer, diagnostics, GetAnnotations());
+
+        internal override GreenNode SetAnnotations(SyntaxAnnotation[]? annotations)
+            => new ImplicitArrayCreationExpression2Syntax(this.Kind, this.initializer, GetDiagnostics(), annotations);
+
+        internal ImplicitArrayCreationExpression2Syntax(ObjectReader reader)
+          : base(reader)
+        {
+            this.SlotCount = 1;
+            var initializer = (InitializerExpression2Syntax)reader.ReadValue();
+            AdjustFlagsAndWidth(initializer);
+            this.initializer = initializer;
+        }
+
+        internal override void WriteTo(ObjectWriter writer)
+        {
+            base.WriteTo(writer);
+            writer.WriteValue(this.initializer);
+        }
+
+        static ImplicitArrayCreationExpression2Syntax()
+        {
+            ObjectBinder.RegisterTypeReader(typeof(ImplicitArrayCreationExpression2Syntax), r => new ImplicitArrayCreationExpression2Syntax(r));
+        }
+    }
+
     /// <summary>Class which represents the syntax node for implicit array creation expression.</summary>
     internal sealed partial class ImplicitArrayCreationExpressionSyntax : ExpressionSyntax
     {
@@ -8276,6 +8490,616 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
         static ImplicitStackAllocArrayCreationExpressionSyntax()
         {
             ObjectBinder.RegisterTypeReader(typeof(ImplicitStackAllocArrayCreationExpressionSyntax), r => new ImplicitStackAllocArrayCreationExpressionSyntax(r));
+        }
+    }
+
+    internal abstract partial class QueryClause2Syntax : CSharpSyntaxNode
+    {
+        internal QueryClause2Syntax(SyntaxKind kind, DiagnosticInfo[]? diagnostics, SyntaxAnnotation[]? annotations)
+          : base(kind, diagnostics, annotations)
+        {
+        }
+
+        internal QueryClause2Syntax(SyntaxKind kind)
+          : base(kind)
+        {
+        }
+
+        protected QueryClause2Syntax(ObjectReader reader)
+          : base(reader)
+        {
+        }
+    }
+
+    internal sealed partial class QueryExpression2Syntax : ExpressionSyntax
+    {
+        internal readonly SyntaxToken openBracketToken;
+        internal readonly FromClause2Syntax fromClause;
+        internal readonly QueryBody2Syntax body;
+        internal readonly SyntaxToken closeBracketToken;
+
+        internal QueryExpression2Syntax(SyntaxKind kind, SyntaxToken openBracketToken, FromClause2Syntax fromClause, QueryBody2Syntax body, SyntaxToken closeBracketToken, DiagnosticInfo[]? diagnostics, SyntaxAnnotation[]? annotations)
+          : base(kind, diagnostics, annotations)
+        {
+            this.SlotCount = 4;
+            this.AdjustFlagsAndWidth(openBracketToken);
+            this.openBracketToken = openBracketToken;
+            this.AdjustFlagsAndWidth(fromClause);
+            this.fromClause = fromClause;
+            this.AdjustFlagsAndWidth(body);
+            this.body = body;
+            this.AdjustFlagsAndWidth(closeBracketToken);
+            this.closeBracketToken = closeBracketToken;
+        }
+
+        internal QueryExpression2Syntax(SyntaxKind kind, SyntaxToken openBracketToken, FromClause2Syntax fromClause, QueryBody2Syntax body, SyntaxToken closeBracketToken, SyntaxFactoryContext context)
+          : base(kind)
+        {
+            this.SetFactoryContext(context);
+            this.SlotCount = 4;
+            this.AdjustFlagsAndWidth(openBracketToken);
+            this.openBracketToken = openBracketToken;
+            this.AdjustFlagsAndWidth(fromClause);
+            this.fromClause = fromClause;
+            this.AdjustFlagsAndWidth(body);
+            this.body = body;
+            this.AdjustFlagsAndWidth(closeBracketToken);
+            this.closeBracketToken = closeBracketToken;
+        }
+
+        internal QueryExpression2Syntax(SyntaxKind kind, SyntaxToken openBracketToken, FromClause2Syntax fromClause, QueryBody2Syntax body, SyntaxToken closeBracketToken)
+          : base(kind)
+        {
+            this.SlotCount = 4;
+            this.AdjustFlagsAndWidth(openBracketToken);
+            this.openBracketToken = openBracketToken;
+            this.AdjustFlagsAndWidth(fromClause);
+            this.fromClause = fromClause;
+            this.AdjustFlagsAndWidth(body);
+            this.body = body;
+            this.AdjustFlagsAndWidth(closeBracketToken);
+            this.closeBracketToken = closeBracketToken;
+        }
+
+        /// <summary>SyntaxToken representing the open brace.</summary>
+        public SyntaxToken OpenBracketToken => this.openBracketToken;
+        public FromClause2Syntax FromClause => this.fromClause;
+        public QueryBody2Syntax Body => this.body;
+        /// <summary>SyntaxToken representing the close brace.</summary>
+        public SyntaxToken CloseBracketToken => this.closeBracketToken;
+
+        internal override GreenNode? GetSlot(int index)
+            => index switch
+            {
+                0 => this.openBracketToken,
+                1 => this.fromClause,
+                2 => this.body,
+                3 => this.closeBracketToken,
+                _ => null,
+            };
+
+        internal override SyntaxNode CreateRed(SyntaxNode? parent, int position) => new CSharp.Syntax.QueryExpression2Syntax(this, parent, position);
+
+        public override void Accept(CSharpSyntaxVisitor visitor) => visitor.VisitQueryExpression2(this);
+        public override TResult Accept<TResult>(CSharpSyntaxVisitor<TResult> visitor) => visitor.VisitQueryExpression2(this);
+
+        public QueryExpression2Syntax Update(SyntaxToken openBracketToken, FromClause2Syntax fromClause, QueryBody2Syntax body, SyntaxToken closeBracketToken)
+        {
+            if (openBracketToken != this.OpenBracketToken || fromClause != this.FromClause || body != this.Body || closeBracketToken != this.CloseBracketToken)
+            {
+                var newNode = SyntaxFactory.QueryExpression2(openBracketToken, fromClause, body, closeBracketToken);
+                var diags = GetDiagnostics();
+                if (diags?.Length > 0)
+                    newNode = newNode.WithDiagnosticsGreen(diags);
+                var annotations = GetAnnotations();
+                if (annotations?.Length > 0)
+                    newNode = newNode.WithAnnotationsGreen(annotations);
+                return newNode;
+            }
+
+            return this;
+        }
+
+        internal override GreenNode SetDiagnostics(DiagnosticInfo[]? diagnostics)
+            => new QueryExpression2Syntax(this.Kind, this.openBracketToken, this.fromClause, this.body, this.closeBracketToken, diagnostics, GetAnnotations());
+
+        internal override GreenNode SetAnnotations(SyntaxAnnotation[]? annotations)
+            => new QueryExpression2Syntax(this.Kind, this.openBracketToken, this.fromClause, this.body, this.closeBracketToken, GetDiagnostics(), annotations);
+
+        internal QueryExpression2Syntax(ObjectReader reader)
+          : base(reader)
+        {
+            this.SlotCount = 4;
+            var openBracketToken = (SyntaxToken)reader.ReadValue();
+            AdjustFlagsAndWidth(openBracketToken);
+            this.openBracketToken = openBracketToken;
+            var fromClause = (FromClause2Syntax)reader.ReadValue();
+            AdjustFlagsAndWidth(fromClause);
+            this.fromClause = fromClause;
+            var body = (QueryBody2Syntax)reader.ReadValue();
+            AdjustFlagsAndWidth(body);
+            this.body = body;
+            var closeBracketToken = (SyntaxToken)reader.ReadValue();
+            AdjustFlagsAndWidth(closeBracketToken);
+            this.closeBracketToken = closeBracketToken;
+        }
+
+        internal override void WriteTo(ObjectWriter writer)
+        {
+            base.WriteTo(writer);
+            writer.WriteValue(this.openBracketToken);
+            writer.WriteValue(this.fromClause);
+            writer.WriteValue(this.body);
+            writer.WriteValue(this.closeBracketToken);
+        }
+
+        static QueryExpression2Syntax()
+        {
+            ObjectBinder.RegisterTypeReader(typeof(QueryExpression2Syntax), r => new QueryExpression2Syntax(r));
+        }
+    }
+
+    internal sealed partial class QueryBody2Syntax : CSharpSyntaxNode
+    {
+        internal readonly GreenNode? clauses;
+        internal readonly SelectClause2Syntax selectOrGroup;
+
+        internal QueryBody2Syntax(SyntaxKind kind, GreenNode? clauses, SelectClause2Syntax selectOrGroup, DiagnosticInfo[]? diagnostics, SyntaxAnnotation[]? annotations)
+          : base(kind, diagnostics, annotations)
+        {
+            this.SlotCount = 2;
+            if (clauses != null)
+            {
+                this.AdjustFlagsAndWidth(clauses);
+                this.clauses = clauses;
+            }
+            this.AdjustFlagsAndWidth(selectOrGroup);
+            this.selectOrGroup = selectOrGroup;
+        }
+
+        internal QueryBody2Syntax(SyntaxKind kind, GreenNode? clauses, SelectClause2Syntax selectOrGroup, SyntaxFactoryContext context)
+          : base(kind)
+        {
+            this.SetFactoryContext(context);
+            this.SlotCount = 2;
+            if (clauses != null)
+            {
+                this.AdjustFlagsAndWidth(clauses);
+                this.clauses = clauses;
+            }
+            this.AdjustFlagsAndWidth(selectOrGroup);
+            this.selectOrGroup = selectOrGroup;
+        }
+
+        internal QueryBody2Syntax(SyntaxKind kind, GreenNode? clauses, SelectClause2Syntax selectOrGroup)
+          : base(kind)
+        {
+            this.SlotCount = 2;
+            if (clauses != null)
+            {
+                this.AdjustFlagsAndWidth(clauses);
+                this.clauses = clauses;
+            }
+            this.AdjustFlagsAndWidth(selectOrGroup);
+            this.selectOrGroup = selectOrGroup;
+        }
+
+        public Microsoft.CodeAnalysis.Syntax.InternalSyntax.SyntaxList<QueryClause2Syntax> Clauses => new Microsoft.CodeAnalysis.Syntax.InternalSyntax.SyntaxList<QueryClause2Syntax>(this.clauses);
+        public SelectClause2Syntax SelectOrGroup => this.selectOrGroup;
+
+        internal override GreenNode? GetSlot(int index)
+            => index switch
+            {
+                0 => this.clauses,
+                1 => this.selectOrGroup,
+                _ => null,
+            };
+
+        internal override SyntaxNode CreateRed(SyntaxNode? parent, int position) => new CSharp.Syntax.QueryBody2Syntax(this, parent, position);
+
+        public override void Accept(CSharpSyntaxVisitor visitor) => visitor.VisitQueryBody2(this);
+        public override TResult Accept<TResult>(CSharpSyntaxVisitor<TResult> visitor) => visitor.VisitQueryBody2(this);
+
+        public QueryBody2Syntax Update(Microsoft.CodeAnalysis.Syntax.InternalSyntax.SyntaxList<QueryClause2Syntax> clauses, SelectClause2Syntax selectOrGroup)
+        {
+            if (clauses != this.Clauses || selectOrGroup != this.SelectOrGroup)
+            {
+                var newNode = SyntaxFactory.QueryBody2(clauses, selectOrGroup);
+                var diags = GetDiagnostics();
+                if (diags?.Length > 0)
+                    newNode = newNode.WithDiagnosticsGreen(diags);
+                var annotations = GetAnnotations();
+                if (annotations?.Length > 0)
+                    newNode = newNode.WithAnnotationsGreen(annotations);
+                return newNode;
+            }
+
+            return this;
+        }
+
+        internal override GreenNode SetDiagnostics(DiagnosticInfo[]? diagnostics)
+            => new QueryBody2Syntax(this.Kind, this.clauses, this.selectOrGroup, diagnostics, GetAnnotations());
+
+        internal override GreenNode SetAnnotations(SyntaxAnnotation[]? annotations)
+            => new QueryBody2Syntax(this.Kind, this.clauses, this.selectOrGroup, GetDiagnostics(), annotations);
+
+        internal QueryBody2Syntax(ObjectReader reader)
+          : base(reader)
+        {
+            this.SlotCount = 2;
+            var clauses = (GreenNode?)reader.ReadValue();
+            if (clauses != null)
+            {
+                AdjustFlagsAndWidth(clauses);
+                this.clauses = clauses;
+            }
+            var selectOrGroup = (SelectClause2Syntax)reader.ReadValue();
+            AdjustFlagsAndWidth(selectOrGroup);
+            this.selectOrGroup = selectOrGroup;
+        }
+
+        internal override void WriteTo(ObjectWriter writer)
+        {
+            base.WriteTo(writer);
+            writer.WriteValue(this.clauses);
+            writer.WriteValue(this.selectOrGroup);
+        }
+
+        static QueryBody2Syntax()
+        {
+            ObjectBinder.RegisterTypeReader(typeof(QueryBody2Syntax), r => new QueryBody2Syntax(r));
+        }
+    }
+
+    internal sealed partial class FromClause2Syntax : QueryClause2Syntax
+    {
+        internal readonly SyntaxToken fromKeyword;
+        internal readonly TypeSyntax? type;
+        internal readonly SyntaxToken identifier;
+        internal readonly SyntaxToken inKeyword;
+        internal readonly ExpressionSyntax expression;
+
+        internal FromClause2Syntax(SyntaxKind kind, SyntaxToken fromKeyword, TypeSyntax? type, SyntaxToken identifier, SyntaxToken inKeyword, ExpressionSyntax expression, DiagnosticInfo[]? diagnostics, SyntaxAnnotation[]? annotations)
+          : base(kind, diagnostics, annotations)
+        {
+            this.SlotCount = 5;
+            this.AdjustFlagsAndWidth(fromKeyword);
+            this.fromKeyword = fromKeyword;
+            if (type != null)
+            {
+                this.AdjustFlagsAndWidth(type);
+                this.type = type;
+            }
+            this.AdjustFlagsAndWidth(identifier);
+            this.identifier = identifier;
+            this.AdjustFlagsAndWidth(inKeyword);
+            this.inKeyword = inKeyword;
+            this.AdjustFlagsAndWidth(expression);
+            this.expression = expression;
+        }
+
+        internal FromClause2Syntax(SyntaxKind kind, SyntaxToken fromKeyword, TypeSyntax? type, SyntaxToken identifier, SyntaxToken inKeyword, ExpressionSyntax expression, SyntaxFactoryContext context)
+          : base(kind)
+        {
+            this.SetFactoryContext(context);
+            this.SlotCount = 5;
+            this.AdjustFlagsAndWidth(fromKeyword);
+            this.fromKeyword = fromKeyword;
+            if (type != null)
+            {
+                this.AdjustFlagsAndWidth(type);
+                this.type = type;
+            }
+            this.AdjustFlagsAndWidth(identifier);
+            this.identifier = identifier;
+            this.AdjustFlagsAndWidth(inKeyword);
+            this.inKeyword = inKeyword;
+            this.AdjustFlagsAndWidth(expression);
+            this.expression = expression;
+        }
+
+        internal FromClause2Syntax(SyntaxKind kind, SyntaxToken fromKeyword, TypeSyntax? type, SyntaxToken identifier, SyntaxToken inKeyword, ExpressionSyntax expression)
+          : base(kind)
+        {
+            this.SlotCount = 5;
+            this.AdjustFlagsAndWidth(fromKeyword);
+            this.fromKeyword = fromKeyword;
+            if (type != null)
+            {
+                this.AdjustFlagsAndWidth(type);
+                this.type = type;
+            }
+            this.AdjustFlagsAndWidth(identifier);
+            this.identifier = identifier;
+            this.AdjustFlagsAndWidth(inKeyword);
+            this.inKeyword = inKeyword;
+            this.AdjustFlagsAndWidth(expression);
+            this.expression = expression;
+        }
+
+        public SyntaxToken FromKeyword => this.fromKeyword;
+        public TypeSyntax? Type => this.type;
+        /// <summary>Gets the identifier.</summary>
+        public SyntaxToken Identifier => this.identifier;
+        public SyntaxToken InKeyword => this.inKeyword;
+        public ExpressionSyntax Expression => this.expression;
+
+        internal override GreenNode? GetSlot(int index)
+            => index switch
+            {
+                0 => this.fromKeyword,
+                1 => this.type,
+                2 => this.identifier,
+                3 => this.inKeyword,
+                4 => this.expression,
+                _ => null,
+            };
+
+        internal override SyntaxNode CreateRed(SyntaxNode? parent, int position) => new CSharp.Syntax.FromClause2Syntax(this, parent, position);
+
+        public override void Accept(CSharpSyntaxVisitor visitor) => visitor.VisitFromClause2(this);
+        public override TResult Accept<TResult>(CSharpSyntaxVisitor<TResult> visitor) => visitor.VisitFromClause2(this);
+
+        public FromClause2Syntax Update(SyntaxToken fromKeyword, TypeSyntax type, SyntaxToken identifier, SyntaxToken inKeyword, ExpressionSyntax expression)
+        {
+            if (fromKeyword != this.FromKeyword || type != this.Type || identifier != this.Identifier || inKeyword != this.InKeyword || expression != this.Expression)
+            {
+                var newNode = SyntaxFactory.FromClause2(fromKeyword, type, identifier, inKeyword, expression);
+                var diags = GetDiagnostics();
+                if (diags?.Length > 0)
+                    newNode = newNode.WithDiagnosticsGreen(diags);
+                var annotations = GetAnnotations();
+                if (annotations?.Length > 0)
+                    newNode = newNode.WithAnnotationsGreen(annotations);
+                return newNode;
+            }
+
+            return this;
+        }
+
+        internal override GreenNode SetDiagnostics(DiagnosticInfo[]? diagnostics)
+            => new FromClause2Syntax(this.Kind, this.fromKeyword, this.type, this.identifier, this.inKeyword, this.expression, diagnostics, GetAnnotations());
+
+        internal override GreenNode SetAnnotations(SyntaxAnnotation[]? annotations)
+            => new FromClause2Syntax(this.Kind, this.fromKeyword, this.type, this.identifier, this.inKeyword, this.expression, GetDiagnostics(), annotations);
+
+        internal FromClause2Syntax(ObjectReader reader)
+          : base(reader)
+        {
+            this.SlotCount = 5;
+            var fromKeyword = (SyntaxToken)reader.ReadValue();
+            AdjustFlagsAndWidth(fromKeyword);
+            this.fromKeyword = fromKeyword;
+            var type = (TypeSyntax?)reader.ReadValue();
+            if (type != null)
+            {
+                AdjustFlagsAndWidth(type);
+                this.type = type;
+            }
+            var identifier = (SyntaxToken)reader.ReadValue();
+            AdjustFlagsAndWidth(identifier);
+            this.identifier = identifier;
+            var inKeyword = (SyntaxToken)reader.ReadValue();
+            AdjustFlagsAndWidth(inKeyword);
+            this.inKeyword = inKeyword;
+            var expression = (ExpressionSyntax)reader.ReadValue();
+            AdjustFlagsAndWidth(expression);
+            this.expression = expression;
+        }
+
+        internal override void WriteTo(ObjectWriter writer)
+        {
+            base.WriteTo(writer);
+            writer.WriteValue(this.fromKeyword);
+            writer.WriteValue(this.type);
+            writer.WriteValue(this.identifier);
+            writer.WriteValue(this.inKeyword);
+            writer.WriteValue(this.expression);
+        }
+
+        static FromClause2Syntax()
+        {
+            ObjectBinder.RegisterTypeReader(typeof(FromClause2Syntax), r => new FromClause2Syntax(r));
+        }
+    }
+
+    internal sealed partial class WhereClause2Syntax : QueryClause2Syntax
+    {
+        internal readonly SyntaxToken whereKeyword;
+        internal readonly ExpressionSyntax condition;
+
+        internal WhereClause2Syntax(SyntaxKind kind, SyntaxToken whereKeyword, ExpressionSyntax condition, DiagnosticInfo[]? diagnostics, SyntaxAnnotation[]? annotations)
+          : base(kind, diagnostics, annotations)
+        {
+            this.SlotCount = 2;
+            this.AdjustFlagsAndWidth(whereKeyword);
+            this.whereKeyword = whereKeyword;
+            this.AdjustFlagsAndWidth(condition);
+            this.condition = condition;
+        }
+
+        internal WhereClause2Syntax(SyntaxKind kind, SyntaxToken whereKeyword, ExpressionSyntax condition, SyntaxFactoryContext context)
+          : base(kind)
+        {
+            this.SetFactoryContext(context);
+            this.SlotCount = 2;
+            this.AdjustFlagsAndWidth(whereKeyword);
+            this.whereKeyword = whereKeyword;
+            this.AdjustFlagsAndWidth(condition);
+            this.condition = condition;
+        }
+
+        internal WhereClause2Syntax(SyntaxKind kind, SyntaxToken whereKeyword, ExpressionSyntax condition)
+          : base(kind)
+        {
+            this.SlotCount = 2;
+            this.AdjustFlagsAndWidth(whereKeyword);
+            this.whereKeyword = whereKeyword;
+            this.AdjustFlagsAndWidth(condition);
+            this.condition = condition;
+        }
+
+        public SyntaxToken WhereKeyword => this.whereKeyword;
+        public ExpressionSyntax Condition => this.condition;
+
+        internal override GreenNode? GetSlot(int index)
+            => index switch
+            {
+                0 => this.whereKeyword,
+                1 => this.condition,
+                _ => null,
+            };
+
+        internal override SyntaxNode CreateRed(SyntaxNode? parent, int position) => new CSharp.Syntax.WhereClause2Syntax(this, parent, position);
+
+        public override void Accept(CSharpSyntaxVisitor visitor) => visitor.VisitWhereClause2(this);
+        public override TResult Accept<TResult>(CSharpSyntaxVisitor<TResult> visitor) => visitor.VisitWhereClause2(this);
+
+        public WhereClause2Syntax Update(SyntaxToken whereKeyword, ExpressionSyntax condition)
+        {
+            if (whereKeyword != this.WhereKeyword || condition != this.Condition)
+            {
+                var newNode = SyntaxFactory.WhereClause2(whereKeyword, condition);
+                var diags = GetDiagnostics();
+                if (diags?.Length > 0)
+                    newNode = newNode.WithDiagnosticsGreen(diags);
+                var annotations = GetAnnotations();
+                if (annotations?.Length > 0)
+                    newNode = newNode.WithAnnotationsGreen(annotations);
+                return newNode;
+            }
+
+            return this;
+        }
+
+        internal override GreenNode SetDiagnostics(DiagnosticInfo[]? diagnostics)
+            => new WhereClause2Syntax(this.Kind, this.whereKeyword, this.condition, diagnostics, GetAnnotations());
+
+        internal override GreenNode SetAnnotations(SyntaxAnnotation[]? annotations)
+            => new WhereClause2Syntax(this.Kind, this.whereKeyword, this.condition, GetDiagnostics(), annotations);
+
+        internal WhereClause2Syntax(ObjectReader reader)
+          : base(reader)
+        {
+            this.SlotCount = 2;
+            var whereKeyword = (SyntaxToken)reader.ReadValue();
+            AdjustFlagsAndWidth(whereKeyword);
+            this.whereKeyword = whereKeyword;
+            var condition = (ExpressionSyntax)reader.ReadValue();
+            AdjustFlagsAndWidth(condition);
+            this.condition = condition;
+        }
+
+        internal override void WriteTo(ObjectWriter writer)
+        {
+            base.WriteTo(writer);
+            writer.WriteValue(this.whereKeyword);
+            writer.WriteValue(this.condition);
+        }
+
+        static WhereClause2Syntax()
+        {
+            ObjectBinder.RegisterTypeReader(typeof(WhereClause2Syntax), r => new WhereClause2Syntax(r));
+        }
+    }
+
+    internal sealed partial class SelectClause2Syntax : QueryClause2Syntax
+    {
+        internal readonly SyntaxToken selectKeyword;
+        internal readonly ExpressionSyntax expression;
+
+        internal SelectClause2Syntax(SyntaxKind kind, SyntaxToken selectKeyword, ExpressionSyntax expression, DiagnosticInfo[]? diagnostics, SyntaxAnnotation[]? annotations)
+          : base(kind, diagnostics, annotations)
+        {
+            this.SlotCount = 2;
+            this.AdjustFlagsAndWidth(selectKeyword);
+            this.selectKeyword = selectKeyword;
+            this.AdjustFlagsAndWidth(expression);
+            this.expression = expression;
+        }
+
+        internal SelectClause2Syntax(SyntaxKind kind, SyntaxToken selectKeyword, ExpressionSyntax expression, SyntaxFactoryContext context)
+          : base(kind)
+        {
+            this.SetFactoryContext(context);
+            this.SlotCount = 2;
+            this.AdjustFlagsAndWidth(selectKeyword);
+            this.selectKeyword = selectKeyword;
+            this.AdjustFlagsAndWidth(expression);
+            this.expression = expression;
+        }
+
+        internal SelectClause2Syntax(SyntaxKind kind, SyntaxToken selectKeyword, ExpressionSyntax expression)
+          : base(kind)
+        {
+            this.SlotCount = 2;
+            this.AdjustFlagsAndWidth(selectKeyword);
+            this.selectKeyword = selectKeyword;
+            this.AdjustFlagsAndWidth(expression);
+            this.expression = expression;
+        }
+
+        public SyntaxToken SelectKeyword => this.selectKeyword;
+        public ExpressionSyntax Expression => this.expression;
+
+        internal override GreenNode? GetSlot(int index)
+            => index switch
+            {
+                0 => this.selectKeyword,
+                1 => this.expression,
+                _ => null,
+            };
+
+        internal override SyntaxNode CreateRed(SyntaxNode? parent, int position) => new CSharp.Syntax.SelectClause2Syntax(this, parent, position);
+
+        public override void Accept(CSharpSyntaxVisitor visitor) => visitor.VisitSelectClause2(this);
+        public override TResult Accept<TResult>(CSharpSyntaxVisitor<TResult> visitor) => visitor.VisitSelectClause2(this);
+
+        public SelectClause2Syntax Update(SyntaxToken selectKeyword, ExpressionSyntax expression)
+        {
+            if (selectKeyword != this.SelectKeyword || expression != this.Expression)
+            {
+                var newNode = SyntaxFactory.SelectClause2(selectKeyword, expression);
+                var diags = GetDiagnostics();
+                if (diags?.Length > 0)
+                    newNode = newNode.WithDiagnosticsGreen(diags);
+                var annotations = GetAnnotations();
+                if (annotations?.Length > 0)
+                    newNode = newNode.WithAnnotationsGreen(annotations);
+                return newNode;
+            }
+
+            return this;
+        }
+
+        internal override GreenNode SetDiagnostics(DiagnosticInfo[]? diagnostics)
+            => new SelectClause2Syntax(this.Kind, this.selectKeyword, this.expression, diagnostics, GetAnnotations());
+
+        internal override GreenNode SetAnnotations(SyntaxAnnotation[]? annotations)
+            => new SelectClause2Syntax(this.Kind, this.selectKeyword, this.expression, GetDiagnostics(), annotations);
+
+        internal SelectClause2Syntax(ObjectReader reader)
+          : base(reader)
+        {
+            this.SlotCount = 2;
+            var selectKeyword = (SyntaxToken)reader.ReadValue();
+            AdjustFlagsAndWidth(selectKeyword);
+            this.selectKeyword = selectKeyword;
+            var expression = (ExpressionSyntax)reader.ReadValue();
+            AdjustFlagsAndWidth(expression);
+            this.expression = expression;
+        }
+
+        internal override void WriteTo(ObjectWriter writer)
+        {
+            base.WriteTo(writer);
+            writer.WriteValue(this.selectKeyword);
+            writer.WriteValue(this.expression);
+        }
+
+        static SelectClause2Syntax()
+        {
+            ObjectBinder.RegisterTypeReader(typeof(SelectClause2Syntax), r => new SelectClause2Syntax(r));
         }
     }
 
@@ -13119,9 +13943,9 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
         internal readonly SyntaxToken? usingKeyword;
         internal readonly GreenNode? modifiers;
         internal readonly VariableDeclarationSyntax declaration;
-        internal readonly SyntaxToken semicolonToken;
+        internal readonly SyntaxToken? semicolonToken;
 
-        internal LocalDeclarationStatementSyntax(SyntaxKind kind, GreenNode? attributeLists, SyntaxToken? awaitKeyword, SyntaxToken? usingKeyword, GreenNode? modifiers, VariableDeclarationSyntax declaration, SyntaxToken semicolonToken, DiagnosticInfo[]? diagnostics, SyntaxAnnotation[]? annotations)
+        internal LocalDeclarationStatementSyntax(SyntaxKind kind, GreenNode? attributeLists, SyntaxToken? awaitKeyword, SyntaxToken? usingKeyword, GreenNode? modifiers, VariableDeclarationSyntax declaration, SyntaxToken? semicolonToken, DiagnosticInfo[]? diagnostics, SyntaxAnnotation[]? annotations)
           : base(kind, diagnostics, annotations)
         {
             this.SlotCount = 6;
@@ -13147,11 +13971,14 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
             }
             this.AdjustFlagsAndWidth(declaration);
             this.declaration = declaration;
-            this.AdjustFlagsAndWidth(semicolonToken);
-            this.semicolonToken = semicolonToken;
+            if (semicolonToken != null)
+            {
+                this.AdjustFlagsAndWidth(semicolonToken);
+                this.semicolonToken = semicolonToken;
+            }
         }
 
-        internal LocalDeclarationStatementSyntax(SyntaxKind kind, GreenNode? attributeLists, SyntaxToken? awaitKeyword, SyntaxToken? usingKeyword, GreenNode? modifiers, VariableDeclarationSyntax declaration, SyntaxToken semicolonToken, SyntaxFactoryContext context)
+        internal LocalDeclarationStatementSyntax(SyntaxKind kind, GreenNode? attributeLists, SyntaxToken? awaitKeyword, SyntaxToken? usingKeyword, GreenNode? modifiers, VariableDeclarationSyntax declaration, SyntaxToken? semicolonToken, SyntaxFactoryContext context)
           : base(kind)
         {
             this.SetFactoryContext(context);
@@ -13178,11 +14005,14 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
             }
             this.AdjustFlagsAndWidth(declaration);
             this.declaration = declaration;
-            this.AdjustFlagsAndWidth(semicolonToken);
-            this.semicolonToken = semicolonToken;
+            if (semicolonToken != null)
+            {
+                this.AdjustFlagsAndWidth(semicolonToken);
+                this.semicolonToken = semicolonToken;
+            }
         }
 
-        internal LocalDeclarationStatementSyntax(SyntaxKind kind, GreenNode? attributeLists, SyntaxToken? awaitKeyword, SyntaxToken? usingKeyword, GreenNode? modifiers, VariableDeclarationSyntax declaration, SyntaxToken semicolonToken)
+        internal LocalDeclarationStatementSyntax(SyntaxKind kind, GreenNode? attributeLists, SyntaxToken? awaitKeyword, SyntaxToken? usingKeyword, GreenNode? modifiers, VariableDeclarationSyntax declaration, SyntaxToken? semicolonToken)
           : base(kind)
         {
             this.SlotCount = 6;
@@ -13208,8 +14038,11 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
             }
             this.AdjustFlagsAndWidth(declaration);
             this.declaration = declaration;
-            this.AdjustFlagsAndWidth(semicolonToken);
-            this.semicolonToken = semicolonToken;
+            if (semicolonToken != null)
+            {
+                this.AdjustFlagsAndWidth(semicolonToken);
+                this.semicolonToken = semicolonToken;
+            }
         }
 
         public override Microsoft.CodeAnalysis.Syntax.InternalSyntax.SyntaxList<AttributeListSyntax> AttributeLists => new Microsoft.CodeAnalysis.Syntax.InternalSyntax.SyntaxList<AttributeListSyntax>(this.attributeLists);
@@ -13218,7 +14051,7 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
         /// <summary>Gets the modifier list.</summary>
         public Microsoft.CodeAnalysis.Syntax.InternalSyntax.SyntaxList<SyntaxToken> Modifiers => new Microsoft.CodeAnalysis.Syntax.InternalSyntax.SyntaxList<SyntaxToken>(this.modifiers);
         public VariableDeclarationSyntax Declaration => this.declaration;
-        public SyntaxToken SemicolonToken => this.semicolonToken;
+        public SyntaxToken? SemicolonToken => this.semicolonToken;
 
         internal override GreenNode? GetSlot(int index)
             => index switch
@@ -13291,9 +14124,12 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
             var declaration = (VariableDeclarationSyntax)reader.ReadValue();
             AdjustFlagsAndWidth(declaration);
             this.declaration = declaration;
-            var semicolonToken = (SyntaxToken)reader.ReadValue();
-            AdjustFlagsAndWidth(semicolonToken);
-            this.semicolonToken = semicolonToken;
+            var semicolonToken = (SyntaxToken?)reader.ReadValue();
+            if (semicolonToken != null)
+            {
+                AdjustFlagsAndWidth(semicolonToken);
+                this.semicolonToken = semicolonToken;
+            }
         }
 
         internal override void WriteTo(ObjectWriter writer)
@@ -13976,9 +14812,9 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
     {
         internal readonly GreenNode? attributeLists;
         internal readonly ExpressionSyntax expression;
-        internal readonly SyntaxToken semicolonToken;
+        internal readonly SyntaxToken? semicolonToken;
 
-        internal ExpressionStatementSyntax(SyntaxKind kind, GreenNode? attributeLists, ExpressionSyntax expression, SyntaxToken semicolonToken, DiagnosticInfo[]? diagnostics, SyntaxAnnotation[]? annotations)
+        internal ExpressionStatementSyntax(SyntaxKind kind, GreenNode? attributeLists, ExpressionSyntax expression, SyntaxToken? semicolonToken, DiagnosticInfo[]? diagnostics, SyntaxAnnotation[]? annotations)
           : base(kind, diagnostics, annotations)
         {
             this.SlotCount = 3;
@@ -13989,11 +14825,14 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
             }
             this.AdjustFlagsAndWidth(expression);
             this.expression = expression;
-            this.AdjustFlagsAndWidth(semicolonToken);
-            this.semicolonToken = semicolonToken;
+            if (semicolonToken != null)
+            {
+                this.AdjustFlagsAndWidth(semicolonToken);
+                this.semicolonToken = semicolonToken;
+            }
         }
 
-        internal ExpressionStatementSyntax(SyntaxKind kind, GreenNode? attributeLists, ExpressionSyntax expression, SyntaxToken semicolonToken, SyntaxFactoryContext context)
+        internal ExpressionStatementSyntax(SyntaxKind kind, GreenNode? attributeLists, ExpressionSyntax expression, SyntaxToken? semicolonToken, SyntaxFactoryContext context)
           : base(kind)
         {
             this.SetFactoryContext(context);
@@ -14005,11 +14844,14 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
             }
             this.AdjustFlagsAndWidth(expression);
             this.expression = expression;
-            this.AdjustFlagsAndWidth(semicolonToken);
-            this.semicolonToken = semicolonToken;
+            if (semicolonToken != null)
+            {
+                this.AdjustFlagsAndWidth(semicolonToken);
+                this.semicolonToken = semicolonToken;
+            }
         }
 
-        internal ExpressionStatementSyntax(SyntaxKind kind, GreenNode? attributeLists, ExpressionSyntax expression, SyntaxToken semicolonToken)
+        internal ExpressionStatementSyntax(SyntaxKind kind, GreenNode? attributeLists, ExpressionSyntax expression, SyntaxToken? semicolonToken)
           : base(kind)
         {
             this.SlotCount = 3;
@@ -14020,13 +14862,16 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
             }
             this.AdjustFlagsAndWidth(expression);
             this.expression = expression;
-            this.AdjustFlagsAndWidth(semicolonToken);
-            this.semicolonToken = semicolonToken;
+            if (semicolonToken != null)
+            {
+                this.AdjustFlagsAndWidth(semicolonToken);
+                this.semicolonToken = semicolonToken;
+            }
         }
 
         public override Microsoft.CodeAnalysis.Syntax.InternalSyntax.SyntaxList<AttributeListSyntax> AttributeLists => new Microsoft.CodeAnalysis.Syntax.InternalSyntax.SyntaxList<AttributeListSyntax>(this.attributeLists);
         public ExpressionSyntax Expression => this.expression;
-        public SyntaxToken SemicolonToken => this.semicolonToken;
+        public SyntaxToken? SemicolonToken => this.semicolonToken;
 
         internal override GreenNode? GetSlot(int index)
             => index switch
@@ -14078,9 +14923,12 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
             var expression = (ExpressionSyntax)reader.ReadValue();
             AdjustFlagsAndWidth(expression);
             this.expression = expression;
-            var semicolonToken = (SyntaxToken)reader.ReadValue();
-            AdjustFlagsAndWidth(semicolonToken);
-            this.semicolonToken = semicolonToken;
+            var semicolonToken = (SyntaxToken?)reader.ReadValue();
+            if (semicolonToken != null)
+            {
+                AdjustFlagsAndWidth(semicolonToken);
+                this.semicolonToken = semicolonToken;
+            }
         }
 
         internal override void WriteTo(ObjectWriter writer)
@@ -34222,6 +35070,7 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
         public virtual TResult VisitSimpleLambdaExpression(SimpleLambdaExpressionSyntax node) => this.DefaultVisit(node);
         public virtual TResult VisitRefExpression(RefExpressionSyntax node) => this.DefaultVisit(node);
         public virtual TResult VisitParenthesizedLambdaExpression(ParenthesizedLambdaExpressionSyntax node) => this.DefaultVisit(node);
+        public virtual TResult VisitInitializerExpression2(InitializerExpression2Syntax node) => this.DefaultVisit(node);
         public virtual TResult VisitInitializerExpression(InitializerExpressionSyntax node) => this.DefaultVisit(node);
         public virtual TResult VisitImplicitObjectCreationExpression(ImplicitObjectCreationExpressionSyntax node) => this.DefaultVisit(node);
         public virtual TResult VisitObjectCreationExpression(ObjectCreationExpressionSyntax node) => this.DefaultVisit(node);
@@ -34229,9 +35078,15 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
         public virtual TResult VisitAnonymousObjectMemberDeclarator(AnonymousObjectMemberDeclaratorSyntax node) => this.DefaultVisit(node);
         public virtual TResult VisitAnonymousObjectCreationExpression(AnonymousObjectCreationExpressionSyntax node) => this.DefaultVisit(node);
         public virtual TResult VisitArrayCreationExpression(ArrayCreationExpressionSyntax node) => this.DefaultVisit(node);
+        public virtual TResult VisitImplicitArrayCreationExpression2(ImplicitArrayCreationExpression2Syntax node) => this.DefaultVisit(node);
         public virtual TResult VisitImplicitArrayCreationExpression(ImplicitArrayCreationExpressionSyntax node) => this.DefaultVisit(node);
         public virtual TResult VisitStackAllocArrayCreationExpression(StackAllocArrayCreationExpressionSyntax node) => this.DefaultVisit(node);
         public virtual TResult VisitImplicitStackAllocArrayCreationExpression(ImplicitStackAllocArrayCreationExpressionSyntax node) => this.DefaultVisit(node);
+        public virtual TResult VisitQueryExpression2(QueryExpression2Syntax node) => this.DefaultVisit(node);
+        public virtual TResult VisitQueryBody2(QueryBody2Syntax node) => this.DefaultVisit(node);
+        public virtual TResult VisitFromClause2(FromClause2Syntax node) => this.DefaultVisit(node);
+        public virtual TResult VisitWhereClause2(WhereClause2Syntax node) => this.DefaultVisit(node);
+        public virtual TResult VisitSelectClause2(SelectClause2Syntax node) => this.DefaultVisit(node);
         public virtual TResult VisitQueryExpression(QueryExpressionSyntax node) => this.DefaultVisit(node);
         public virtual TResult VisitQueryBody(QueryBodySyntax node) => this.DefaultVisit(node);
         public virtual TResult VisitFromClause(FromClauseSyntax node) => this.DefaultVisit(node);
@@ -34463,6 +35318,7 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
         public virtual void VisitSimpleLambdaExpression(SimpleLambdaExpressionSyntax node) => this.DefaultVisit(node);
         public virtual void VisitRefExpression(RefExpressionSyntax node) => this.DefaultVisit(node);
         public virtual void VisitParenthesizedLambdaExpression(ParenthesizedLambdaExpressionSyntax node) => this.DefaultVisit(node);
+        public virtual void VisitInitializerExpression2(InitializerExpression2Syntax node) => this.DefaultVisit(node);
         public virtual void VisitInitializerExpression(InitializerExpressionSyntax node) => this.DefaultVisit(node);
         public virtual void VisitImplicitObjectCreationExpression(ImplicitObjectCreationExpressionSyntax node) => this.DefaultVisit(node);
         public virtual void VisitObjectCreationExpression(ObjectCreationExpressionSyntax node) => this.DefaultVisit(node);
@@ -34470,9 +35326,15 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
         public virtual void VisitAnonymousObjectMemberDeclarator(AnonymousObjectMemberDeclaratorSyntax node) => this.DefaultVisit(node);
         public virtual void VisitAnonymousObjectCreationExpression(AnonymousObjectCreationExpressionSyntax node) => this.DefaultVisit(node);
         public virtual void VisitArrayCreationExpression(ArrayCreationExpressionSyntax node) => this.DefaultVisit(node);
+        public virtual void VisitImplicitArrayCreationExpression2(ImplicitArrayCreationExpression2Syntax node) => this.DefaultVisit(node);
         public virtual void VisitImplicitArrayCreationExpression(ImplicitArrayCreationExpressionSyntax node) => this.DefaultVisit(node);
         public virtual void VisitStackAllocArrayCreationExpression(StackAllocArrayCreationExpressionSyntax node) => this.DefaultVisit(node);
         public virtual void VisitImplicitStackAllocArrayCreationExpression(ImplicitStackAllocArrayCreationExpressionSyntax node) => this.DefaultVisit(node);
+        public virtual void VisitQueryExpression2(QueryExpression2Syntax node) => this.DefaultVisit(node);
+        public virtual void VisitQueryBody2(QueryBody2Syntax node) => this.DefaultVisit(node);
+        public virtual void VisitFromClause2(FromClause2Syntax node) => this.DefaultVisit(node);
+        public virtual void VisitWhereClause2(WhereClause2Syntax node) => this.DefaultVisit(node);
+        public virtual void VisitSelectClause2(SelectClause2Syntax node) => this.DefaultVisit(node);
         public virtual void VisitQueryExpression(QueryExpressionSyntax node) => this.DefaultVisit(node);
         public virtual void VisitQueryBody(QueryBodySyntax node) => this.DefaultVisit(node);
         public virtual void VisitFromClause(FromClauseSyntax node) => this.DefaultVisit(node);
@@ -34816,6 +35678,9 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
         public override CSharpSyntaxNode VisitParenthesizedLambdaExpression(ParenthesizedLambdaExpressionSyntax node)
             => node.Update(VisitList(node.AttributeLists), VisitList(node.Modifiers), (TypeSyntax)Visit(node.ReturnType), (ParameterListSyntax)Visit(node.ParameterList), (SyntaxToken)Visit(node.ArrowToken), (BlockSyntax)Visit(node.Block), (ExpressionSyntax)Visit(node.ExpressionBody));
 
+        public override CSharpSyntaxNode VisitInitializerExpression2(InitializerExpression2Syntax node)
+            => node.Update((SyntaxToken)Visit(node.OpenBracketToken), VisitList(node.Expressions), (SyntaxToken)Visit(node.CloseBracketToken));
+
         public override CSharpSyntaxNode VisitInitializerExpression(InitializerExpressionSyntax node)
             => node.Update((SyntaxToken)Visit(node.OpenBraceToken), VisitList(node.Expressions), (SyntaxToken)Visit(node.CloseBraceToken));
 
@@ -34837,6 +35702,9 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
         public override CSharpSyntaxNode VisitArrayCreationExpression(ArrayCreationExpressionSyntax node)
             => node.Update((SyntaxToken)Visit(node.NewKeyword), (ArrayTypeSyntax)Visit(node.Type), (InitializerExpressionSyntax)Visit(node.Initializer));
 
+        public override CSharpSyntaxNode VisitImplicitArrayCreationExpression2(ImplicitArrayCreationExpression2Syntax node)
+            => node.Update((InitializerExpression2Syntax)Visit(node.Initializer));
+
         public override CSharpSyntaxNode VisitImplicitArrayCreationExpression(ImplicitArrayCreationExpressionSyntax node)
             => node.Update((SyntaxToken)Visit(node.NewKeyword), (SyntaxToken)Visit(node.OpenBracketToken), VisitList(node.Commas), (SyntaxToken)Visit(node.CloseBracketToken), (InitializerExpressionSyntax)Visit(node.Initializer));
 
@@ -34845,6 +35713,21 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
 
         public override CSharpSyntaxNode VisitImplicitStackAllocArrayCreationExpression(ImplicitStackAllocArrayCreationExpressionSyntax node)
             => node.Update((SyntaxToken)Visit(node.StackAllocKeyword), (SyntaxToken)Visit(node.OpenBracketToken), (SyntaxToken)Visit(node.CloseBracketToken), (InitializerExpressionSyntax)Visit(node.Initializer));
+
+        public override CSharpSyntaxNode VisitQueryExpression2(QueryExpression2Syntax node)
+            => node.Update((SyntaxToken)Visit(node.OpenBracketToken), (FromClause2Syntax)Visit(node.FromClause), (QueryBody2Syntax)Visit(node.Body), (SyntaxToken)Visit(node.CloseBracketToken));
+
+        public override CSharpSyntaxNode VisitQueryBody2(QueryBody2Syntax node)
+            => node.Update(VisitList(node.Clauses), (SelectClause2Syntax)Visit(node.SelectOrGroup));
+
+        public override CSharpSyntaxNode VisitFromClause2(FromClause2Syntax node)
+            => node.Update((SyntaxToken)Visit(node.FromKeyword), (TypeSyntax)Visit(node.Type), (SyntaxToken)Visit(node.Identifier), (SyntaxToken)Visit(node.InKeyword), (ExpressionSyntax)Visit(node.Expression));
+
+        public override CSharpSyntaxNode VisitWhereClause2(WhereClause2Syntax node)
+            => node.Update((SyntaxToken)Visit(node.WhereKeyword), (ExpressionSyntax)Visit(node.Condition));
+
+        public override CSharpSyntaxNode VisitSelectClause2(SelectClause2Syntax node)
+            => node.Update((SyntaxToken)Visit(node.SelectKeyword), (ExpressionSyntax)Visit(node.Expression));
 
         public override CSharpSyntaxNode VisitQueryExpression(QueryExpressionSyntax node)
             => node.Update((FromClauseSyntax)Visit(node.FromClause), (QueryBodySyntax)Visit(node.Body));
@@ -36667,6 +37550,28 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
             return new ParenthesizedLambdaExpressionSyntax(SyntaxKind.ParenthesizedLambdaExpression, attributeLists.Node, modifiers.Node, returnType, parameterList, arrowToken, block, expressionBody, this.context);
         }
 
+        public InitializerExpression2Syntax InitializerExpression2(SyntaxToken openBracketToken, Microsoft.CodeAnalysis.Syntax.InternalSyntax.SeparatedSyntaxList<ExpressionSyntax> expressions, SyntaxToken closeBracketToken)
+        {
+#if DEBUG
+            if (openBracketToken == null) throw new ArgumentNullException(nameof(openBracketToken));
+            if (openBracketToken.Kind != SyntaxKind.OpenBracketToken) throw new ArgumentException(nameof(openBracketToken));
+            if (closeBracketToken == null) throw new ArgumentNullException(nameof(closeBracketToken));
+            if (closeBracketToken.Kind != SyntaxKind.CloseBracketToken) throw new ArgumentException(nameof(closeBracketToken));
+#endif
+
+            int hash;
+            var cached = CSharpSyntaxNodeCache.TryGetNode((int)SyntaxKind.ArrayInitializerExpression, openBracketToken, expressions.Node, closeBracketToken, this.context, out hash);
+            if (cached != null) return (InitializerExpression2Syntax)cached;
+
+            var result = new InitializerExpression2Syntax(SyntaxKind.ArrayInitializerExpression, openBracketToken, expressions.Node, closeBracketToken, this.context);
+            if (hash >= 0)
+            {
+                SyntaxNodeCache.AddNode(result, hash);
+            }
+
+            return result;
+        }
+
         public InitializerExpressionSyntax InitializerExpression(SyntaxKind kind, SyntaxToken openBraceToken, Microsoft.CodeAnalysis.Syntax.InternalSyntax.SeparatedSyntaxList<ExpressionSyntax> expressions, SyntaxToken closeBraceToken)
         {
             switch (kind)
@@ -36680,9 +37585,19 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
             }
 #if DEBUG
             if (openBraceToken == null) throw new ArgumentNullException(nameof(openBraceToken));
-            if (openBraceToken.Kind != SyntaxKind.OpenBraceToken) throw new ArgumentException(nameof(openBraceToken));
+            switch (openBraceToken.Kind)
+            {
+                case SyntaxKind.OpenBraceToken:
+                case SyntaxKind.IndentInToken: break;
+                default: throw new ArgumentException(nameof(openBraceToken));
+            }
             if (closeBraceToken == null) throw new ArgumentNullException(nameof(closeBraceToken));
-            if (closeBraceToken.Kind != SyntaxKind.CloseBraceToken) throw new ArgumentException(nameof(closeBraceToken));
+            switch (closeBraceToken.Kind)
+            {
+                case SyntaxKind.CloseBraceToken:
+                case SyntaxKind.IndentOutToken: break;
+                default: throw new ArgumentException(nameof(closeBraceToken));
+            }
 #endif
 
             int hash;
@@ -36777,9 +37692,19 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
             if (newKeyword == null) throw new ArgumentNullException(nameof(newKeyword));
             if (newKeyword.Kind != SyntaxKind.NewKeyword) throw new ArgumentException(nameof(newKeyword));
             if (openBraceToken == null) throw new ArgumentNullException(nameof(openBraceToken));
-            if (openBraceToken.Kind != SyntaxKind.OpenBraceToken) throw new ArgumentException(nameof(openBraceToken));
+            switch (openBraceToken.Kind)
+            {
+                case SyntaxKind.OpenBraceToken:
+                case SyntaxKind.IndentInToken: break;
+                default: throw new ArgumentException(nameof(openBraceToken));
+            }
             if (closeBraceToken == null) throw new ArgumentNullException(nameof(closeBraceToken));
-            if (closeBraceToken.Kind != SyntaxKind.CloseBraceToken) throw new ArgumentException(nameof(closeBraceToken));
+            switch (closeBraceToken.Kind)
+            {
+                case SyntaxKind.CloseBraceToken:
+                case SyntaxKind.IndentOutToken: break;
+                default: throw new ArgumentException(nameof(closeBraceToken));
+            }
 #endif
 
             return new AnonymousObjectCreationExpressionSyntax(SyntaxKind.AnonymousObjectCreationExpression, newKeyword, openBraceToken, initializers.Node, closeBraceToken, this.context);
@@ -36798,6 +37723,25 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
             if (cached != null) return (ArrayCreationExpressionSyntax)cached;
 
             var result = new ArrayCreationExpressionSyntax(SyntaxKind.ArrayCreationExpression, newKeyword, type, initializer, this.context);
+            if (hash >= 0)
+            {
+                SyntaxNodeCache.AddNode(result, hash);
+            }
+
+            return result;
+        }
+
+        public ImplicitArrayCreationExpression2Syntax ImplicitArrayCreationExpression2(InitializerExpression2Syntax initializer)
+        {
+#if DEBUG
+            if (initializer == null) throw new ArgumentNullException(nameof(initializer));
+#endif
+
+            int hash;
+            var cached = CSharpSyntaxNodeCache.TryGetNode((int)SyntaxKind.ImplicitArrayCreationExpression2, initializer, this.context, out hash);
+            if (cached != null) return (ImplicitArrayCreationExpression2Syntax)cached;
+
+            var result = new ImplicitArrayCreationExpression2Syntax(SyntaxKind.ImplicitArrayCreationExpression2, initializer, this.context);
             if (hash >= 0)
             {
                 SyntaxNodeCache.AddNode(result, hash);
@@ -36855,6 +37799,96 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
 #endif
 
             return new ImplicitStackAllocArrayCreationExpressionSyntax(SyntaxKind.ImplicitStackAllocArrayCreationExpression, stackAllocKeyword, openBracketToken, closeBracketToken, initializer, this.context);
+        }
+
+        public QueryExpression2Syntax QueryExpression2(SyntaxToken openBracketToken, FromClause2Syntax fromClause, QueryBody2Syntax body, SyntaxToken closeBracketToken)
+        {
+#if DEBUG
+            if (openBracketToken == null) throw new ArgumentNullException(nameof(openBracketToken));
+            if (openBracketToken.Kind != SyntaxKind.OpenBracketToken) throw new ArgumentException(nameof(openBracketToken));
+            if (fromClause == null) throw new ArgumentNullException(nameof(fromClause));
+            if (body == null) throw new ArgumentNullException(nameof(body));
+            if (closeBracketToken == null) throw new ArgumentNullException(nameof(closeBracketToken));
+            if (closeBracketToken.Kind != SyntaxKind.CloseBracketToken) throw new ArgumentException(nameof(closeBracketToken));
+#endif
+
+            return new QueryExpression2Syntax(SyntaxKind.QueryExpression2, openBracketToken, fromClause, body, closeBracketToken, this.context);
+        }
+
+        public QueryBody2Syntax QueryBody2(Microsoft.CodeAnalysis.Syntax.InternalSyntax.SyntaxList<QueryClause2Syntax> clauses, SelectClause2Syntax selectOrGroup)
+        {
+#if DEBUG
+            if (selectOrGroup == null) throw new ArgumentNullException(nameof(selectOrGroup));
+#endif
+
+            int hash;
+            var cached = CSharpSyntaxNodeCache.TryGetNode((int)SyntaxKind.QueryBody2, clauses.Node, selectOrGroup, this.context, out hash);
+            if (cached != null) return (QueryBody2Syntax)cached;
+
+            var result = new QueryBody2Syntax(SyntaxKind.QueryBody2, clauses.Node, selectOrGroup, this.context);
+            if (hash >= 0)
+            {
+                SyntaxNodeCache.AddNode(result, hash);
+            }
+
+            return result;
+        }
+
+        public FromClause2Syntax FromClause2(SyntaxToken fromKeyword, TypeSyntax? type, SyntaxToken identifier, SyntaxToken inKeyword, ExpressionSyntax expression)
+        {
+#if DEBUG
+            if (fromKeyword == null) throw new ArgumentNullException(nameof(fromKeyword));
+            if (fromKeyword.Kind != SyntaxKind.FromKeyword) throw new ArgumentException(nameof(fromKeyword));
+            if (identifier == null) throw new ArgumentNullException(nameof(identifier));
+            if (identifier.Kind != SyntaxKind.IdentifierToken) throw new ArgumentException(nameof(identifier));
+            if (inKeyword == null) throw new ArgumentNullException(nameof(inKeyword));
+            if (inKeyword.Kind != SyntaxKind.InKeyword) throw new ArgumentException(nameof(inKeyword));
+            if (expression == null) throw new ArgumentNullException(nameof(expression));
+#endif
+
+            return new FromClause2Syntax(SyntaxKind.FromClause2, fromKeyword, type, identifier, inKeyword, expression, this.context);
+        }
+
+        public WhereClause2Syntax WhereClause2(SyntaxToken whereKeyword, ExpressionSyntax condition)
+        {
+#if DEBUG
+            if (whereKeyword == null) throw new ArgumentNullException(nameof(whereKeyword));
+            if (whereKeyword.Kind != SyntaxKind.WhereKeyword) throw new ArgumentException(nameof(whereKeyword));
+            if (condition == null) throw new ArgumentNullException(nameof(condition));
+#endif
+
+            int hash;
+            var cached = CSharpSyntaxNodeCache.TryGetNode((int)SyntaxKind.WhereClause2, whereKeyword, condition, this.context, out hash);
+            if (cached != null) return (WhereClause2Syntax)cached;
+
+            var result = new WhereClause2Syntax(SyntaxKind.WhereClause2, whereKeyword, condition, this.context);
+            if (hash >= 0)
+            {
+                SyntaxNodeCache.AddNode(result, hash);
+            }
+
+            return result;
+        }
+
+        public SelectClause2Syntax SelectClause2(SyntaxToken selectKeyword, ExpressionSyntax expression)
+        {
+#if DEBUG
+            if (selectKeyword == null) throw new ArgumentNullException(nameof(selectKeyword));
+            if (selectKeyword.Kind != SyntaxKind.SelectKeyword) throw new ArgumentException(nameof(selectKeyword));
+            if (expression == null) throw new ArgumentNullException(nameof(expression));
+#endif
+
+            int hash;
+            var cached = CSharpSyntaxNodeCache.TryGetNode((int)SyntaxKind.SelectClause2, selectKeyword, expression, this.context, out hash);
+            if (cached != null) return (SelectClause2Syntax)cached;
+
+            var result = new SelectClause2Syntax(SyntaxKind.SelectClause2, selectKeyword, expression, this.context);
+            if (hash >= 0)
+            {
+                SyntaxNodeCache.AddNode(result, hash);
+            }
+
+            return result;
         }
 
         public QueryExpressionSyntax QueryExpression(FromClauseSyntax fromClause, QueryBodySyntax body)
@@ -37309,9 +38343,19 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
         {
 #if DEBUG
             if (openBraceToken == null) throw new ArgumentNullException(nameof(openBraceToken));
-            if (openBraceToken.Kind != SyntaxKind.OpenBraceToken) throw new ArgumentException(nameof(openBraceToken));
+            switch (openBraceToken.Kind)
+            {
+                case SyntaxKind.OpenBraceToken:
+                case SyntaxKind.IndentInToken: break;
+                default: throw new ArgumentException(nameof(openBraceToken));
+            }
             if (closeBraceToken == null) throw new ArgumentNullException(nameof(closeBraceToken));
-            if (closeBraceToken.Kind != SyntaxKind.CloseBraceToken) throw new ArgumentException(nameof(closeBraceToken));
+            switch (closeBraceToken.Kind)
+            {
+                case SyntaxKind.CloseBraceToken:
+                case SyntaxKind.IndentOutToken: break;
+                default: throw new ArgumentException(nameof(closeBraceToken));
+            }
 #endif
 
             int hash;
@@ -37547,10 +38591,20 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
         {
 #if DEBUG
             if (openBraceToken == null) throw new ArgumentNullException(nameof(openBraceToken));
-            if (openBraceToken.Kind != SyntaxKind.OpenBraceToken) throw new ArgumentException(nameof(openBraceToken));
+            switch (openBraceToken.Kind)
+            {
+                case SyntaxKind.OpenBraceToken:
+                case SyntaxKind.IndentInToken: break;
+                default: throw new ArgumentException(nameof(openBraceToken));
+            }
             if (expression == null) throw new ArgumentNullException(nameof(expression));
             if (closeBraceToken == null) throw new ArgumentNullException(nameof(closeBraceToken));
-            if (closeBraceToken.Kind != SyntaxKind.CloseBraceToken) throw new ArgumentException(nameof(closeBraceToken));
+            switch (closeBraceToken.Kind)
+            {
+                case SyntaxKind.CloseBraceToken:
+                case SyntaxKind.IndentOutToken: break;
+                default: throw new ArgumentException(nameof(closeBraceToken));
+            }
 #endif
 
             return new InterpolationSyntax(SyntaxKind.Interpolation, openBraceToken, expression, alignmentClause, formatClause, closeBraceToken, this.context);
@@ -37649,7 +38703,7 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
             return new LocalFunctionStatementSyntax(SyntaxKind.LocalFunctionStatement, attributeLists.Node, modifiers.Node, returnType, identifier, typeParameterList, parameterList, constraintClauses.Node, body, expressionBody, semicolonToken, this.context);
         }
 
-        public LocalDeclarationStatementSyntax LocalDeclarationStatement(Microsoft.CodeAnalysis.Syntax.InternalSyntax.SyntaxList<AttributeListSyntax> attributeLists, SyntaxToken? awaitKeyword, SyntaxToken? usingKeyword, Microsoft.CodeAnalysis.Syntax.InternalSyntax.SyntaxList<SyntaxToken> modifiers, VariableDeclarationSyntax declaration, SyntaxToken semicolonToken)
+        public LocalDeclarationStatementSyntax LocalDeclarationStatement(Microsoft.CodeAnalysis.Syntax.InternalSyntax.SyntaxList<AttributeListSyntax> attributeLists, SyntaxToken? awaitKeyword, SyntaxToken? usingKeyword, Microsoft.CodeAnalysis.Syntax.InternalSyntax.SyntaxList<SyntaxToken> modifiers, VariableDeclarationSyntax declaration, SyntaxToken? semicolonToken)
         {
 #if DEBUG
             if (awaitKeyword != null)
@@ -37671,8 +38725,15 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
                 }
             }
             if (declaration == null) throw new ArgumentNullException(nameof(declaration));
-            if (semicolonToken == null) throw new ArgumentNullException(nameof(semicolonToken));
-            if (semicolonToken.Kind != SyntaxKind.SemicolonToken) throw new ArgumentException(nameof(semicolonToken));
+            if (semicolonToken != null)
+            {
+                switch (semicolonToken.Kind)
+                {
+                    case SyntaxKind.SemicolonToken:
+                    case SyntaxKind.None: break;
+                    default: throw new ArgumentException(nameof(semicolonToken));
+                }
+            }
 #endif
 
             return new LocalDeclarationStatementSyntax(SyntaxKind.LocalDeclarationStatement, attributeLists.Node, awaitKeyword, usingKeyword, modifiers.Node, declaration, semicolonToken, this.context);
@@ -37800,12 +38861,19 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
             return result;
         }
 
-        public ExpressionStatementSyntax ExpressionStatement(Microsoft.CodeAnalysis.Syntax.InternalSyntax.SyntaxList<AttributeListSyntax> attributeLists, ExpressionSyntax expression, SyntaxToken semicolonToken)
+        public ExpressionStatementSyntax ExpressionStatement(Microsoft.CodeAnalysis.Syntax.InternalSyntax.SyntaxList<AttributeListSyntax> attributeLists, ExpressionSyntax expression, SyntaxToken? semicolonToken)
         {
 #if DEBUG
             if (expression == null) throw new ArgumentNullException(nameof(expression));
-            if (semicolonToken == null) throw new ArgumentNullException(nameof(semicolonToken));
-            if (semicolonToken.Kind != SyntaxKind.SemicolonToken) throw new ArgumentException(nameof(semicolonToken));
+            if (semicolonToken != null)
+            {
+                switch (semicolonToken.Kind)
+                {
+                    case SyntaxKind.SemicolonToken:
+                    case SyntaxKind.None: break;
+                    default: throw new ArgumentException(nameof(semicolonToken));
+                }
+            }
 #endif
 
             int hash;
@@ -38260,9 +39328,19 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
                 }
             }
             if (openBraceToken == null) throw new ArgumentNullException(nameof(openBraceToken));
-            if (openBraceToken.Kind != SyntaxKind.OpenBraceToken) throw new ArgumentException(nameof(openBraceToken));
+            switch (openBraceToken.Kind)
+            {
+                case SyntaxKind.OpenBraceToken:
+                case SyntaxKind.IndentInToken: break;
+                default: throw new ArgumentException(nameof(openBraceToken));
+            }
             if (closeBraceToken == null) throw new ArgumentNullException(nameof(closeBraceToken));
-            if (closeBraceToken.Kind != SyntaxKind.CloseBraceToken) throw new ArgumentException(nameof(closeBraceToken));
+            switch (closeBraceToken.Kind)
+            {
+                case SyntaxKind.CloseBraceToken:
+                case SyntaxKind.IndentOutToken: break;
+                default: throw new ArgumentException(nameof(closeBraceToken));
+            }
 #endif
 
             return new SwitchStatementSyntax(SyntaxKind.SwitchStatement, attributeLists.Node, switchKeyword, openParenToken, expression, closeParenToken, openBraceToken, sections.Node, closeBraceToken, this.context);
@@ -38348,9 +39426,19 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
             if (switchKeyword == null) throw new ArgumentNullException(nameof(switchKeyword));
             if (switchKeyword.Kind != SyntaxKind.SwitchKeyword) throw new ArgumentException(nameof(switchKeyword));
             if (openBraceToken == null) throw new ArgumentNullException(nameof(openBraceToken));
-            if (openBraceToken.Kind != SyntaxKind.OpenBraceToken) throw new ArgumentException(nameof(openBraceToken));
+            switch (openBraceToken.Kind)
+            {
+                case SyntaxKind.OpenBraceToken:
+                case SyntaxKind.IndentInToken: break;
+                default: throw new ArgumentException(nameof(openBraceToken));
+            }
             if (closeBraceToken == null) throw new ArgumentNullException(nameof(closeBraceToken));
-            if (closeBraceToken.Kind != SyntaxKind.CloseBraceToken) throw new ArgumentException(nameof(closeBraceToken));
+            switch (closeBraceToken.Kind)
+            {
+                case SyntaxKind.CloseBraceToken:
+                case SyntaxKind.IndentOutToken: break;
+                default: throw new ArgumentException(nameof(closeBraceToken));
+            }
 #endif
 
             return new SwitchExpressionSyntax(SyntaxKind.SwitchExpression, governingExpression, switchKeyword, openBraceToken, arms.Node, closeBraceToken, this.context);
@@ -38503,9 +39591,19 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
             if (namespaceKeyword.Kind != SyntaxKind.NamespaceKeyword) throw new ArgumentException(nameof(namespaceKeyword));
             if (name == null) throw new ArgumentNullException(nameof(name));
             if (openBraceToken == null) throw new ArgumentNullException(nameof(openBraceToken));
-            if (openBraceToken.Kind != SyntaxKind.OpenBraceToken) throw new ArgumentException(nameof(openBraceToken));
+            switch (openBraceToken.Kind)
+            {
+                case SyntaxKind.OpenBraceToken:
+                case SyntaxKind.IndentInToken: break;
+                default: throw new ArgumentException(nameof(openBraceToken));
+            }
             if (closeBraceToken == null) throw new ArgumentNullException(nameof(closeBraceToken));
-            if (closeBraceToken.Kind != SyntaxKind.CloseBraceToken) throw new ArgumentException(nameof(closeBraceToken));
+            switch (closeBraceToken.Kind)
+            {
+                case SyntaxKind.CloseBraceToken:
+                case SyntaxKind.IndentOutToken: break;
+                default: throw new ArgumentException(nameof(closeBraceToken));
+            }
             if (semicolonToken != null)
             {
                 switch (semicolonToken.Kind)
@@ -38707,9 +39805,19 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
             if (identifier == null) throw new ArgumentNullException(nameof(identifier));
             if (identifier.Kind != SyntaxKind.IdentifierToken) throw new ArgumentException(nameof(identifier));
             if (openBraceToken == null) throw new ArgumentNullException(nameof(openBraceToken));
-            if (openBraceToken.Kind != SyntaxKind.OpenBraceToken) throw new ArgumentException(nameof(openBraceToken));
+            switch (openBraceToken.Kind)
+            {
+                case SyntaxKind.OpenBraceToken:
+                case SyntaxKind.IndentInToken: break;
+                default: throw new ArgumentException(nameof(openBraceToken));
+            }
             if (closeBraceToken == null) throw new ArgumentNullException(nameof(closeBraceToken));
-            if (closeBraceToken.Kind != SyntaxKind.CloseBraceToken) throw new ArgumentException(nameof(closeBraceToken));
+            switch (closeBraceToken.Kind)
+            {
+                case SyntaxKind.CloseBraceToken:
+                case SyntaxKind.IndentOutToken: break;
+                default: throw new ArgumentException(nameof(closeBraceToken));
+            }
             if (semicolonToken != null)
             {
                 switch (semicolonToken.Kind)
@@ -38732,9 +39840,19 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
             if (identifier == null) throw new ArgumentNullException(nameof(identifier));
             if (identifier.Kind != SyntaxKind.IdentifierToken) throw new ArgumentException(nameof(identifier));
             if (openBraceToken == null) throw new ArgumentNullException(nameof(openBraceToken));
-            if (openBraceToken.Kind != SyntaxKind.OpenBraceToken) throw new ArgumentException(nameof(openBraceToken));
+            switch (openBraceToken.Kind)
+            {
+                case SyntaxKind.OpenBraceToken:
+                case SyntaxKind.IndentInToken: break;
+                default: throw new ArgumentException(nameof(openBraceToken));
+            }
             if (closeBraceToken == null) throw new ArgumentNullException(nameof(closeBraceToken));
-            if (closeBraceToken.Kind != SyntaxKind.CloseBraceToken) throw new ArgumentException(nameof(closeBraceToken));
+            switch (closeBraceToken.Kind)
+            {
+                case SyntaxKind.CloseBraceToken:
+                case SyntaxKind.IndentOutToken: break;
+                default: throw new ArgumentException(nameof(closeBraceToken));
+            }
             if (semicolonToken != null)
             {
                 switch (semicolonToken.Kind)
@@ -38757,9 +39875,19 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
             if (identifier == null) throw new ArgumentNullException(nameof(identifier));
             if (identifier.Kind != SyntaxKind.IdentifierToken) throw new ArgumentException(nameof(identifier));
             if (openBraceToken == null) throw new ArgumentNullException(nameof(openBraceToken));
-            if (openBraceToken.Kind != SyntaxKind.OpenBraceToken) throw new ArgumentException(nameof(openBraceToken));
+            switch (openBraceToken.Kind)
+            {
+                case SyntaxKind.OpenBraceToken:
+                case SyntaxKind.IndentInToken: break;
+                default: throw new ArgumentException(nameof(openBraceToken));
+            }
             if (closeBraceToken == null) throw new ArgumentNullException(nameof(closeBraceToken));
-            if (closeBraceToken.Kind != SyntaxKind.CloseBraceToken) throw new ArgumentException(nameof(closeBraceToken));
+            switch (closeBraceToken.Kind)
+            {
+                case SyntaxKind.CloseBraceToken:
+                case SyntaxKind.IndentOutToken: break;
+                default: throw new ArgumentException(nameof(closeBraceToken));
+            }
             if (semicolonToken != null)
             {
                 switch (semicolonToken.Kind)
@@ -38836,9 +39964,19 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
             if (identifier == null) throw new ArgumentNullException(nameof(identifier));
             if (identifier.Kind != SyntaxKind.IdentifierToken) throw new ArgumentException(nameof(identifier));
             if (openBraceToken == null) throw new ArgumentNullException(nameof(openBraceToken));
-            if (openBraceToken.Kind != SyntaxKind.OpenBraceToken) throw new ArgumentException(nameof(openBraceToken));
+            switch (openBraceToken.Kind)
+            {
+                case SyntaxKind.OpenBraceToken:
+                case SyntaxKind.IndentInToken: break;
+                default: throw new ArgumentException(nameof(openBraceToken));
+            }
             if (closeBraceToken == null) throw new ArgumentNullException(nameof(closeBraceToken));
-            if (closeBraceToken.Kind != SyntaxKind.CloseBraceToken) throw new ArgumentException(nameof(closeBraceToken));
+            switch (closeBraceToken.Kind)
+            {
+                case SyntaxKind.CloseBraceToken:
+                case SyntaxKind.IndentOutToken: break;
+                default: throw new ArgumentException(nameof(closeBraceToken));
+            }
             if (semicolonToken != null)
             {
                 switch (semicolonToken.Kind)
@@ -41681,6 +42819,28 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
             return new ParenthesizedLambdaExpressionSyntax(SyntaxKind.ParenthesizedLambdaExpression, attributeLists.Node, modifiers.Node, returnType, parameterList, arrowToken, block, expressionBody);
         }
 
+        public static InitializerExpression2Syntax InitializerExpression2(SyntaxToken openBracketToken, Microsoft.CodeAnalysis.Syntax.InternalSyntax.SeparatedSyntaxList<ExpressionSyntax> expressions, SyntaxToken closeBracketToken)
+        {
+#if DEBUG
+            if (openBracketToken == null) throw new ArgumentNullException(nameof(openBracketToken));
+            if (openBracketToken.Kind != SyntaxKind.OpenBracketToken) throw new ArgumentException(nameof(openBracketToken));
+            if (closeBracketToken == null) throw new ArgumentNullException(nameof(closeBracketToken));
+            if (closeBracketToken.Kind != SyntaxKind.CloseBracketToken) throw new ArgumentException(nameof(closeBracketToken));
+#endif
+
+            int hash;
+            var cached = SyntaxNodeCache.TryGetNode((int)SyntaxKind.ArrayInitializerExpression, openBracketToken, expressions.Node, closeBracketToken, out hash);
+            if (cached != null) return (InitializerExpression2Syntax)cached;
+
+            var result = new InitializerExpression2Syntax(SyntaxKind.ArrayInitializerExpression, openBracketToken, expressions.Node, closeBracketToken);
+            if (hash >= 0)
+            {
+                SyntaxNodeCache.AddNode(result, hash);
+            }
+
+            return result;
+        }
+
         public static InitializerExpressionSyntax InitializerExpression(SyntaxKind kind, SyntaxToken openBraceToken, Microsoft.CodeAnalysis.Syntax.InternalSyntax.SeparatedSyntaxList<ExpressionSyntax> expressions, SyntaxToken closeBraceToken)
         {
             switch (kind)
@@ -41694,9 +42854,19 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
             }
 #if DEBUG
             if (openBraceToken == null) throw new ArgumentNullException(nameof(openBraceToken));
-            if (openBraceToken.Kind != SyntaxKind.OpenBraceToken) throw new ArgumentException(nameof(openBraceToken));
+            switch (openBraceToken.Kind)
+            {
+                case SyntaxKind.OpenBraceToken:
+                case SyntaxKind.IndentInToken: break;
+                default: throw new ArgumentException(nameof(openBraceToken));
+            }
             if (closeBraceToken == null) throw new ArgumentNullException(nameof(closeBraceToken));
-            if (closeBraceToken.Kind != SyntaxKind.CloseBraceToken) throw new ArgumentException(nameof(closeBraceToken));
+            switch (closeBraceToken.Kind)
+            {
+                case SyntaxKind.CloseBraceToken:
+                case SyntaxKind.IndentOutToken: break;
+                default: throw new ArgumentException(nameof(closeBraceToken));
+            }
 #endif
 
             int hash;
@@ -41791,9 +42961,19 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
             if (newKeyword == null) throw new ArgumentNullException(nameof(newKeyword));
             if (newKeyword.Kind != SyntaxKind.NewKeyword) throw new ArgumentException(nameof(newKeyword));
             if (openBraceToken == null) throw new ArgumentNullException(nameof(openBraceToken));
-            if (openBraceToken.Kind != SyntaxKind.OpenBraceToken) throw new ArgumentException(nameof(openBraceToken));
+            switch (openBraceToken.Kind)
+            {
+                case SyntaxKind.OpenBraceToken:
+                case SyntaxKind.IndentInToken: break;
+                default: throw new ArgumentException(nameof(openBraceToken));
+            }
             if (closeBraceToken == null) throw new ArgumentNullException(nameof(closeBraceToken));
-            if (closeBraceToken.Kind != SyntaxKind.CloseBraceToken) throw new ArgumentException(nameof(closeBraceToken));
+            switch (closeBraceToken.Kind)
+            {
+                case SyntaxKind.CloseBraceToken:
+                case SyntaxKind.IndentOutToken: break;
+                default: throw new ArgumentException(nameof(closeBraceToken));
+            }
 #endif
 
             return new AnonymousObjectCreationExpressionSyntax(SyntaxKind.AnonymousObjectCreationExpression, newKeyword, openBraceToken, initializers.Node, closeBraceToken);
@@ -41812,6 +42992,25 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
             if (cached != null) return (ArrayCreationExpressionSyntax)cached;
 
             var result = new ArrayCreationExpressionSyntax(SyntaxKind.ArrayCreationExpression, newKeyword, type, initializer);
+            if (hash >= 0)
+            {
+                SyntaxNodeCache.AddNode(result, hash);
+            }
+
+            return result;
+        }
+
+        public static ImplicitArrayCreationExpression2Syntax ImplicitArrayCreationExpression2(InitializerExpression2Syntax initializer)
+        {
+#if DEBUG
+            if (initializer == null) throw new ArgumentNullException(nameof(initializer));
+#endif
+
+            int hash;
+            var cached = SyntaxNodeCache.TryGetNode((int)SyntaxKind.ImplicitArrayCreationExpression2, initializer, out hash);
+            if (cached != null) return (ImplicitArrayCreationExpression2Syntax)cached;
+
+            var result = new ImplicitArrayCreationExpression2Syntax(SyntaxKind.ImplicitArrayCreationExpression2, initializer);
             if (hash >= 0)
             {
                 SyntaxNodeCache.AddNode(result, hash);
@@ -41869,6 +43068,96 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
 #endif
 
             return new ImplicitStackAllocArrayCreationExpressionSyntax(SyntaxKind.ImplicitStackAllocArrayCreationExpression, stackAllocKeyword, openBracketToken, closeBracketToken, initializer);
+        }
+
+        public static QueryExpression2Syntax QueryExpression2(SyntaxToken openBracketToken, FromClause2Syntax fromClause, QueryBody2Syntax body, SyntaxToken closeBracketToken)
+        {
+#if DEBUG
+            if (openBracketToken == null) throw new ArgumentNullException(nameof(openBracketToken));
+            if (openBracketToken.Kind != SyntaxKind.OpenBracketToken) throw new ArgumentException(nameof(openBracketToken));
+            if (fromClause == null) throw new ArgumentNullException(nameof(fromClause));
+            if (body == null) throw new ArgumentNullException(nameof(body));
+            if (closeBracketToken == null) throw new ArgumentNullException(nameof(closeBracketToken));
+            if (closeBracketToken.Kind != SyntaxKind.CloseBracketToken) throw new ArgumentException(nameof(closeBracketToken));
+#endif
+
+            return new QueryExpression2Syntax(SyntaxKind.QueryExpression2, openBracketToken, fromClause, body, closeBracketToken);
+        }
+
+        public static QueryBody2Syntax QueryBody2(Microsoft.CodeAnalysis.Syntax.InternalSyntax.SyntaxList<QueryClause2Syntax> clauses, SelectClause2Syntax selectOrGroup)
+        {
+#if DEBUG
+            if (selectOrGroup == null) throw new ArgumentNullException(nameof(selectOrGroup));
+#endif
+
+            int hash;
+            var cached = SyntaxNodeCache.TryGetNode((int)SyntaxKind.QueryBody2, clauses.Node, selectOrGroup, out hash);
+            if (cached != null) return (QueryBody2Syntax)cached;
+
+            var result = new QueryBody2Syntax(SyntaxKind.QueryBody2, clauses.Node, selectOrGroup);
+            if (hash >= 0)
+            {
+                SyntaxNodeCache.AddNode(result, hash);
+            }
+
+            return result;
+        }
+
+        public static FromClause2Syntax FromClause2(SyntaxToken fromKeyword, TypeSyntax? type, SyntaxToken identifier, SyntaxToken inKeyword, ExpressionSyntax expression)
+        {
+#if DEBUG
+            if (fromKeyword == null) throw new ArgumentNullException(nameof(fromKeyword));
+            if (fromKeyword.Kind != SyntaxKind.FromKeyword) throw new ArgumentException(nameof(fromKeyword));
+            if (identifier == null) throw new ArgumentNullException(nameof(identifier));
+            if (identifier.Kind != SyntaxKind.IdentifierToken) throw new ArgumentException(nameof(identifier));
+            if (inKeyword == null) throw new ArgumentNullException(nameof(inKeyword));
+            if (inKeyword.Kind != SyntaxKind.InKeyword) throw new ArgumentException(nameof(inKeyword));
+            if (expression == null) throw new ArgumentNullException(nameof(expression));
+#endif
+
+            return new FromClause2Syntax(SyntaxKind.FromClause2, fromKeyword, type, identifier, inKeyword, expression);
+        }
+
+        public static WhereClause2Syntax WhereClause2(SyntaxToken whereKeyword, ExpressionSyntax condition)
+        {
+#if DEBUG
+            if (whereKeyword == null) throw new ArgumentNullException(nameof(whereKeyword));
+            if (whereKeyword.Kind != SyntaxKind.WhereKeyword) throw new ArgumentException(nameof(whereKeyword));
+            if (condition == null) throw new ArgumentNullException(nameof(condition));
+#endif
+
+            int hash;
+            var cached = SyntaxNodeCache.TryGetNode((int)SyntaxKind.WhereClause2, whereKeyword, condition, out hash);
+            if (cached != null) return (WhereClause2Syntax)cached;
+
+            var result = new WhereClause2Syntax(SyntaxKind.WhereClause2, whereKeyword, condition);
+            if (hash >= 0)
+            {
+                SyntaxNodeCache.AddNode(result, hash);
+            }
+
+            return result;
+        }
+
+        public static SelectClause2Syntax SelectClause2(SyntaxToken selectKeyword, ExpressionSyntax expression)
+        {
+#if DEBUG
+            if (selectKeyword == null) throw new ArgumentNullException(nameof(selectKeyword));
+            if (selectKeyword.Kind != SyntaxKind.SelectKeyword) throw new ArgumentException(nameof(selectKeyword));
+            if (expression == null) throw new ArgumentNullException(nameof(expression));
+#endif
+
+            int hash;
+            var cached = SyntaxNodeCache.TryGetNode((int)SyntaxKind.SelectClause2, selectKeyword, expression, out hash);
+            if (cached != null) return (SelectClause2Syntax)cached;
+
+            var result = new SelectClause2Syntax(SyntaxKind.SelectClause2, selectKeyword, expression);
+            if (hash >= 0)
+            {
+                SyntaxNodeCache.AddNode(result, hash);
+            }
+
+            return result;
         }
 
         public static QueryExpressionSyntax QueryExpression(FromClauseSyntax fromClause, QueryBodySyntax body)
@@ -42323,9 +43612,19 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
         {
 #if DEBUG
             if (openBraceToken == null) throw new ArgumentNullException(nameof(openBraceToken));
-            if (openBraceToken.Kind != SyntaxKind.OpenBraceToken) throw new ArgumentException(nameof(openBraceToken));
+            switch (openBraceToken.Kind)
+            {
+                case SyntaxKind.OpenBraceToken:
+                case SyntaxKind.IndentInToken: break;
+                default: throw new ArgumentException(nameof(openBraceToken));
+            }
             if (closeBraceToken == null) throw new ArgumentNullException(nameof(closeBraceToken));
-            if (closeBraceToken.Kind != SyntaxKind.CloseBraceToken) throw new ArgumentException(nameof(closeBraceToken));
+            switch (closeBraceToken.Kind)
+            {
+                case SyntaxKind.CloseBraceToken:
+                case SyntaxKind.IndentOutToken: break;
+                default: throw new ArgumentException(nameof(closeBraceToken));
+            }
 #endif
 
             int hash;
@@ -42561,10 +43860,20 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
         {
 #if DEBUG
             if (openBraceToken == null) throw new ArgumentNullException(nameof(openBraceToken));
-            if (openBraceToken.Kind != SyntaxKind.OpenBraceToken) throw new ArgumentException(nameof(openBraceToken));
+            switch (openBraceToken.Kind)
+            {
+                case SyntaxKind.OpenBraceToken:
+                case SyntaxKind.IndentInToken: break;
+                default: throw new ArgumentException(nameof(openBraceToken));
+            }
             if (expression == null) throw new ArgumentNullException(nameof(expression));
             if (closeBraceToken == null) throw new ArgumentNullException(nameof(closeBraceToken));
-            if (closeBraceToken.Kind != SyntaxKind.CloseBraceToken) throw new ArgumentException(nameof(closeBraceToken));
+            switch (closeBraceToken.Kind)
+            {
+                case SyntaxKind.CloseBraceToken:
+                case SyntaxKind.IndentOutToken: break;
+                default: throw new ArgumentException(nameof(closeBraceToken));
+            }
 #endif
 
             return new InterpolationSyntax(SyntaxKind.Interpolation, openBraceToken, expression, alignmentClause, formatClause, closeBraceToken);
@@ -42663,7 +43972,7 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
             return new LocalFunctionStatementSyntax(SyntaxKind.LocalFunctionStatement, attributeLists.Node, modifiers.Node, returnType, identifier, typeParameterList, parameterList, constraintClauses.Node, body, expressionBody, semicolonToken);
         }
 
-        public static LocalDeclarationStatementSyntax LocalDeclarationStatement(Microsoft.CodeAnalysis.Syntax.InternalSyntax.SyntaxList<AttributeListSyntax> attributeLists, SyntaxToken? awaitKeyword, SyntaxToken? usingKeyword, Microsoft.CodeAnalysis.Syntax.InternalSyntax.SyntaxList<SyntaxToken> modifiers, VariableDeclarationSyntax declaration, SyntaxToken semicolonToken)
+        public static LocalDeclarationStatementSyntax LocalDeclarationStatement(Microsoft.CodeAnalysis.Syntax.InternalSyntax.SyntaxList<AttributeListSyntax> attributeLists, SyntaxToken? awaitKeyword, SyntaxToken? usingKeyword, Microsoft.CodeAnalysis.Syntax.InternalSyntax.SyntaxList<SyntaxToken> modifiers, VariableDeclarationSyntax declaration, SyntaxToken? semicolonToken)
         {
 #if DEBUG
             if (awaitKeyword != null)
@@ -42685,8 +43994,15 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
                 }
             }
             if (declaration == null) throw new ArgumentNullException(nameof(declaration));
-            if (semicolonToken == null) throw new ArgumentNullException(nameof(semicolonToken));
-            if (semicolonToken.Kind != SyntaxKind.SemicolonToken) throw new ArgumentException(nameof(semicolonToken));
+            if (semicolonToken != null)
+            {
+                switch (semicolonToken.Kind)
+                {
+                    case SyntaxKind.SemicolonToken:
+                    case SyntaxKind.None: break;
+                    default: throw new ArgumentException(nameof(semicolonToken));
+                }
+            }
 #endif
 
             return new LocalDeclarationStatementSyntax(SyntaxKind.LocalDeclarationStatement, attributeLists.Node, awaitKeyword, usingKeyword, modifiers.Node, declaration, semicolonToken);
@@ -42814,12 +44130,19 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
             return result;
         }
 
-        public static ExpressionStatementSyntax ExpressionStatement(Microsoft.CodeAnalysis.Syntax.InternalSyntax.SyntaxList<AttributeListSyntax> attributeLists, ExpressionSyntax expression, SyntaxToken semicolonToken)
+        public static ExpressionStatementSyntax ExpressionStatement(Microsoft.CodeAnalysis.Syntax.InternalSyntax.SyntaxList<AttributeListSyntax> attributeLists, ExpressionSyntax expression, SyntaxToken? semicolonToken)
         {
 #if DEBUG
             if (expression == null) throw new ArgumentNullException(nameof(expression));
-            if (semicolonToken == null) throw new ArgumentNullException(nameof(semicolonToken));
-            if (semicolonToken.Kind != SyntaxKind.SemicolonToken) throw new ArgumentException(nameof(semicolonToken));
+            if (semicolonToken != null)
+            {
+                switch (semicolonToken.Kind)
+                {
+                    case SyntaxKind.SemicolonToken:
+                    case SyntaxKind.None: break;
+                    default: throw new ArgumentException(nameof(semicolonToken));
+                }
+            }
 #endif
 
             int hash;
@@ -43274,9 +44597,19 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
                 }
             }
             if (openBraceToken == null) throw new ArgumentNullException(nameof(openBraceToken));
-            if (openBraceToken.Kind != SyntaxKind.OpenBraceToken) throw new ArgumentException(nameof(openBraceToken));
+            switch (openBraceToken.Kind)
+            {
+                case SyntaxKind.OpenBraceToken:
+                case SyntaxKind.IndentInToken: break;
+                default: throw new ArgumentException(nameof(openBraceToken));
+            }
             if (closeBraceToken == null) throw new ArgumentNullException(nameof(closeBraceToken));
-            if (closeBraceToken.Kind != SyntaxKind.CloseBraceToken) throw new ArgumentException(nameof(closeBraceToken));
+            switch (closeBraceToken.Kind)
+            {
+                case SyntaxKind.CloseBraceToken:
+                case SyntaxKind.IndentOutToken: break;
+                default: throw new ArgumentException(nameof(closeBraceToken));
+            }
 #endif
 
             return new SwitchStatementSyntax(SyntaxKind.SwitchStatement, attributeLists.Node, switchKeyword, openParenToken, expression, closeParenToken, openBraceToken, sections.Node, closeBraceToken);
@@ -43362,9 +44695,19 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
             if (switchKeyword == null) throw new ArgumentNullException(nameof(switchKeyword));
             if (switchKeyword.Kind != SyntaxKind.SwitchKeyword) throw new ArgumentException(nameof(switchKeyword));
             if (openBraceToken == null) throw new ArgumentNullException(nameof(openBraceToken));
-            if (openBraceToken.Kind != SyntaxKind.OpenBraceToken) throw new ArgumentException(nameof(openBraceToken));
+            switch (openBraceToken.Kind)
+            {
+                case SyntaxKind.OpenBraceToken:
+                case SyntaxKind.IndentInToken: break;
+                default: throw new ArgumentException(nameof(openBraceToken));
+            }
             if (closeBraceToken == null) throw new ArgumentNullException(nameof(closeBraceToken));
-            if (closeBraceToken.Kind != SyntaxKind.CloseBraceToken) throw new ArgumentException(nameof(closeBraceToken));
+            switch (closeBraceToken.Kind)
+            {
+                case SyntaxKind.CloseBraceToken:
+                case SyntaxKind.IndentOutToken: break;
+                default: throw new ArgumentException(nameof(closeBraceToken));
+            }
 #endif
 
             return new SwitchExpressionSyntax(SyntaxKind.SwitchExpression, governingExpression, switchKeyword, openBraceToken, arms.Node, closeBraceToken);
@@ -43517,9 +44860,19 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
             if (namespaceKeyword.Kind != SyntaxKind.NamespaceKeyword) throw new ArgumentException(nameof(namespaceKeyword));
             if (name == null) throw new ArgumentNullException(nameof(name));
             if (openBraceToken == null) throw new ArgumentNullException(nameof(openBraceToken));
-            if (openBraceToken.Kind != SyntaxKind.OpenBraceToken) throw new ArgumentException(nameof(openBraceToken));
+            switch (openBraceToken.Kind)
+            {
+                case SyntaxKind.OpenBraceToken:
+                case SyntaxKind.IndentInToken: break;
+                default: throw new ArgumentException(nameof(openBraceToken));
+            }
             if (closeBraceToken == null) throw new ArgumentNullException(nameof(closeBraceToken));
-            if (closeBraceToken.Kind != SyntaxKind.CloseBraceToken) throw new ArgumentException(nameof(closeBraceToken));
+            switch (closeBraceToken.Kind)
+            {
+                case SyntaxKind.CloseBraceToken:
+                case SyntaxKind.IndentOutToken: break;
+                default: throw new ArgumentException(nameof(closeBraceToken));
+            }
             if (semicolonToken != null)
             {
                 switch (semicolonToken.Kind)
@@ -43721,9 +45074,19 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
             if (identifier == null) throw new ArgumentNullException(nameof(identifier));
             if (identifier.Kind != SyntaxKind.IdentifierToken) throw new ArgumentException(nameof(identifier));
             if (openBraceToken == null) throw new ArgumentNullException(nameof(openBraceToken));
-            if (openBraceToken.Kind != SyntaxKind.OpenBraceToken) throw new ArgumentException(nameof(openBraceToken));
+            switch (openBraceToken.Kind)
+            {
+                case SyntaxKind.OpenBraceToken:
+                case SyntaxKind.IndentInToken: break;
+                default: throw new ArgumentException(nameof(openBraceToken));
+            }
             if (closeBraceToken == null) throw new ArgumentNullException(nameof(closeBraceToken));
-            if (closeBraceToken.Kind != SyntaxKind.CloseBraceToken) throw new ArgumentException(nameof(closeBraceToken));
+            switch (closeBraceToken.Kind)
+            {
+                case SyntaxKind.CloseBraceToken:
+                case SyntaxKind.IndentOutToken: break;
+                default: throw new ArgumentException(nameof(closeBraceToken));
+            }
             if (semicolonToken != null)
             {
                 switch (semicolonToken.Kind)
@@ -43746,9 +45109,19 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
             if (identifier == null) throw new ArgumentNullException(nameof(identifier));
             if (identifier.Kind != SyntaxKind.IdentifierToken) throw new ArgumentException(nameof(identifier));
             if (openBraceToken == null) throw new ArgumentNullException(nameof(openBraceToken));
-            if (openBraceToken.Kind != SyntaxKind.OpenBraceToken) throw new ArgumentException(nameof(openBraceToken));
+            switch (openBraceToken.Kind)
+            {
+                case SyntaxKind.OpenBraceToken:
+                case SyntaxKind.IndentInToken: break;
+                default: throw new ArgumentException(nameof(openBraceToken));
+            }
             if (closeBraceToken == null) throw new ArgumentNullException(nameof(closeBraceToken));
-            if (closeBraceToken.Kind != SyntaxKind.CloseBraceToken) throw new ArgumentException(nameof(closeBraceToken));
+            switch (closeBraceToken.Kind)
+            {
+                case SyntaxKind.CloseBraceToken:
+                case SyntaxKind.IndentOutToken: break;
+                default: throw new ArgumentException(nameof(closeBraceToken));
+            }
             if (semicolonToken != null)
             {
                 switch (semicolonToken.Kind)
@@ -43771,9 +45144,19 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
             if (identifier == null) throw new ArgumentNullException(nameof(identifier));
             if (identifier.Kind != SyntaxKind.IdentifierToken) throw new ArgumentException(nameof(identifier));
             if (openBraceToken == null) throw new ArgumentNullException(nameof(openBraceToken));
-            if (openBraceToken.Kind != SyntaxKind.OpenBraceToken) throw new ArgumentException(nameof(openBraceToken));
+            switch (openBraceToken.Kind)
+            {
+                case SyntaxKind.OpenBraceToken:
+                case SyntaxKind.IndentInToken: break;
+                default: throw new ArgumentException(nameof(openBraceToken));
+            }
             if (closeBraceToken == null) throw new ArgumentNullException(nameof(closeBraceToken));
-            if (closeBraceToken.Kind != SyntaxKind.CloseBraceToken) throw new ArgumentException(nameof(closeBraceToken));
+            switch (closeBraceToken.Kind)
+            {
+                case SyntaxKind.CloseBraceToken:
+                case SyntaxKind.IndentOutToken: break;
+                default: throw new ArgumentException(nameof(closeBraceToken));
+            }
             if (semicolonToken != null)
             {
                 switch (semicolonToken.Kind)
@@ -43850,9 +45233,19 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
             if (identifier == null) throw new ArgumentNullException(nameof(identifier));
             if (identifier.Kind != SyntaxKind.IdentifierToken) throw new ArgumentException(nameof(identifier));
             if (openBraceToken == null) throw new ArgumentNullException(nameof(openBraceToken));
-            if (openBraceToken.Kind != SyntaxKind.OpenBraceToken) throw new ArgumentException(nameof(openBraceToken));
+            switch (openBraceToken.Kind)
+            {
+                case SyntaxKind.OpenBraceToken:
+                case SyntaxKind.IndentInToken: break;
+                default: throw new ArgumentException(nameof(openBraceToken));
+            }
             if (closeBraceToken == null) throw new ArgumentNullException(nameof(closeBraceToken));
-            if (closeBraceToken.Kind != SyntaxKind.CloseBraceToken) throw new ArgumentException(nameof(closeBraceToken));
+            switch (closeBraceToken.Kind)
+            {
+                case SyntaxKind.CloseBraceToken:
+                case SyntaxKind.IndentOutToken: break;
+                default: throw new ArgumentException(nameof(closeBraceToken));
+            }
             if (semicolonToken != null)
             {
                 switch (semicolonToken.Kind)
@@ -45451,6 +46844,7 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
                 typeof(SimpleLambdaExpressionSyntax),
                 typeof(RefExpressionSyntax),
                 typeof(ParenthesizedLambdaExpressionSyntax),
+                typeof(InitializerExpression2Syntax),
                 typeof(InitializerExpressionSyntax),
                 typeof(ImplicitObjectCreationExpressionSyntax),
                 typeof(ObjectCreationExpressionSyntax),
@@ -45458,9 +46852,15 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
                 typeof(AnonymousObjectMemberDeclaratorSyntax),
                 typeof(AnonymousObjectCreationExpressionSyntax),
                 typeof(ArrayCreationExpressionSyntax),
+                typeof(ImplicitArrayCreationExpression2Syntax),
                 typeof(ImplicitArrayCreationExpressionSyntax),
                 typeof(StackAllocArrayCreationExpressionSyntax),
                 typeof(ImplicitStackAllocArrayCreationExpressionSyntax),
+                typeof(QueryExpression2Syntax),
+                typeof(QueryBody2Syntax),
+                typeof(FromClause2Syntax),
+                typeof(WhereClause2Syntax),
+                typeof(SelectClause2Syntax),
                 typeof(QueryExpressionSyntax),
                 typeof(QueryBodySyntax),
                 typeof(FromClauseSyntax),

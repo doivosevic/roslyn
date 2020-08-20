@@ -34,6 +34,7 @@ namespace Microsoft.CodeAnalysis.CSharp
             switch (syntax.Kind())
             {
                 case SyntaxKind.FromClause:
+                case SyntaxKind.FromClause2:
                 case SyntaxKind.GroupClause:
                 case SyntaxKind.JoinClause:
                 case SyntaxKind.JoinIntoClause:
@@ -42,7 +43,9 @@ namespace Microsoft.CodeAnalysis.CSharp
                 case SyntaxKind.QueryContinuation:
                 case SyntaxKind.QueryExpression:
                 case SyntaxKind.SelectClause:
+                case SyntaxKind.SelectClause2:
                 case SyntaxKind.WhereClause:
+                case SyntaxKind.WhereClause2:
                     return true;
                 default:
                     return false;

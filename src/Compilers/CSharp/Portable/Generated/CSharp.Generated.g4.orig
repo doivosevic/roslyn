@@ -481,7 +481,11 @@ empty_statement
   ;
 
 expression_statement
-  : expression ';'
+<<<<<<< Updated upstream
+  : attribute_list* expression ';'
+=======
+  : expression ';'?
+>>>>>>> Stashed changes
   ;
 
 fixed_statement
@@ -509,7 +513,11 @@ labeled_statement
   ;
 
 local_declaration_statement
+<<<<<<< Updated upstream
   : attribute_list* 'await'? 'using'? modifier* variable_declaration ';'
+=======
+  : 'await'? 'using'? modifier* variable_declaration ';'?
+>>>>>>> Stashed changes
   ;
 
 local_function_statement
@@ -525,7 +533,11 @@ return_statement
   ;
 
 switch_statement
+<<<<<<< Updated upstream
   : attribute_list* 'switch' '('? expression ')'? '{' switch_section* '}'
+=======
+  : 'switch' '('? expression ')'? ('{' | indent_in_token) switch_section* ('}' | indent_out_token)
+>>>>>>> Stashed changes
   ;
 
 switch_section

@@ -832,10 +832,15 @@ namespace Microsoft.CodeAnalysis.CSharp.CodeGeneration
                 default,
                 AsModifierList(accessibility, modifiers, SyntaxKind.EnumDeclaration),
                 name.ToIdentifierToken(),
+<<<<<<< HEAD
                 underlyingType != null ? SyntaxFactory.BaseList(SyntaxFactory.SingletonSeparatedList((BaseTypeSyntax)SyntaxFactory.SimpleBaseType((TypeSyntax)underlyingType))) : null,
+                this.AsEnumMembers(members));
+=======
+                null,
                 openBraceToken: SyntaxFactory.Token(SyntaxKind.IndentInToken),
                 this.AsEnumMembers(members),
                 closeBraceToken: SyntaxFactory.Token(SyntaxKind.IndentOutToken));
+>>>>>>> 436b1b0ecf4 (rebase attempt)
         }
 
         public override SyntaxNode EnumMember(string name, SyntaxNode? expression)
@@ -3080,13 +3085,18 @@ namespace Microsoft.CodeAnalysis.CSharp.CodeGeneration
 
         public override SyntaxNode ArrayCreationExpression(SyntaxNode elementType, IEnumerable<SyntaxNode> elements)
         {
+<<<<<<< HEAD
             var arrayType = SyntaxFactory.ArrayType((TypeSyntax)elementType, SyntaxFactory.SingletonList(
                 SyntaxFactory.ArrayRankSpecifier(SyntaxFactory.SingletonSeparatedList((ExpressionSyntax)SyntaxFactory.OmittedArraySizeExpression()))));
+            var initializer = SyntaxFactory.InitializerExpression(SyntaxKind.ArrayInitializerExpression, AsExpressionList(elements));
+=======
+            var arrayType = SyntaxFactory.ArrayType((TypeSyntax)elementType, SyntaxFactory.SingletonList(SyntaxFactory.ArrayRankSpecifier()));
             var initializer = SyntaxFactory.InitializerExpression(
                 SyntaxKind.ArrayInitializerExpression,
                 openBraceToken: SyntaxFactory.Token(SyntaxKind.IndentInToken),
                 AsExpressionList(elements),
                 closeBraceToken: SyntaxFactory.Token(SyntaxKind.IndentOutToken));
+>>>>>>> 436b1b0ecf4 (rebase attempt)
             return SyntaxFactory.ArrayCreationExpression(arrayType, initializer);
         }
 

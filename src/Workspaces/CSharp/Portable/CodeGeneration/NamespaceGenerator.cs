@@ -111,7 +111,11 @@ namespace Microsoft.CodeAnalysis.CSharp.CodeGeneration
                 return SyntaxFactory.FileScopedNamespaceDeclaration(SyntaxFactory.ParseName(name)).WithUsings(usings);
             }
 
-            return SyntaxFactory.NamespaceDeclaration(SyntaxFactory.ParseName(name)).WithUsings(usings);
+            return SyntaxFactory.NamespaceDeclaration(
+                SyntaxFactory.ParseName(name),
+                SyntaxFactory.Token(SyntaxKind.IndentInToken),
+                SyntaxFactory.Token(SyntaxKind.IndentOutToken))
+                        .WithUsings(usings);
         }
 
         private static SyntaxNode GetDeclarationSyntaxWithoutMembers(

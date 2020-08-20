@@ -105,6 +105,11 @@ namespace Microsoft.CodeAnalysis.CSharp
         /// Consider only symbols that are abstract.
         /// </summary>
         MustBeAbstract = 1 << 15,
+
+        /// <summary>
+        /// Do not lookup the implicitly declared variables from local binder.
+        /// </summary>
+        NoImplicitLocals = 1 << 16
     }
 
     internal static class LookupOptionExtensions

@@ -219,13 +219,17 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax
                 char c = charWindow[i];
                 int uc = unchecked((int)c);
 
+<<<<<<< HEAD
                 var flags = uc < charPropLength ? (CharFlags)CharProperties[uc] : CharFlags.Complex;
+=======
                 if (i > 0 && c == '\n')
                 {
                     state = QuickScanState.Bad;
                     goto exitWhile;
                 }
 
+                var flags = uc < charPropLength ? (CharFlags)s_charProperties[uc] : CharFlags.Complex;
+>>>>>>> 436b1b0ecf4 (rebase attempt)
 
                 state = (QuickScanState)s_stateTransitions[(int)state, (int)flags];
                 // NOTE: that Bad > Done and it is the only state like that

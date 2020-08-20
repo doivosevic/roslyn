@@ -461,6 +461,25 @@ namespace Microsoft.CodeAnalysis.CSharp
             return initializer;
         }
 
+        internal BoundExpression BindVariableOrAutoPropInitializerValue(
+            ExpressionSyntax initializerOpt,
+            RefKind refKind,
+            TypeSymbol varType,
+            BindingDiagnosticBag diagnostics)
+        {
+            if (initializerOpt == null)
+            {
+                return null;
+            }
+
+            BindValueKind valueKind;
+            ExpressionSyntax value;
+            IsInitializerRefKindValid(initializerOpt, initializerOpt, refKind, diagnostics, out valueKind, out value);
+            BoundExpression initializer = BindPossibleArrayInitializer(value, varType, valueKind, diagnostics);
+            initializer = GenerateConversionForAssignment(varType, initializer, diagnostics);
+            return initializer;
+        }
+
         internal Binder CreateBinderForParameterDefaultValue(
             ParameterSymbol parameter,
             EqualsValueClauseSyntax defaultValueSyntax)
@@ -576,6 +595,8 @@ namespace Microsoft.CodeAnalysis.CSharp
                     return BindArrayCreationExpression((ArrayCreationExpressionSyntax)node, diagnostics);
                 case SyntaxKind.ImplicitArrayCreationExpression:
                     return BindImplicitArrayCreationExpression((ImplicitArrayCreationExpressionSyntax)node, diagnostics);
+                case SyntaxKind.ImplicitArrayCreationExpression2:
+                    return BindImplicitArrayCreationExpression2((ImplicitArrayCreationExpression2Syntax)node, diagnostics);
                 case SyntaxKind.StackAllocArrayCreationExpression:
                     return BindStackAllocArrayCreationExpression((StackAllocArrayCreationExpressionSyntax)node, diagnostics);
                 case SyntaxKind.ImplicitStackAllocArrayCreationExpression:
@@ -715,6 +736,9 @@ namespace Microsoft.CodeAnalysis.CSharp
 
                 case SyntaxKind.QueryExpression:
                     return this.BindQuery((QueryExpressionSyntax)node, diagnostics);
+
+                case SyntaxKind.QueryExpression2:
+                    return this.BindQuery2((QueryExpression2Syntax)node, diagnostics);
 
                 case SyntaxKind.AnonymousObjectCreationExpression:
                     return BindAnonymousObjectCreation((AnonymousObjectCreationExpressionSyntax)node, diagnostics);
@@ -1472,7 +1496,8 @@ namespace Microsoft.CodeAnalysis.CSharp
                 BindTypeArguments(typeArgumentList, diagnostics) :
                 default(ImmutableArray<TypeWithAnnotations>);
 
-            var lookupResult = LookupResult.GetInstance();
+            var lookupResult1 = LookupResult.GetInstance();
+            var lookupResult2 = LookupResult.GetInstance();
             LookupOptions options = LookupOptions.AllMethodsOnArityZero;
             if (invoked)
             {
@@ -1487,7 +1512,13 @@ namespace Microsoft.CodeAnalysis.CSharp
 
             var name = node.Identifier.ValueText;
             CompoundUseSiteInfo<AssemblySymbol> useSiteInfo = GetNewCompoundUseSiteInfo(diagnostics);
-            this.LookupSymbolsWithFallback(lookupResult, name, arity: arity, useSiteInfo: ref useSiteInfo, options: options);
+            this.LookupSymbolsWithFallback(lookupResult1, name, arity: arity, useSiteInfo: ref useSiteInfo, options: options);
+
+            var newOptions = options | LookupOptions.NoImplicitLocals;
+            this.LookupSymbolsWithFallback(lookupResult2, name, arity: arity, useSiteInfo: ref useSiteInfo, options: newOptions);
+
+            var lookupResult = lookupResult2.Kind != LookupResultKind.Empty ? lookupResult2 : lookupResult1;
+
             diagnostics.Add(node, useSiteInfo);
 
             if (lookupResult.Kind != LookupResultKind.Empty)
@@ -1582,7 +1613,8 @@ namespace Microsoft.CodeAnalysis.CSharp
                 }
             }
 
-            lookupResult.Free();
+            lookupResult1.Free();
+            lookupResult2.Free();
             return expression;
         }
 
@@ -3235,6 +3267,35 @@ namespace Microsoft.CodeAnalysis.CSharp
             }
             return null;
         }
+        private BoundExpression BindImplicitArrayCreationExpression2(ImplicitArrayCreationExpression2Syntax node, BindingDiagnosticBag diagnostics)
+        {
+            // See BindArrayCreationExpression method above for implicitly typed array creation SPEC.
+
+            InitializerExpression2Syntax initializer = node.Initializer;
+
+            ImmutableArray<BoundExpression> boundInitializerExpressions = BindArrayInitializerExpressions2(initializer, diagnostics, dimension: 1);
+
+            CompoundUseSiteInfo<AssemblySymbol> useSiteInfo = GetNewCompoundUseSiteInfo(diagnostics);
+            TypeSymbol bestType = BestTypeInferrer.InferBestType(boundInitializerExpressions, this.Conversions, ref useSiteInfo, out _);
+            diagnostics.Add(node, useSiteInfo);
+
+            if ((object)bestType == null || bestType.SpecialType == SpecialType.System_Void) // Dev10 also reports ERR_ImplicitlyTypedArrayNoBestType for void.
+            {
+                Error(diagnostics, ErrorCode.ERR_ImplicitlyTypedArrayNoBestType, node);
+                bestType = CreateErrorType();
+            }
+
+            if (bestType.IsRestrictedType())
+            {
+                // CS0611: Array elements cannot be of type '{0}'
+                Error(diagnostics, ErrorCode.ERR_ArrayElementCantBeRefAny, node, bestType);
+            }
+
+            // Element type nullability will be inferred in flow analysis and does not need to be set here.
+            var arrayType = ArrayTypeSymbol.CreateCSharpArray(Compilation.Assembly, TypeWithAnnotations.Create(bestType), rank: 1);
+            return BindArrayCreationWithInitializer2(diagnostics, node, initializer, arrayType,
+                sizes: ImmutableArray<BoundExpression>.Empty, boundInitExprOpt: boundInitializerExpressions);
+        }
 
         private BoundExpression BindImplicitArrayCreationExpression(ImplicitArrayCreationExpressionSyntax node, BindingDiagnosticBag diagnostics)
         {
@@ -3298,6 +3359,13 @@ namespace Microsoft.CodeAnalysis.CSharp
                 boundInitializerExpressions);
         }
 
+        private ImmutableArray<BoundExpression> BindArrayInitializerExpressions2(InitializerExpression2Syntax initializer, BindingDiagnosticBag diagnostics, int dimension)
+        {
+            var exprBuilder = ArrayBuilder<BoundExpression>.GetInstance();
+            BindArrayInitializerExpressions2(initializer, exprBuilder, diagnostics, dimension);
+            return exprBuilder.ToImmutableAndFree();
+        }
+
         // This method binds all the array initializer expressions.
         // NOTE: It doesn't convert the bound initializer expressions to array's element type.
         // NOTE: This is done separately in ConvertAndBindArrayInitialization method below.
@@ -3306,6 +3374,64 @@ namespace Microsoft.CodeAnalysis.CSharp
             var exprBuilder = ArrayBuilder<BoundExpression>.GetInstance();
             BindArrayInitializerExpressions(initializer, exprBuilder, diagnostics, dimension, rank);
             return exprBuilder.ToImmutableAndFree();
+        }
+
+        /// <summary>
+        /// This method walks through the array's InitializerExpressionSyntax and binds all the initializer expressions recursively.
+        /// NOTE: It doesn't convert the bound initializer expressions to array's element type.
+        /// NOTE: This is done separately in ConvertAndBindArrayInitialization method below.
+        /// </summary>
+        /// <param name="initializer">Initializer Syntax.</param>
+        /// <param name="exprBuilder">Bound expression builder.</param>
+        /// <param name="diagnostics">Diagnostics.</param>
+        /// <param name="dimension">Current array dimension being processed.</param>
+        private void BindArrayInitializerExpressions2(InitializerExpression2Syntax initializer, ArrayBuilder<BoundExpression> exprBuilder, BindingDiagnosticBag diagnostics, int dimension)
+        {
+            Debug.Assert(exprBuilder != null);
+
+            if (dimension == 1)
+            {
+                // We are processing the nth dimension of a rank-n array. We expect that these will
+                // only be values, not array initializers.
+                foreach (var expression in initializer.Expressions)
+                {
+                    var boundExpression = BindValue(expression, diagnostics, BindValueKind.RValue);
+                    exprBuilder.Add(boundExpression);
+                }
+            }
+            else
+            {
+                // Inductive case; we'd better have another array initializer
+                foreach (var expression in initializer.Expressions)
+                {
+                    if (expression.Kind() == SyntaxKind.ArrayInitializerExpression)
+                    {
+                        BindArrayInitializerExpressions2((InitializerExpression2Syntax)expression, exprBuilder, diagnostics, dimension + 1);
+                    }
+                    else
+                    {
+                        // We have non-array initializer expression, but we expected an array initializer expression.
+
+                        var boundExpression = BindValue(expression, diagnostics, BindValueKind.RValue);
+                        if ((object)boundExpression.Type == null || !boundExpression.Type.IsErrorType())
+                        {
+                            if (!boundExpression.HasAnyErrors)
+                            {
+                                Error(diagnostics, ErrorCode.ERR_ArrayInitializerExpected, expression);
+                            }
+
+                            // Wrap the expression with a bound bad expression with error type.
+                            boundExpression = BadExpression(
+                                expression,
+                                LookupResultKind.Empty,
+                                ImmutableArray.Create(boundExpression.ExpressionSymbol),
+                                ImmutableArray.Create(boundExpression));
+                        }
+
+                        exprBuilder.Add(boundExpression);
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -3462,6 +3588,121 @@ namespace Microsoft.CodeAnalysis.CSharp
             return new BoundArrayInitialization(node, initializers.ToImmutableAndFree(), hasErrors: hasErrors);
         }
 
+        /// <summary>
+        /// Given an array of bound initializer expressions, this method converts these bound expressions
+        /// to array's element type and generates a BoundArrayInitialization with the converted initializers.
+        /// </summary>
+        /// <param name="diagnostics">Diagnostics.</param>
+        /// <param name="node">Initializer Syntax.</param>
+        /// <param name="type">Array type.</param>
+        /// <param name="knownSizes">Known array bounds.</param>
+        /// <param name="dimension">Current array dimension being processed.</param>
+        /// <param name="boundInitExpr">Array of bound initializer expressions.</param>
+        /// <param name="boundInitExprIndex">
+        /// Index into the array of bound initializer expressions to fetch the next bound expression.
+        /// </param>
+        /// <returns></returns>
+        private BoundArrayInitialization ConvertAndBindArrayInitialization2(
+            BindingDiagnosticBag diagnostics,
+            InitializerExpression2Syntax node,
+            ArrayTypeSymbol type,
+            int?[] knownSizes,
+            int dimension,
+            ImmutableArray<BoundExpression> boundInitExpr,
+            ref int boundInitExprIndex)
+        {
+            Debug.Assert(!boundInitExpr.IsDefault);
+
+            ArrayBuilder<BoundExpression> initializers = ArrayBuilder<BoundExpression>.GetInstance();
+            if (dimension == type.Rank)
+            {
+                // We are processing the nth dimension of a rank-n array. We expect that these will
+                // only be values, not array initializers.
+                TypeSymbol elemType = type.ElementType;
+                foreach (var expressionSyntax in node.Expressions)
+                {
+                    Debug.Assert(boundInitExprIndex >= 0 && boundInitExprIndex < boundInitExpr.Length);
+
+                    BoundExpression boundExpression = boundInitExpr[boundInitExprIndex];
+                    boundInitExprIndex++;
+
+                    BoundExpression convertedExpression = GenerateConversionForAssignment(elemType, boundExpression, diagnostics);
+                    initializers.Add(convertedExpression);
+                }
+            }
+            else
+            {
+                // Inductive case; we'd better have another array initializer
+                foreach (var expr in node.Expressions)
+                {
+                    BoundExpression init = null;
+                    if (expr.Kind() == SyntaxKind.ArrayInitializerExpression)
+                    {
+                        init = ConvertAndBindArrayInitialization(diagnostics, (InitializerExpressionSyntax)expr,
+                             type, knownSizes, dimension + 1, boundInitExpr, ref boundInitExprIndex);
+                    }
+                    else
+                    {
+                        // We have non-array initializer expression, but we expected an array initializer expression.
+                        // We have already generated the diagnostics during binding, so just fetch the bound expression.
+
+                        Debug.Assert(boundInitExprIndex >= 0 && boundInitExprIndex < boundInitExpr.Length);
+
+                        init = boundInitExpr[boundInitExprIndex];
+                        Debug.Assert(init.HasAnyErrors);
+                        Debug.Assert(init.Type.IsErrorType());
+
+                        boundInitExprIndex++;
+                    }
+
+                    initializers.Add(init);
+                }
+            }
+
+            bool hasErrors = false;
+            var knownSizeOpt = knownSizes[dimension - 1];
+
+            if (knownSizeOpt == null)
+            {
+                knownSizes[dimension - 1] = initializers.Count;
+            }
+            else if (knownSizeOpt != initializers.Count)
+            {
+                // No need to report an error if the known size is negative
+                // since we've already reported CS0248 earlier and it's
+                // expected that the number of initializers won't match.
+                if (knownSizeOpt >= 0)
+                {
+                    Error(diagnostics, ErrorCode.ERR_ArrayInitializerIncorrectLength, node, knownSizeOpt.Value);
+                    hasErrors = true;
+                }
+            }
+
+            return new BoundArrayInitialization(node, initializers.ToImmutableAndFree(), hasErrors: hasErrors);
+        }
+
+        private BoundArrayInitialization BindArrayInitializerList2(
+           BindingDiagnosticBag diagnostics,
+           InitializerExpression2Syntax node,
+           ArrayTypeSymbol type,
+           int?[] knownSizes,
+           int dimension,
+           ImmutableArray<BoundExpression> boundInitExprOpt = default(ImmutableArray<BoundExpression>))
+        {
+            // Bind the array initializer expressions, if not already bound.
+            // NOTE: Initializer expressions might already be bound for implicitly type array creation
+            // NOTE: during array's element type inference.
+            if (boundInitExprOpt.IsDefault)
+            {
+                boundInitExprOpt = BindArrayInitializerExpressions2(node, diagnostics, dimension);
+            }
+
+            // Convert the bound array initializer expressions to array's element type and
+            // generate BoundArrayInitialization with the converted initializers.
+            int boundInitExprIndex = 0;
+            return ConvertAndBindArrayInitialization2(diagnostics, node, type, knownSizes, dimension, boundInitExprOpt, ref boundInitExprIndex);
+        }
+
         private BoundArrayInitialization BindArrayInitializerList(
            BindingDiagnosticBag diagnostics,
            InitializerExpressionSyntax node,
@@ -3529,6 +3770,116 @@ namespace Microsoft.CodeAnalysis.CSharp
         // These bound expressions are stored in boundInitExprOpt and reused in creating
         // BoundArrayInitialization to avoid binding them twice.
 
+        private BoundArrayCreation BindArrayCreationWithInitializer2(
+            BindingDiagnosticBag diagnostics,
+            ExpressionSyntax creationSyntax,
+            InitializerExpression2Syntax initSyntax,
+            ArrayTypeSymbol type,
+            ImmutableArray<BoundExpression> sizes,
+            ImmutableArray<BoundExpression> boundInitExprOpt = default(ImmutableArray<BoundExpression>))
+        {
+            Debug.Assert(creationSyntax == null ||
+                creationSyntax.Kind() == SyntaxKind.ArrayCreationExpression ||
+                creationSyntax.Kind() == SyntaxKind.ImplicitArrayCreationExpression ||
+                creationSyntax.Kind() == SyntaxKind.ImplicitArrayCreationExpression2);
+            Debug.Assert(initSyntax != null);
+            Debug.Assert((object)type != null);
+            Debug.Assert(boundInitExprOpt.IsDefault ||
+                creationSyntax.Kind() == SyntaxKind.ImplicitArrayCreationExpression ||
+                creationSyntax.Kind() == SyntaxKind.ImplicitArrayCreationExpression2);
+
+            bool error = false;
+
+            // NOTE: In error scenarios, it may be the case sizes.Count > type.Rank.
+            // For example, new int[1 2] has 2 sizes, but rank 1 (since there are 0 commas).
+            int rank = type.Rank;
+            int numSizes = sizes.Length;
+            int?[] knownSizes = new int?[Math.Max(rank, numSizes)];
+
+            // If there are sizes given and there is an array initializer, then every size must be a
+            // constant. (We'll check later that it matches)
+            for (int i = 0; i < numSizes; ++i)
+            {
+                // Here we are being bug-for-bug compatible with C# 4. When you have code like
+                // byte[] b = new[uint.MaxValue] { 2 };
+                // you might expect an error that says that the number of elements in the initializer does
+                // not match the size of the array. But in C# 4 if the constant does not fit into an integer
+                // then we confusingly give the error "that's not a constant".
+                // NOTE: in the example above, GetIntegerConstantForArraySize is returning null because the
+                // size doesn't fit in an int - not because it doesn't match the initializer length.
+                var size = sizes[i];
+                knownSizes[i] = GetIntegerConstantForArraySize(size);
+                if (!size.HasAnyErrors && knownSizes[i] == null)
+                {
+                    Error(diagnostics, ErrorCode.ERR_ConstantExpected, size.Syntax);
+                    error = true;
+                }
+            }
+
+            // KnownSizes is further mutated by BindArrayInitializerList as it works out more
+            // information about the sizes.
+            BoundArrayInitialization initializer = BindArrayInitializerList2(diagnostics, initSyntax, type, knownSizes, 1, boundInitExprOpt);
+
+            error = error || initializer.HasAnyErrors;
+
+            bool hasCreationSyntax = creationSyntax != null;
+            CSharpSyntaxNode nonNullSyntax = (CSharpSyntaxNode)creationSyntax ?? initSyntax;
+
+            // Construct a set of size expressions if we were not given any.
+            //
+            // It is possible in error scenarios that some of the bounds were not determined. Substitute
+            // zeroes for those.
+            if (numSizes == 0)
+            {
+                BoundExpression[] sizeArray = new BoundExpression[rank];
+                for (int i = 0; i < rank; i++)
+                {
+                    sizeArray[i] = new BoundLiteral(
+                        nonNullSyntax,
+                        ConstantValue.Create(knownSizes[i] ?? 0),
+                        GetSpecialType(SpecialType.System_Int32, diagnostics, nonNullSyntax))
+                    { WasCompilerGenerated = true };
+                }
+                sizes = sizeArray.AsImmutableOrNull();
+            }
+            else if (!error && rank != numSizes)
+            {
+                Error(diagnostics, ErrorCode.ERR_BadIndexCount, nonNullSyntax, type.Rank);
+                error = true;
+            }
+
+            return new BoundArrayCreation(nonNullSyntax, sizes, initializer, type, hasErrors: error)
+            {
+                WasCompilerGenerated = !hasCreationSyntax &&
+                    (initSyntax.Parent == null ||
+                    initSyntax.Parent.Kind() != SyntaxKind.EqualsValueClause ||
+                    ((EqualsValueClauseSyntax)initSyntax.Parent).Value != initSyntax)
+            };
+        }
+
+        // We could be in the cases
+        //
+        // (1) int[] x = { a, b }
+        // (2) new int[] { a, b }
+        // (3) new int[2] { a, b }
+        // (4) new [] { a, b }
+        //
+        // In case (1) there is no creation syntax.
+        // In cases (2) and (3) creation syntax is an ArrayCreationExpression.
+        // In case (4) creation syntax is an ImplicitArrayCreationExpression.
+        //
+        // In cases (1), (2) and (4) there are no sizes.
+        //
+        // The initializer syntax is always provided.
+        //
+        // If we are in case (3) and sizes are provided then the number of sizes must match the rank
+        // of the array type passed in.
+
+        // For case (4), i.e. ImplicitArrayCreationExpression, we must have already bound the
+        // initializer expressions for best type inference.
+        // These bound expressions are stored in boundInitExprOpt and reused in creating
+        // BoundArrayInitialization to avoid binding them twice.
+
         private BoundArrayCreation BindArrayCreationWithInitializer(
             BindingDiagnosticBag diagnostics,
             ExpressionSyntax creationSyntax,
@@ -3540,10 +3891,13 @@ namespace Microsoft.CodeAnalysis.CSharp
         {
             Debug.Assert(creationSyntax == null ||
                 creationSyntax.Kind() == SyntaxKind.ArrayCreationExpression ||
-                creationSyntax.Kind() == SyntaxKind.ImplicitArrayCreationExpression);
+                creationSyntax.Kind() == SyntaxKind.ImplicitArrayCreationExpression ||
+                creationSyntax.Kind() == SyntaxKind.ImplicitArrayCreationExpression2);
             Debug.Assert(initSyntax != null);
             Debug.Assert((object)type != null);
-            Debug.Assert(boundInitExprOpt.IsDefault || creationSyntax.Kind() == SyntaxKind.ImplicitArrayCreationExpression);
+            Debug.Assert(boundInitExprOpt.IsDefault ||
+                creationSyntax.Kind() == SyntaxKind.ImplicitArrayCreationExpression ||
+                creationSyntax.Kind() == SyntaxKind.ImplicitArrayCreationExpression2);
 
             // NOTE: In error scenarios, it may be the case sizes.Count > type.Rank.
             // For example, new int[1 2] has 2 sizes, but rank 1 (since there are 0 commas).

@@ -9213,10 +9213,14 @@ class C
         [Fact, Trait(Traits.Feature, Traits.Features.Formatting)]
         [WorkItem(25098, "https://github.com/dotnet/roslyn/issues/25098")]
         public void FormatSingleStructDeclaration()
+<<<<<<< HEAD
             => Formatter.Format(SyntaxFactory.StructDeclaration("S"), DefaultWorkspace.Services, CSharpSyntaxFormattingOptions.Default, CancellationToken.None);
+=======
+            => Formatter.Format(SyntaxFactory.StructDeclaration("S"), DefaultWorkspace);
             Formatter.Format(SyntaxFactory.StructDeclaration("S"
                 , openBraceToken: SyntaxFactory.Token(SyntaxKind.IndentInToken)
                 , closeBraceToken: SyntaxFactory.Token(SyntaxKind.IndentOutToken)), DefaultWorkspace);
+>>>>>>> 436b1b0ecf4 (rebase attempt)
 
         [Fact, Trait(Traits.Feature, Traits.Features.Formatting)]
         public async Task FormatIndexExpression()

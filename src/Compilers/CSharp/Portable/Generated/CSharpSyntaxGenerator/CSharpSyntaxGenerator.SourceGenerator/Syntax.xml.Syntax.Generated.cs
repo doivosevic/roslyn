@@ -3385,6 +3385,64 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax
     /// <remarks>
     /// <para>This node is associated with the following syntax kinds:</para>
     /// <list type="bullet">
+    /// <item><description><see cref="SyntaxKind.ArrayInitializerExpression"/></description></item>
+    /// </list>
+    /// </remarks>
+    public sealed partial class InitializerExpression2Syntax : ExpressionSyntax
+    {
+        private SyntaxNode? expressions;
+
+        internal InitializerExpression2Syntax(InternalSyntax.CSharpSyntaxNode green, SyntaxNode? parent, int position)
+          : base(green, parent, position)
+        {
+        }
+
+        /// <summary>SyntaxToken representing the open brace.</summary>
+        public SyntaxToken OpenBracketToken => new SyntaxToken(this, ((Syntax.InternalSyntax.InitializerExpression2Syntax)this.Green).openBracketToken, Position, 0);
+
+        /// <summary>SeparatedSyntaxList of ExpressionSyntax representing the list of expressions in the initializer expression.</summary>
+        public SeparatedSyntaxList<ExpressionSyntax> Expressions
+        {
+            get
+            {
+                var red = GetRed(ref this.expressions, 1);
+                return red != null ? new SeparatedSyntaxList<ExpressionSyntax>(red, GetChildIndex(1)) : default;
+            }
+        }
+
+        /// <summary>SyntaxToken representing the close brace.</summary>
+        public SyntaxToken CloseBracketToken => new SyntaxToken(this, ((Syntax.InternalSyntax.InitializerExpression2Syntax)this.Green).closeBracketToken, GetChildPosition(2), GetChildIndex(2));
+
+        internal override SyntaxNode? GetNodeSlot(int index) => index == 1 ? GetRed(ref this.expressions, 1)! : null;
+
+        internal override SyntaxNode? GetCachedSlot(int index) => index == 1 ? this.expressions : null;
+
+        public override void Accept(CSharpSyntaxVisitor visitor) => visitor.VisitInitializerExpression2(this);
+        public override TResult? Accept<TResult>(CSharpSyntaxVisitor<TResult> visitor) where TResult : default => visitor.VisitInitializerExpression2(this);
+
+        public InitializerExpression2Syntax Update(SyntaxToken openBracketToken, SeparatedSyntaxList<ExpressionSyntax> expressions, SyntaxToken closeBracketToken)
+        {
+            if (openBracketToken != this.OpenBracketToken || expressions != this.Expressions || closeBracketToken != this.CloseBracketToken)
+            {
+                var newNode = SyntaxFactory.InitializerExpression2(openBracketToken, expressions, closeBracketToken);
+                var annotations = GetAnnotations();
+                return annotations?.Length > 0 ? newNode.WithAnnotations(annotations) : newNode;
+            }
+
+            return this;
+        }
+
+        public InitializerExpression2Syntax WithOpenBracketToken(SyntaxToken openBracketToken) => Update(openBracketToken, this.Expressions, this.CloseBracketToken);
+        public InitializerExpression2Syntax WithExpressions(SeparatedSyntaxList<ExpressionSyntax> expressions) => Update(this.OpenBracketToken, expressions, this.CloseBracketToken);
+        public InitializerExpression2Syntax WithCloseBracketToken(SyntaxToken closeBracketToken) => Update(this.OpenBracketToken, this.Expressions, closeBracketToken);
+
+        public InitializerExpression2Syntax AddExpressions(params ExpressionSyntax[] items) => WithExpressions(this.Expressions.AddRange(items));
+    }
+
+    /// <summary>Class which represents the syntax node for initializer expression.</summary>
+    /// <remarks>
+    /// <para>This node is associated with the following syntax kinds:</para>
+    /// <list type="bullet">
     /// <item><description><see cref="SyntaxKind.ObjectInitializerExpression"/></description></item>
     /// <item><description><see cref="SyntaxKind.CollectionInitializerExpression"/></description></item>
     /// <item><description><see cref="SyntaxKind.ArrayInitializerExpression"/></description></item>
@@ -3860,6 +3918,49 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax
         public ArrayCreationExpressionSyntax AddTypeRankSpecifiers(params ArrayRankSpecifierSyntax[] items) => WithType(this.Type.WithRankSpecifiers(this.Type.RankSpecifiers.AddRange(items)));
     }
 
+    /// <summary>Class which represents the syntax node for implicit array creation expression 2.</summary>
+    /// <remarks>
+    /// <para>This node is associated with the following syntax kinds:</para>
+    /// <list type="bullet">
+    /// <item><description><see cref="SyntaxKind.ImplicitArrayCreationExpression2"/></description></item>
+    /// </list>
+    /// </remarks>
+    public sealed partial class ImplicitArrayCreationExpression2Syntax : ExpressionSyntax
+    {
+        private InitializerExpression2Syntax? initializer;
+
+        internal ImplicitArrayCreationExpression2Syntax(InternalSyntax.CSharpSyntaxNode green, SyntaxNode? parent, int position)
+          : base(green, parent, position)
+        {
+        }
+
+        /// <summary>InitializerExpressionSyntax representing the initializer expression of the implicit array creation expression.</summary>
+        public InitializerExpression2Syntax Initializer => GetRedAtZero(ref this.initializer)!;
+
+        internal override SyntaxNode? GetNodeSlot(int index) => index == 0 ? GetRedAtZero(ref this.initializer)! : null;
+
+        internal override SyntaxNode? GetCachedSlot(int index) => index == 0 ? this.initializer : null;
+
+        public override void Accept(CSharpSyntaxVisitor visitor) => visitor.VisitImplicitArrayCreationExpression2(this);
+        public override TResult? Accept<TResult>(CSharpSyntaxVisitor<TResult> visitor) where TResult : default => visitor.VisitImplicitArrayCreationExpression2(this);
+
+        public ImplicitArrayCreationExpression2Syntax Update(InitializerExpression2Syntax initializer)
+        {
+            if (initializer != this.Initializer)
+            {
+                var newNode = SyntaxFactory.ImplicitArrayCreationExpression2(initializer);
+                var annotations = GetAnnotations();
+                return annotations?.Length > 0 ? newNode.WithAnnotations(annotations) : newNode;
+            }
+
+            return this;
+        }
+
+        public ImplicitArrayCreationExpression2Syntax WithInitializer(InitializerExpression2Syntax initializer) => Update(initializer);
+
+        public ImplicitArrayCreationExpression2Syntax AddInitializerExpressions(params ExpressionSyntax[] items) => WithInitializer(this.Initializer.WithExpressions(this.Initializer.Expressions.AddRange(items)));
+    }
+
     /// <summary>Class which represents the syntax node for implicit array creation expression.</summary>
     /// <remarks>
     /// <para>This node is associated with the following syntax kinds:</para>
@@ -4042,6 +4143,285 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax
         public ImplicitStackAllocArrayCreationExpressionSyntax WithInitializer(InitializerExpressionSyntax initializer) => Update(this.StackAllocKeyword, this.OpenBracketToken, this.CloseBracketToken, initializer);
 
         public ImplicitStackAllocArrayCreationExpressionSyntax AddInitializerExpressions(params ExpressionSyntax[] items) => WithInitializer(this.Initializer.WithExpressions(this.Initializer.Expressions.AddRange(items)));
+    }
+
+    public abstract partial class QueryClause2Syntax : CSharpSyntaxNode
+    {
+        internal QueryClause2Syntax(InternalSyntax.CSharpSyntaxNode green, SyntaxNode? parent, int position)
+          : base(green, parent, position)
+        {
+        }
+    }
+
+    /// <remarks>
+    /// <para>This node is associated with the following syntax kinds:</para>
+    /// <list type="bullet">
+    /// <item><description><see cref="SyntaxKind.QueryExpression2"/></description></item>
+    /// </list>
+    /// </remarks>
+    public sealed partial class QueryExpression2Syntax : ExpressionSyntax
+    {
+        private FromClause2Syntax? fromClause;
+        private QueryBody2Syntax? body;
+
+        internal QueryExpression2Syntax(InternalSyntax.CSharpSyntaxNode green, SyntaxNode? parent, int position)
+          : base(green, parent, position)
+        {
+        }
+
+        /// <summary>SyntaxToken representing the open brace.</summary>
+        public SyntaxToken OpenBracketToken => new SyntaxToken(this, ((Syntax.InternalSyntax.QueryExpression2Syntax)this.Green).openBracketToken, Position, 0);
+
+        public FromClause2Syntax FromClause => GetRed(ref this.fromClause, 1)!;
+
+        public QueryBody2Syntax Body => GetRed(ref this.body, 2)!;
+
+        /// <summary>SyntaxToken representing the close brace.</summary>
+        public SyntaxToken CloseBracketToken => new SyntaxToken(this, ((Syntax.InternalSyntax.QueryExpression2Syntax)this.Green).closeBracketToken, GetChildPosition(3), GetChildIndex(3));
+
+        internal override SyntaxNode? GetNodeSlot(int index)
+            => index switch
+            {
+                1 => GetRed(ref this.fromClause, 1)!,
+                2 => GetRed(ref this.body, 2)!,
+                _ => null,
+            };
+
+        internal override SyntaxNode? GetCachedSlot(int index)
+            => index switch
+            {
+                1 => this.fromClause,
+                2 => this.body,
+                _ => null,
+            };
+
+        public override void Accept(CSharpSyntaxVisitor visitor) => visitor.VisitQueryExpression2(this);
+        public override TResult? Accept<TResult>(CSharpSyntaxVisitor<TResult> visitor) where TResult : default => visitor.VisitQueryExpression2(this);
+
+        public QueryExpression2Syntax Update(SyntaxToken openBracketToken, FromClause2Syntax fromClause, QueryBody2Syntax body, SyntaxToken closeBracketToken)
+        {
+            if (openBracketToken != this.OpenBracketToken || fromClause != this.FromClause || body != this.Body || closeBracketToken != this.CloseBracketToken)
+            {
+                var newNode = SyntaxFactory.QueryExpression2(openBracketToken, fromClause, body, closeBracketToken);
+                var annotations = GetAnnotations();
+                return annotations?.Length > 0 ? newNode.WithAnnotations(annotations) : newNode;
+            }
+
+            return this;
+        }
+
+        public QueryExpression2Syntax WithOpenBracketToken(SyntaxToken openBracketToken) => Update(openBracketToken, this.FromClause, this.Body, this.CloseBracketToken);
+        public QueryExpression2Syntax WithFromClause(FromClause2Syntax fromClause) => Update(this.OpenBracketToken, fromClause, this.Body, this.CloseBracketToken);
+        public QueryExpression2Syntax WithBody(QueryBody2Syntax body) => Update(this.OpenBracketToken, this.FromClause, body, this.CloseBracketToken);
+        public QueryExpression2Syntax WithCloseBracketToken(SyntaxToken closeBracketToken) => Update(this.OpenBracketToken, this.FromClause, this.Body, closeBracketToken);
+
+        public QueryExpression2Syntax AddBodyClauses(params QueryClause2Syntax[] items) => WithBody(this.Body.WithClauses(this.Body.Clauses.AddRange(items)));
+    }
+
+    /// <remarks>
+    /// <para>This node is associated with the following syntax kinds:</para>
+    /// <list type="bullet">
+    /// <item><description><see cref="SyntaxKind.QueryBody2"/></description></item>
+    /// </list>
+    /// </remarks>
+    public sealed partial class QueryBody2Syntax : CSharpSyntaxNode
+    {
+        private SyntaxNode? clauses;
+        private SelectClause2Syntax? selectOrGroup;
+
+        internal QueryBody2Syntax(InternalSyntax.CSharpSyntaxNode green, SyntaxNode? parent, int position)
+          : base(green, parent, position)
+        {
+        }
+
+        public SyntaxList<QueryClause2Syntax> Clauses => new SyntaxList<QueryClause2Syntax>(GetRed(ref this.clauses, 0));
+
+        public SelectClause2Syntax SelectOrGroup => GetRed(ref this.selectOrGroup, 1)!;
+
+        internal override SyntaxNode? GetNodeSlot(int index)
+            => index switch
+            {
+                0 => GetRedAtZero(ref this.clauses)!,
+                1 => GetRed(ref this.selectOrGroup, 1)!,
+                _ => null,
+            };
+
+        internal override SyntaxNode? GetCachedSlot(int index)
+            => index switch
+            {
+                0 => this.clauses,
+                1 => this.selectOrGroup,
+                _ => null,
+            };
+
+        public override void Accept(CSharpSyntaxVisitor visitor) => visitor.VisitQueryBody2(this);
+        public override TResult? Accept<TResult>(CSharpSyntaxVisitor<TResult> visitor) where TResult : default => visitor.VisitQueryBody2(this);
+
+        public QueryBody2Syntax Update(SyntaxList<QueryClause2Syntax> clauses, SelectClause2Syntax selectOrGroup)
+        {
+            if (clauses != this.Clauses || selectOrGroup != this.SelectOrGroup)
+            {
+                var newNode = SyntaxFactory.QueryBody2(clauses, selectOrGroup);
+                var annotations = GetAnnotations();
+                return annotations?.Length > 0 ? newNode.WithAnnotations(annotations) : newNode;
+            }
+
+            return this;
+        }
+
+        public QueryBody2Syntax WithClauses(SyntaxList<QueryClause2Syntax> clauses) => Update(clauses, this.SelectOrGroup);
+        public QueryBody2Syntax WithSelectOrGroup(SelectClause2Syntax selectOrGroup) => Update(this.Clauses, selectOrGroup);
+
+        public QueryBody2Syntax AddClauses(params QueryClause2Syntax[] items) => WithClauses(this.Clauses.AddRange(items));
+    }
+
+    /// <remarks>
+    /// <para>This node is associated with the following syntax kinds:</para>
+    /// <list type="bullet">
+    /// <item><description><see cref="SyntaxKind.FromClause2"/></description></item>
+    /// </list>
+    /// </remarks>
+    public sealed partial class FromClause2Syntax : QueryClause2Syntax
+    {
+        private TypeSyntax? type;
+        private ExpressionSyntax? expression;
+
+        internal FromClause2Syntax(InternalSyntax.CSharpSyntaxNode green, SyntaxNode? parent, int position)
+          : base(green, parent, position)
+        {
+        }
+
+        public SyntaxToken FromKeyword => new SyntaxToken(this, ((Syntax.InternalSyntax.FromClause2Syntax)this.Green).fromKeyword, Position, 0);
+
+        public TypeSyntax? Type => GetRed(ref this.type, 1);
+
+        /// <summary>Gets the identifier.</summary>
+        public SyntaxToken Identifier => new SyntaxToken(this, ((Syntax.InternalSyntax.FromClause2Syntax)this.Green).identifier, GetChildPosition(2), GetChildIndex(2));
+
+        public SyntaxToken InKeyword => new SyntaxToken(this, ((Syntax.InternalSyntax.FromClause2Syntax)this.Green).inKeyword, GetChildPosition(3), GetChildIndex(3));
+
+        public ExpressionSyntax Expression => GetRed(ref this.expression, 4)!;
+
+        internal override SyntaxNode? GetNodeSlot(int index)
+            => index switch
+            {
+                1 => GetRed(ref this.type, 1),
+                4 => GetRed(ref this.expression, 4)!,
+                _ => null,
+            };
+
+        internal override SyntaxNode? GetCachedSlot(int index)
+            => index switch
+            {
+                1 => this.type,
+                4 => this.expression,
+                _ => null,
+            };
+
+        public override void Accept(CSharpSyntaxVisitor visitor) => visitor.VisitFromClause2(this);
+        public override TResult? Accept<TResult>(CSharpSyntaxVisitor<TResult> visitor) where TResult : default => visitor.VisitFromClause2(this);
+
+        public FromClause2Syntax Update(SyntaxToken fromKeyword, TypeSyntax? type, SyntaxToken identifier, SyntaxToken inKeyword, ExpressionSyntax expression)
+        {
+            if (fromKeyword != this.FromKeyword || type != this.Type || identifier != this.Identifier || inKeyword != this.InKeyword || expression != this.Expression)
+            {
+                var newNode = SyntaxFactory.FromClause2(fromKeyword, type, identifier, inKeyword, expression);
+                var annotations = GetAnnotations();
+                return annotations?.Length > 0 ? newNode.WithAnnotations(annotations) : newNode;
+            }
+
+            return this;
+        }
+
+        public FromClause2Syntax WithFromKeyword(SyntaxToken fromKeyword) => Update(fromKeyword, this.Type, this.Identifier, this.InKeyword, this.Expression);
+        public FromClause2Syntax WithType(TypeSyntax? type) => Update(this.FromKeyword, type, this.Identifier, this.InKeyword, this.Expression);
+        public FromClause2Syntax WithIdentifier(SyntaxToken identifier) => Update(this.FromKeyword, this.Type, identifier, this.InKeyword, this.Expression);
+        public FromClause2Syntax WithInKeyword(SyntaxToken inKeyword) => Update(this.FromKeyword, this.Type, this.Identifier, inKeyword, this.Expression);
+        public FromClause2Syntax WithExpression(ExpressionSyntax expression) => Update(this.FromKeyword, this.Type, this.Identifier, this.InKeyword, expression);
+    }
+
+    /// <remarks>
+    /// <para>This node is associated with the following syntax kinds:</para>
+    /// <list type="bullet">
+    /// <item><description><see cref="SyntaxKind.WhereClause2"/></description></item>
+    /// </list>
+    /// </remarks>
+    public sealed partial class WhereClause2Syntax : QueryClause2Syntax
+    {
+        private ExpressionSyntax? condition;
+
+        internal WhereClause2Syntax(InternalSyntax.CSharpSyntaxNode green, SyntaxNode? parent, int position)
+          : base(green, parent, position)
+        {
+        }
+
+        public SyntaxToken WhereKeyword => new SyntaxToken(this, ((Syntax.InternalSyntax.WhereClause2Syntax)this.Green).whereKeyword, Position, 0);
+
+        public ExpressionSyntax Condition => GetRed(ref this.condition, 1)!;
+
+        internal override SyntaxNode? GetNodeSlot(int index) => index == 1 ? GetRed(ref this.condition, 1)! : null;
+
+        internal override SyntaxNode? GetCachedSlot(int index) => index == 1 ? this.condition : null;
+
+        public override void Accept(CSharpSyntaxVisitor visitor) => visitor.VisitWhereClause2(this);
+        public override TResult? Accept<TResult>(CSharpSyntaxVisitor<TResult> visitor) where TResult : default => visitor.VisitWhereClause2(this);
+
+        public WhereClause2Syntax Update(SyntaxToken whereKeyword, ExpressionSyntax condition)
+        {
+            if (whereKeyword != this.WhereKeyword || condition != this.Condition)
+            {
+                var newNode = SyntaxFactory.WhereClause2(whereKeyword, condition);
+                var annotations = GetAnnotations();
+                return annotations?.Length > 0 ? newNode.WithAnnotations(annotations) : newNode;
+            }
+
+            return this;
+        }
+
+        public WhereClause2Syntax WithWhereKeyword(SyntaxToken whereKeyword) => Update(whereKeyword, this.Condition);
+        public WhereClause2Syntax WithCondition(ExpressionSyntax condition) => Update(this.WhereKeyword, condition);
+    }
+
+    /// <remarks>
+    /// <para>This node is associated with the following syntax kinds:</para>
+    /// <list type="bullet">
+    /// <item><description><see cref="SyntaxKind.SelectClause2"/></description></item>
+    /// </list>
+    /// </remarks>
+    public sealed partial class SelectClause2Syntax : QueryClause2Syntax
+    {
+        private ExpressionSyntax? expression;
+
+        internal SelectClause2Syntax(InternalSyntax.CSharpSyntaxNode green, SyntaxNode? parent, int position)
+          : base(green, parent, position)
+        {
+        }
+
+        public SyntaxToken SelectKeyword => new SyntaxToken(this, ((Syntax.InternalSyntax.SelectClause2Syntax)this.Green).selectKeyword, Position, 0);
+
+        public ExpressionSyntax Expression => GetRed(ref this.expression, 1)!;
+
+        internal override SyntaxNode? GetNodeSlot(int index) => index == 1 ? GetRed(ref this.expression, 1)! : null;
+
+        internal override SyntaxNode? GetCachedSlot(int index) => index == 1 ? this.expression : null;
+
+        public override void Accept(CSharpSyntaxVisitor visitor) => visitor.VisitSelectClause2(this);
+        public override TResult? Accept<TResult>(CSharpSyntaxVisitor<TResult> visitor) where TResult : default => visitor.VisitSelectClause2(this);
+
+        public SelectClause2Syntax Update(SyntaxToken selectKeyword, ExpressionSyntax expression)
+        {
+            if (selectKeyword != this.SelectKeyword || expression != this.Expression)
+            {
+                var newNode = SyntaxFactory.SelectClause2(selectKeyword, expression);
+                var annotations = GetAnnotations();
+                return annotations?.Length > 0 ? newNode.WithAnnotations(annotations) : newNode;
+            }
+
+            return this;
+        }
+
+        public SelectClause2Syntax WithSelectKeyword(SyntaxToken selectKeyword) => Update(selectKeyword, this.Expression);
+        public SelectClause2Syntax WithExpression(ExpressionSyntax expression) => Update(this.SelectKeyword, expression);
     }
 
     public abstract partial class QueryClauseSyntax : CSharpSyntaxNode
@@ -5168,11 +5548,6 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax
             var positionalPatternClause = this.PositionalPatternClause ?? SyntaxFactory.PositionalPatternClause();
             return WithPositionalPatternClause(positionalPatternClause.WithSubpatterns(positionalPatternClause.Subpatterns.AddRange(items)));
         }
-        public RecursivePatternSyntax AddPropertyPatternClauseSubpatterns(params SubpatternSyntax[] items)
-        {
-            var propertyPatternClause = this.PropertyPatternClause ?? SyntaxFactory.PropertyPatternClause();
-            return WithPropertyPatternClause(propertyPatternClause.WithSubpatterns(propertyPatternClause.Subpatterns.AddRange(items)));
-        }
     }
 
     /// <remarks>
@@ -6251,7 +6626,14 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax
 
         public VariableDeclarationSyntax Declaration => GetRed(ref this.declaration, 4)!;
 
-        public SyntaxToken SemicolonToken => new SyntaxToken(this, ((Syntax.InternalSyntax.LocalDeclarationStatementSyntax)this.Green).semicolonToken, GetChildPosition(5), GetChildIndex(5));
+        public SyntaxToken SemicolonToken
+        {
+            get
+            {
+                var slot = ((Syntax.InternalSyntax.LocalDeclarationStatementSyntax)this.Green).semicolonToken;
+                return slot != null ? new SyntaxToken(this, slot, GetChildPosition(5), GetChildIndex(5)) : default;
+            }
+        }
 
         internal override SyntaxNode? GetNodeSlot(int index)
             => index switch
@@ -6627,7 +7009,14 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax
 
         public ExpressionSyntax Expression => GetRed(ref this.expression, 1)!;
 
-        public SyntaxToken SemicolonToken => new SyntaxToken(this, ((Syntax.InternalSyntax.ExpressionStatementSyntax)this.Green).semicolonToken, GetChildPosition(2), GetChildIndex(2));
+        public SyntaxToken SemicolonToken
+        {
+            get
+            {
+                var slot = ((Syntax.InternalSyntax.ExpressionStatementSyntax)this.Green).semicolonToken;
+                return slot != null ? new SyntaxToken(this, slot, GetChildPosition(2), GetChildIndex(2)) : default;
+            }
+        }
 
         internal override SyntaxNode? GetNodeSlot(int index)
             => index switch

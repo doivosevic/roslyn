@@ -3179,6 +3179,13 @@
       <Kind Name="NamespaceKeyword"/>
     </Field>
     <Field Name="Name" Type="NameSyntax"/>
+<<<<<<< HEAD
+=======
+    <Field Name="OpenBraceToken" Type="SyntaxToken">
+      <Kind Name="OpenBraceToken"/>
+      <Kind Name="IndentInToken"/>
+    </Field>
+>>>>>>> 436b1b0ecf4 (rebase attempt)
     <Field Name="Externs" Type="SyntaxList&lt;ExternAliasDirectiveSyntax&gt;"/>
     <Field Name="Usings" Type="SyntaxList&lt;UsingDirectiveSyntax&gt;"/>
     <Field Name="Members" Type="SyntaxList&lt;MemberDeclarationSyntax&gt;"/>
@@ -3193,7 +3200,6 @@
     <Field Name="Name" Type="NameSyntax" Override="true"/>
     <Field Name="OpenBraceToken" Type="SyntaxToken">
       <Kind Name="OpenBraceToken"/>
-      <Kind Name="IndentInToken"/>
     </Field>
     <Field Name="Externs" Type="SyntaxList&lt;ExternAliasDirectiveSyntax&gt;" Override="true"/>
     <Field Name="Usings" Type="SyntaxList&lt;UsingDirectiveSyntax&gt;" Override="true"/>

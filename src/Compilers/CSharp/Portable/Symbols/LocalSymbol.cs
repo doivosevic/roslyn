@@ -46,6 +46,8 @@ namespace Microsoft.CodeAnalysis.CSharp.Symbols
 
         internal virtual bool CanScheduleToStack => !IsConst && !IsPinned;
 
+        internal virtual bool IsDeclaredWithoutVar { get => false; }
+
         internal abstract SyntaxToken IdentifierToken
         {
             get;
