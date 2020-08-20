@@ -365,8 +365,11 @@ namespace Microsoft.CodeAnalysis.CSharp
         ImplicitElementAccess = 8656,
         IsPatternExpression = 8657,
         RangeExpression = 8658,
+<<<<<<< Updated upstream
         ImplicitObjectCreationExpression = 8659,
-        ImplicitArrayCreationExpression2 = 8660,
+=======
+        ImplicitArrayCreationExpression2 = 8659,
+>>>>>>> Stashed changes
 
         // binary expressions
         AddExpression = 8668,
@@ -628,10 +631,9 @@ namespace Microsoft.CodeAnalysis.CSharp
         SuppressNullableWarningExpression = 9054,
         NullableDirectiveTrivia = 9055,
 
+<<<<<<< Updated upstream
         FunctionPointerType = 9056,
         FunctionPointerParameter = 9057,
-        OpenContext = 9080,
-        CloseContext = 9081
         FunctionPointerParameterList = 9058,
         FunctionPointerCallingConvention = 9059,
 
@@ -647,5 +649,9 @@ namespace Microsoft.CodeAnalysis.CSharp
 
         FunctionPointerUnmanagedCallingConventionList = 9066,
         FunctionPointerUnmanagedCallingConvention = 9067,
+=======
+        OpenContext = 9080,
+        CloseContext = 9081
+>>>>>>> Stashed changes
     }
 }

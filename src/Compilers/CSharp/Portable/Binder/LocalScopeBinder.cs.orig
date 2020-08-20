@@ -224,7 +224,15 @@ namespace Microsoft.CodeAnalysis.CSharp
                                     ExpressionVariableFinder.FindExpressionVariables(args.localScopeBinder, args.locals, expression, args.localDeclarationBinder);
                                 }
                             }
+<<<<<<< Updated upstream
                         }, (localScopeBinder: this, locals: locals, localDeclarationBinder: localDeclarationBinder));
+=======
+
+                            foreach (var vdecl in decl.Declaration.Variables)
+                            {
+                                var localSymbol = MakeLocal(decl.Declaration, vdecl, kind, localDeclarationBinder);
+                                locals.Add(localSymbol);
+>>>>>>> Stashed changes
 
                         LocalDeclarationKind kind;
                         if (decl.IsConst)
@@ -239,19 +247,19 @@ namespace Microsoft.CodeAnalysis.CSharp
                         {
                             kind = LocalDeclarationKind.RegularVariable;
                         }
-
                         foreach (var vdecl in decl.Declaration.Variables)
                         {
                             var localSymbol = MakeLocal(decl.Declaration, vdecl, kind, localDeclarationBinder);
                             locals.Add(localSymbol);
 
+<<<<<<< Updated upstream
                             // also gather expression-declared variables from the bracketed argument lists and the initializers
                             ExpressionVariableFinder.FindExpressionVariables(this, locals, vdecl, localDeclarationBinder);
                         }
                     }
                     break;
-
-                case SyntaxKind.ExpressionStatement:
+=======
+                    case SyntaxKind.ExpressionStatement:
                         Binder localDeclarationBinder2 = enclosingBinder.GetBinder(innerStatement) ?? enclosingBinder;
 
                         if ((innerStatement is ExpressionStatementSyntax exp) && exp.Expression.Kind() == SyntaxKind.SimpleAssignmentExpression)
@@ -283,6 +291,15 @@ namespace Microsoft.CodeAnalysis.CSharp
                         ExpressionVariableFinder.FindExpressionVariables(this, locals, innerStatement, localDeclarationBinder2);
                         break;
 
+                    case SyntaxKind.IfStatement:
+                    case SyntaxKind.YieldReturnStatement:
+                    case SyntaxKind.ReturnStatement:
+                    case SyntaxKind.ThrowStatement:
+                        ExpressionVariableFinder.FindExpressionVariables(this, locals, innerStatement, enclosingBinder.GetBinder(innerStatement) ?? enclosingBinder);
+                        break;
+>>>>>>> Stashed changes
+
+                case SyntaxKind.ExpressionStatement:
                 case SyntaxKind.IfStatement:
                 case SyntaxKind.YieldReturnStatement:
                 case SyntaxKind.ReturnStatement:

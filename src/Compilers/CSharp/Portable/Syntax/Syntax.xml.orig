@@ -3331,9 +3331,13 @@
         <summary>Gets the base type list.</summary>
       </PropertyComment>
     </Field>
+<<<<<<< Updated upstream
     <Field Name="OpenBraceToken" Type="SyntaxToken" Optional="true">
+=======
+    <Field Name="OpenBraceToken" Type="SyntaxToken">
       <Kind Name="OpenBraceToken"/>
       <Kind Name="IndentInToken"/>
+>>>>>>> Stashed changes
       <PropertyComment>
         <summary>Gets the open brace token.</summary>
       </PropertyComment>

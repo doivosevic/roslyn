@@ -54,7 +54,9 @@ namespace Microsoft.CodeAnalysis.CSharp.ConvertLinq.ConvertForEachToLinqQuery
                     VarNameIdentifier,
                     SyntaxFactory.Identifier("_"),
                     CreateQueryExpressionOrLinqInvocation(
-                        SyntaxFactory.AnonymousObjectCreationExpression(),
+                        SyntaxFactory.AnonymousObjectCreationExpression(
+                            openBraceToken: SyntaxFactory.Token(SyntaxKind.IndentInToken),
+                            closeBraceToken: SyntaxFactory.Token(SyntaxKind.IndentOutToken)),
                         Enumerable.Empty<SyntaxToken>(),
                         Enumerable.Empty<SyntaxToken>(),
                         convertToQuery),

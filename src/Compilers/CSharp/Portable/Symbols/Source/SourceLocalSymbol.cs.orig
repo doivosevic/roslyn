@@ -613,6 +613,14 @@ namespace Microsoft.CodeAnalysis.CSharp.Symbols
                 Debug.Assert(value <= _valEscapeScope);
                 _valEscapeScope = value;
             }
+<<<<<<< Updated upstream
+=======
+
+            protected override SourceLocalSymbol CloneWithoutType()
+            {
+                return new LocalWithInitializer(_containingSymbol, _scopeBinder, _typeSyntax, _identifierToken, _initializerValue, _initializerBinder, _declarationKind);
+            }
+>>>>>>> Stashed changes
         }
 
         /// <summary>

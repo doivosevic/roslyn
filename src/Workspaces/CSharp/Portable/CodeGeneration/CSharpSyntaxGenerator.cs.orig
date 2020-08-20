@@ -827,10 +827,15 @@ namespace Microsoft.CodeAnalysis.CSharp.CodeGeneration
                 default,
                 AsModifierList(accessibility, modifiers, SyntaxKind.EnumDeclaration),
                 name.ToIdentifierToken(),
+<<<<<<< Updated upstream
                 null,
+                this.AsEnumMembers(members));
+=======
+                default,
                 openBraceToken: SyntaxFactory.Token(SyntaxKind.IndentInToken),
                 this.AsEnumMembers(members),
                 closeBraceToken: SyntaxFactory.Token(SyntaxKind.IndentOutToken));
+>>>>>>> Stashed changes
         }
 
         public override SyntaxNode EnumMember(string name, SyntaxNode expression)
@@ -3157,7 +3162,9 @@ namespace Microsoft.CodeAnalysis.CSharp.CodeGeneration
             => SyntaxFactory.InvocationExpression(ParenthesizeLeft((ExpressionSyntax)expression), CreateArgumentList(arguments));
 
         public override SyntaxNode ElementAccessExpression(SyntaxNode expression, IEnumerable<SyntaxNode> arguments)
+<<<<<<< Updated upstream
             => SyntaxFactory.ElementAccessExpression(ParenthesizeLeft((ExpressionSyntax)expression), SyntaxFactory.BracketedArgumentList(CreateArguments(arguments)));
+=======
         {
             return SyntaxFactory.ElementAccessExpression(ParenthesizeLeft((ExpressionSyntax)expression), SyntaxFactory.BracketedArgumentList(CreateArguments(arguments)));
         }
@@ -3180,6 +3187,7 @@ namespace Microsoft.CodeAnalysis.CSharp.CodeGeneration
                 openBraceToken: SyntaxFactory.Token(SyntaxKind.IndentInToken),
                 (ExpressionSyntax)syntaxNode,
                 closeBraceToken: SyntaxFactory.Token(SyntaxKind.IndentOutToken));
+>>>>>>> Stashed changes
 
         internal override SyntaxToken NumericLiteralToken(string text, ulong value)
             => SyntaxFactory.Literal(text, value);

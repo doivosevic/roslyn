@@ -1483,8 +1483,11 @@ tryAgain:
                     this.ParseTypeParameterConstraintClauses(constraints);
                 }
 
+<<<<<<< Updated upstream
                 _termState = outerSaveTerm;
+=======
                 var openBrace = this.EatToken(this.CurrentToken.Kind == SyntaxKind.IndentInToken ? SyntaxKind.IndentInToken : SyntaxKind.OpenBraceToken);
+>>>>>>> Stashed changes
 
                 SyntaxToken semicolon;
                 SyntaxToken? openBrace;
@@ -1529,7 +1532,7 @@ tryAgain:
 
                                 _termState = saveTerm2;
                             }
-                        else if (kind == SyntaxKind.CloseBraceToken || kind == SyntaxKind.IndentOutToken || kind == SyntaxKind.EndOfFileToken || this.IsTerminator())
+                            else if (kind == SyntaxKind.CloseBraceToken || kind == SyntaxKind.EndOfFileToken || this.IsTerminator())
                             {
                                 // This marks the end of members of this class
                                 break;
@@ -1539,6 +1542,21 @@ tryAgain:
                                 // Error -- try to sync up with intended reality
                                 this.SkipBadMemberListTokens(ref openBrace, members);
                             }
+<<<<<<< Updated upstream
+=======
+
+                            _termState = saveTerm2;
+                        }
+                        else if (kind == SyntaxKind.CloseBraceToken || kind == SyntaxKind.IndentOutToken || kind == SyntaxKind.EndOfFileToken || this.IsTerminator())
+                        {
+                            // This marks the end of members of this class
+                            break;
+                        }
+                        else
+                        {
+                            // Error -- try to sync up with intended reality
+                            this.SkipBadMemberListTokens(ref openBrace, members);
+>>>>>>> Stashed changes
                         }
                     }
 
@@ -1550,15 +1568,18 @@ tryAgain:
                     else
                     {
                         closeBrace = this.EatToken(SyntaxKind.CloseBraceToken);
-                    closeBrace = this.EatClosingToken();
                     }
                     semicolon = TryEatToken(SyntaxKind.SemicolonToken);
                 }
                 else
                 {
+<<<<<<< Updated upstream
                     semicolon = CheckFeatureAvailability(EatToken(SyntaxKind.SemicolonToken), MessageID.IDS_FeatureRecords);
                     openBrace = null;
                     closeBrace = null;
+=======
+                    closeBrace = this.EatClosingToken();
+>>>>>>> Stashed changes
                 }
 
                 var modifiersList = (SyntaxList<SyntaxToken>)modifiers.ToList();
@@ -1779,9 +1800,13 @@ tryAgain:
                 // any additional types
                 while (true)
                 {
-                    if (this.CurrentToken.Kind == SyntaxKind.OpenBraceToken
+<<<<<<< Updated upstream
+                    if (this.CurrentToken.Kind == SyntaxKind.OpenBraceToken ||
                         ((_termState & TerminatorState.IsEndOfRecordSignature) != 0 && this.CurrentToken.Kind == SyntaxKind.SemicolonToken) ||
+=======
+                    if (this.CurrentToken.Kind == SyntaxKind.OpenBraceToken
                          || this.CurrentToken.Kind == SyntaxKind.IndentInToken ||
+>>>>>>> Stashed changes
                         this.IsCurrentTokenWhereOfConstraintClause())
                     {
                         break;
@@ -1855,8 +1880,11 @@ tryAgain:
                     while (true)
                     {
                         if (this.CurrentToken.Kind == SyntaxKind.OpenBraceToken
+<<<<<<< Updated upstream
                             || ((_termState & TerminatorState.IsEndOfRecordSignature) != 0 && this.CurrentToken.Kind == SyntaxKind.SemicolonToken)
+=======
                             || this.CurrentToken.Kind == SyntaxKind.IndentInToken
+>>>>>>> Stashed changes
                             || this.CurrentToken.Kind == SyntaxKind.EqualsGreaterThanToken
                             || this.CurrentToken.ContextualKind == SyntaxKind.WhereKeyword)
                         {
@@ -1947,9 +1975,13 @@ tryAgain:
             CSharpSyntaxNode tmp = null;
             Debug.Assert(list.Count > 0);
             return this.SkipBadSeparatedListTokensWithExpectedKind(ref tmp, list,
+<<<<<<< Updated upstream
                 p => p.CurrentToken.Kind != SyntaxKind.CommaToken && !p.IsPossibleTypeParameterConstraint(),
                 p => p.CurrentToken.Kind == SyntaxKind.OpenBraceToken || p.IsCurrentTokenWhereOfConstraintClause() || p.IsTerminator(),
+=======
+                p => this.CurrentToken.Kind != SyntaxKind.CommaToken && !this.IsPossibleTypeParameterConstraint(),
                 p => this.CurrentToken.Kind == SyntaxKind.OpenBraceToken || this.CurrentToken.Kind == SyntaxKind.IndentInToken || this.IsCurrentTokenWhereOfConstraintClause() || this.IsTerminator(),
+>>>>>>> Stashed changes
                 expected);
         }
 
@@ -2161,8 +2193,17 @@ tryAgain:
                     bool wasInAsync = IsInAsync;
                     if (!IsScript)
                     {
+<<<<<<< Updated upstream
                         IsInAsync = true; // We are implicitly in an async context
                     }
+=======
+                        case SyntaxKind.UnsafeKeyword:
+                            if (this.PeekToken(1).Kind == SyntaxKind.OpenBraceToken || this.PeekToken(1).Kind == SyntaxKind.IndentInToken)
+                            {
+                                return _syntaxFactory.GlobalStatement(ParseUnsafeStatement());
+                            }
+                            break;
+>>>>>>> Stashed changes
 
                     try
                     {
@@ -2170,12 +2211,12 @@ tryAgain:
                         {
                             case SyntaxKind.UnsafeKeyword:
                                 if (this.PeekToken(1).Kind == SyntaxKind.OpenBraceToken)
-                            if (this.PeekToken(1).Kind == SyntaxKind.OpenBraceToken || this.PeekToken(1).Kind == SyntaxKind.IndentInToken)
                                 {
                                     return CheckTopLevelStatementsFeatureAvailability(_syntaxFactory.GlobalStatement(ParseUnsafeStatement(attributes)));
                                 }
                                 break;
 
+<<<<<<< Updated upstream
                             case SyntaxKind.FixedKeyword:
                                 if (this.PeekToken(1).Kind == SyntaxKind.OpenParenToken)
                                 {
@@ -2188,7 +2229,6 @@ tryAgain:
                                 {
                                     case SyntaxKind.OpenParenToken:
                                     case SyntaxKind.OpenBraceToken:
-                                case SyntaxKind.IndentInToken:
                                         return CheckTopLevelStatementsFeatureAvailability(_syntaxFactory.GlobalStatement(ParseExpressionStatement(attributes)));
                                 }
                                 break;
@@ -2199,14 +2239,32 @@ tryAgain:
                                     return CheckTopLevelStatementsFeatureAvailability(_syntaxFactory.GlobalStatement(ParseExpressionStatement(attributes)));
                                 }
                                 break;
-
-                        case SyntaxKind.OpenBracketToken:
-                            return _syntaxFactory.GlobalStatement(ParseExpressionStatement());
                         }
                     }
                     finally
                     {
                         IsInAsync = wasInAsync;
+=======
+                        case SyntaxKind.DelegateKeyword:
+                            switch (this.PeekToken(1).Kind)
+                            {
+                                case SyntaxKind.OpenParenToken:
+                                case SyntaxKind.OpenBraceToken:
+                                case SyntaxKind.IndentInToken:
+                                    return _syntaxFactory.GlobalStatement(ParseExpressionStatement());
+                            }
+                            break;
+
+                        case SyntaxKind.NewKeyword:
+                            if (IsPossibleNewExpression())
+                            {
+                                return _syntaxFactory.GlobalStatement(ParseExpressionStatement());
+                            }
+                            break;
+
+                        case SyntaxKind.OpenBracketToken:
+                            return _syntaxFactory.GlobalStatement(ParseExpressionStatement());
+>>>>>>> Stashed changes
                     }
                 }
 
@@ -2295,15 +2353,34 @@ tryAgain:
                     return this.ParseTypeDeclaration(attributes, modifiers);
                 }
 
-                TypeSyntax type = ParseReturnType();
-
-                var afterTypeResetPoint = this.GetResetPoint();
+<<<<<<< Updated upstream
+=======
+                if (acceptStatement &&
+                    this.CurrentToken.Kind != SyntaxKind.CloseBraceToken &&
                     this.CurrentToken.Kind != SyntaxKind.IndentOutToken &&
                     this.CurrentToken.Kind != SyntaxKind.EndOfFileToken &&
                     this.IsPossibleStatement(acceptAccessibilityMods: true))
                 {
                     var saveTerm = _termState;
                     _termState |= TerminatorState.IsPossibleStatementStartOrStop; // partial statements can abort if a new statement starts
+
+                    // Any expression is allowed, not just expression statements:
+                    var statement = this.ParseStatementNoDeclaration(allowAnyExpression: true);
+
+                    _termState = saveTerm;
+                    if (statement != null)
+                    {
+                        return _syntaxFactory.GlobalStatement(statement);
+                    }
+                }
+
+                // Everything that's left -- methods, fields, properties, 
+                // indexers, and non-conversion operators -- starts with a type 
+                // (possibly void). Parse that.
+>>>>>>> Stashed changes
+                TypeSyntax type = ParseReturnType();
+
+                var afterTypeResetPoint = this.GetResetPoint();
 
                 try
                 {
@@ -2593,7 +2670,6 @@ parse_member_name:;
                 identifierOrThisOpt != null &&
                 (typeParameterListOpt != null && typeParameterListOpt.ContainsDiagnostics
                   || this.CurrentToken.Kind != SyntaxKind.OpenParenToken && this.CurrentToken.Kind != SyntaxKind.OpenBraceToken && this.CurrentToken.Kind != SyntaxKind.EqualsGreaterThanToken) &&
-                          || this.CurrentToken.Kind != SyntaxKind.OpenParenToken && this.CurrentToken.Kind != SyntaxKind.OpenBraceToken && this.CurrentToken.Kind != SyntaxKind.IndentInToken && this.CurrentToken.Kind != SyntaxKind.EqualsGreaterThanToken) &&
                 ReconsiderTypeAsAsyncModifier(ref modifiers, type, identifierOrThisOpt))
             {
                 this.Reset(ref afterTypeResetPoint);
@@ -2622,7 +2698,6 @@ parse_member_name:;
             switch (this.CurrentToken.Kind)
             {
                 case SyntaxKind.OpenBraceToken:
-                            case SyntaxKind.IndentInToken:
                 case SyntaxKind.EqualsGreaterThanToken:
                     result = this.ParsePropertyDeclaration(attributes, modifiers, type, explicitInterfaceOpt, identifierOrThisOpt, typeParameterListOpt);
                     return true;
@@ -2778,7 +2853,15 @@ parse_member_name:;
                     // For example, if we get
                     //     async Task<
                     // then we want async to be a modifier and Task<MISSING> to be a type.
+<<<<<<< Updated upstream
                     if (ReconsideredTypeAsAsyncModifier(ref modifiers, ref type, ref afterTypeResetPoint, ref explicitInterfaceOpt, ref identifierOrThisOpt, ref typeParameterListOpt))
+=======
+                    if (!sawRef &&
+                        identifierOrThisOpt != null &&
+                        (typeParameterListOpt != null && typeParameterListOpt.ContainsDiagnostics
+                          || this.CurrentToken.Kind != SyntaxKind.OpenParenToken && this.CurrentToken.Kind != SyntaxKind.OpenBraceToken && this.CurrentToken.Kind != SyntaxKind.IndentInToken && this.CurrentToken.Kind != SyntaxKind.EqualsGreaterThanToken) &&
+                        ReconsiderTypeAsAsyncModifier(ref modifiers, type, identifierOrThisOpt))
+>>>>>>> Stashed changes
                     {
                         goto parse_member_name;
                     }
@@ -2792,6 +2875,17 @@ parse_member_name:;
                     {
                         return result;
                     }
+<<<<<<< Updated upstream
+=======
+                    else
+                    {
+                        switch (this.CurrentToken.Kind)
+                        {
+                            case SyntaxKind.OpenBraceToken:
+                            case SyntaxKind.IndentInToken:
+                            case SyntaxKind.EqualsGreaterThanToken:
+                                return this.ParsePropertyDeclaration(attributes, modifiers, type, explicitInterfaceOpt, identifierOrThisOpt, typeParameterListOpt);
+>>>>>>> Stashed changes
 
                     // treat anything else as a method.
                     return this.ParseMethodDeclaration(attributes, modifiers, type, explicitInterfaceOpt, identifierOrThisOpt, typeParameterListOpt);
@@ -3033,7 +3127,28 @@ parse_member_name:;
             }
         }
 
+<<<<<<< Updated upstream
+=======
+        private void ParseBodyOrSemicolon(out BlockSyntax body, out SyntaxToken semicolon)
+        {
             if (this.CurrentToken.Kind == SyntaxKind.OpenBraceToken || this.CurrentToken.Kind == SyntaxKind.IndentInToken)
+            {
+                body = this.ParseBlock(isMethodBody: true);
+
+                semicolon = null;
+                if (this.CurrentToken.Kind == SyntaxKind.SemicolonToken)
+                {
+                    semicolon = this.EatTokenWithPrejudice(ErrorCode.ERR_UnexpectedSemicolon);
+                }
+            }
+            else
+            {
+                semicolon = this.EatToken(SyntaxKind.SemicolonToken);
+                body = null;
+            }
+        }
+
+>>>>>>> Stashed changes
         private bool IsEndOfTypeParameterList()
         {
             if (this.CurrentToken.Kind == SyntaxKind.OpenParenToken)
@@ -5190,15 +5305,30 @@ tryAgain:
             {
                 var equals = this.EatToken(SyntaxKind.EqualsToken);
                 ExpressionSyntax value;
-                    if (this.CurrentToken.Kind == SyntaxKind.CommaToken || this.CurrentToken.Kind == SyntaxKind.CloseBraceToken || this.CurrentToken.Kind == SyntaxKind.IndentOutToken)
                 if (this.CurrentToken.Kind == SyntaxKind.CommaToken || this.CurrentToken.Kind == SyntaxKind.CloseBraceToken)
                 {
+<<<<<<< Updated upstream
                     //an identifier is a valid expression
                     value = this.ParseIdentifierName(ErrorCode.ERR_ConstantExpected);
                 }
                 else
                 {
                     value = this.ParseExpressionCore();
+=======
+                    var equals = this.EatToken(SyntaxKind.EqualsToken);
+                    ExpressionSyntax value;
+                    if (this.CurrentToken.Kind == SyntaxKind.CommaToken || this.CurrentToken.Kind == SyntaxKind.CloseBraceToken || this.CurrentToken.Kind == SyntaxKind.IndentOutToken)
+                    {
+                        //an identifier is a valid expression
+                        value = this.ParseIdentifierName(ErrorCode.ERR_ConstantExpected);
+                    }
+                    else
+                    {
+                        value = this.ParseExpressionCore();
+                    }
+
+                    equalsValue = _syntaxFactory.EqualsValueClause(equals, value: value);
+>>>>>>> Stashed changes
                 }
 
                 equalsValue = _syntaxFactory.EqualsValueClause(equals, value: value);
@@ -7235,7 +7365,6 @@ done:;
                         return this.ParseWhileStatement(attributes);
                     case SyntaxKind.OpenBraceToken:
                         return this.ParseBlock(attributes);
-                case SyntaxKind.IndentInToken:
                     case SyntaxKind.SemicolonToken:
                         return _syntaxFactory.EmptyStatement(attributes, this.EatToken());
                     case SyntaxKind.IdentifierToken:
@@ -7245,7 +7374,103 @@ done:;
                         break;
                 }
 
+<<<<<<< Updated upstream
                 return ParseStatementCoreRest(attributes, isGlobal, ref resetPointBeforeStatement);
+=======
+        /// <summary>
+        /// Parses any statement but a declaration statement. Returns null if the lookahead looks like a declaration.
+        /// </summary>
+        /// <remarks>
+        /// Variable declarations in global code are parsed as field declarations so we need to fallback if we encounter a declaration statement.
+        /// </remarks>
+        private StatementSyntax ParseStatementNoDeclaration(bool allowAnyExpression)
+        {
+            switch (this.CurrentToken.Kind)
+            {
+                case SyntaxKind.FixedKeyword:
+                    return this.ParseFixedStatement();
+                case SyntaxKind.BreakKeyword:
+                    return this.ParseBreakStatement();
+                case SyntaxKind.ContinueKeyword:
+                    return this.ParseContinueStatement();
+                case SyntaxKind.TryKeyword:
+                case SyntaxKind.CatchKeyword:
+                case SyntaxKind.FinallyKeyword:
+                    return this.ParseTryStatement();
+                case SyntaxKind.CheckedKeyword:
+                case SyntaxKind.UncheckedKeyword:
+                    return this.ParseCheckedStatement();
+                case SyntaxKind.ConstKeyword:
+                    return null;
+                case SyntaxKind.DoKeyword:
+                    return this.ParseDoStatement();
+                case SyntaxKind.ForKeyword:
+                    return this.ParseForOrForEachStatement();
+                case SyntaxKind.ForEachKeyword:
+                    return this.ParseForEachStatement(awaitTokenOpt: default);
+                case SyntaxKind.GotoKeyword:
+                    return this.ParseGotoStatement();
+                case SyntaxKind.IfKeyword:
+                case SyntaxKind.ElseKeyword: // Including 'else' keyword to handle 'else without if' error cases 
+                    return this.ParseIfStatement();
+                case SyntaxKind.LockKeyword:
+                    return this.ParseLockStatement();
+                case SyntaxKind.ReturnKeyword:
+                    return this.ParseReturnStatement();
+                case SyntaxKind.SwitchKeyword:
+                    return this.ParseSwitchStatement();
+                case SyntaxKind.ThrowKeyword:
+                    return this.ParseThrowStatement();
+                case SyntaxKind.UnsafeKeyword:
+                    // Checking for brace to disambiguate between unsafe statement and unsafe local function
+                    if (this.IsPossibleUnsafeStatement())
+                    {
+                        return this.ParseUnsafeStatement();
+                    }
+                    break;
+                case SyntaxKind.UsingKeyword:
+                    return PeekToken(1).Kind == SyntaxKind.OpenParenToken ? this.ParseUsingStatement() : this.ParseLocalDeclarationStatement();
+                case SyntaxKind.WhileKeyword:
+                    return this.ParseWhileStatement();
+                case SyntaxKind.OpenBraceToken:
+                case SyntaxKind.IndentInToken:
+                    return this.ParseBlock();
+                case SyntaxKind.SemicolonToken:
+                    return _syntaxFactory.EmptyStatement(this.EatToken());
+                case SyntaxKind.IdentifierToken:
+                    if (isPossibleAwaitForEach())
+                    {
+                        return this.ParseForEachStatement(parseAwaitKeywordForAsyncStreams());
+                    }
+                    else if (isPossibleAwaitUsing())
+                    {
+                        if (PeekToken(2).Kind == SyntaxKind.OpenParenToken)
+                        {
+                            return this.ParseUsingStatement(parseAwaitKeywordForAsyncStreams());
+                        }
+                        else
+                        {
+                            return this.ParseLocalDeclarationStatement(parseAwaitKeywordForAsyncStreams());
+                        }
+                    }
+                    else if (this.IsPossibleLabeledStatement())
+                    {
+                        return this.ParseLabeledStatement();
+                    }
+                    else if (this.IsPossibleYieldStatement())
+                    {
+                        return this.ParseYieldStatement();
+                    }
+                    else if (this.IsPossibleAwaitExpressionStatement())
+                    {
+                        return this.ParseExpressionStatement();
+                    }
+                    else if (this.IsQueryExpression(mayBeVariableDeclaration: true, mayBeMemberDeclaration: allowAnyExpression))
+                    {
+                        return this.ParseExpressionStatement(this.ParseQueryExpression(0));
+                    }
+                    break;
+>>>>>>> Stashed changes
             }
             finally
             {
@@ -7887,18 +8112,34 @@ done:;
                 return (BlockSyntax)this.EatNode();
 
             // There's a special error code for a missing token after an accessor keyword
+<<<<<<< Updated upstream
             CSharpSyntaxNode openBrace = isAccessorBody && this.CurrentToken.Kind != SyntaxKind.OpenBraceToken
-            var openBrace = isAccessorBody && this.CurrentToken.Kind != SyntaxKind.OpenBraceToken && this.CurrentToken.Kind != SyntaxKind.IndentInToken
                 ? this.AddError(
                     SyntaxFactory.MissingToken(SyntaxKind.OpenBraceToken),
                     IsFeatureEnabled(MessageID.IDS_FeatureExpressionBodiedAccessor)
                         ? ErrorCode.ERR_SemiOrLBraceOrArrowExpected
                         : ErrorCode.ERR_SemiOrLBraceExpected)
-                : this.EatToken(this.CurrentToken.Kind == SyntaxKind.IndentInToken ? SyntaxKind.IndentInToken : SyntaxKind.OpenBraceToken);
+                : this.EatToken(SyntaxKind.OpenBraceToken);
 
             var statements = _pool.Allocate<StatementSyntax>();
             this.ParseStatements(ref openBrace, statements, stopOnSwitchSections: false);
+=======
+            var openBrace = isAccessorBody && this.CurrentToken.Kind != SyntaxKind.OpenBraceToken && this.CurrentToken.Kind != SyntaxKind.IndentInToken
+                ? this.AddError(
+                    SyntaxFactory.MissingToken(SyntaxKind.OpenBraceToken),
+                    IsFeatureEnabled(MessageID.IDS_FeatureExpressionBodiedAccessor)
+                            ? ErrorCode.ERR_SemiOrLBraceOrArrowExpected
+                            : ErrorCode.ERR_SemiOrLBraceExpected)
+                : this.EatToken(this.CurrentToken.Kind == SyntaxKind.IndentInToken ? SyntaxKind.IndentInToken : SyntaxKind.OpenBraceToken);
+
+            var statements = _pool.Allocate<StatementSyntax>();
+            try
+            {
+                CSharpSyntaxNode tmp = openBrace;
+                this.ParseStatements(ref tmp, statements, stopOnSwitchSections: false);
+                openBrace = (SyntaxToken)tmp;
                 var closeBrace = this.EatClosingToken();
+>>>>>>> Stashed changes
 
             var block = _syntaxFactory.Block(
                 attributes,
@@ -8170,10 +8411,13 @@ done:;
             if (@try.IsMissing)
             {
                 block = _syntaxFactory.Block(
+<<<<<<< Updated upstream
                     attributeLists: default, this.EatToken(SyntaxKind.OpenBraceToken), default(SyntaxList<StatementSyntax>), this.EatToken(SyntaxKind.CloseBraceToken));
+=======
                     this.EatToken(this.CurrentToken.Kind == SyntaxKind.IndentInToken ? SyntaxKind.IndentInToken : SyntaxKind.OpenBraceToken),
                     default(SyntaxList<StatementSyntax>),
                    this.EatClosingToken());
+>>>>>>> Stashed changes
             }
             else
             {
@@ -8906,8 +9150,13 @@ tryAgain:
                     sections.Add(swcase);
                 }
 
-                var closeBrace = this.EatClosingToken();
+<<<<<<< Updated upstream
+                var closeBrace = this.EatToken(SyntaxKind.CloseBraceToken);
                 return _syntaxFactory.SwitchStatement(attributes, @switch, openParen, expression, closeParen, openBrace, sections, closeBrace);
+=======
+                var closeBrace = this.EatClosingToken();
+                return _syntaxFactory.SwitchStatement(@switch, openParen, expression, closeParen, openBrace, sections, closeBrace);
+>>>>>>> Stashed changes
             }
             finally
             {
@@ -10411,10 +10660,15 @@ tryAgain:
                 case SyntaxKind.OpenParenToken:
                     return this.ParseCastOrParenExpressionOrLambdaOrTuple(precedence);
                 case SyntaxKind.NewKeyword:
+<<<<<<< Updated upstream
                     return this.ParseNewExpression();
+=======
+                    expr = this.ParseNewExpression();
+                    break;
                 case SyntaxKind.OpenBracketToken:
                     expr = this.ParseImplicitlyTypedArrayCreation2();
                     break;
+>>>>>>> Stashed changes
                 case SyntaxKind.StackAllocKeyword:
                     return this.ParseStackAllocExpression();
                 case SyntaxKind.DelegateKeyword:
@@ -11642,12 +11896,17 @@ tryAgain:
             }
             else
             {
+<<<<<<< Updated upstream
                 type = this.ParseType(ParseTypeMode.NewExpression);
                 if (type.Kind == SyntaxKind.ArrayType)
+=======
+                // Check for an initializer.
+                InitializerExpressionSyntax initializer = null;
+                if (this.CurrentToken.Kind == SyntaxKind.OpenBraceToken || this.CurrentToken.Kind == SyntaxKind.IndentInToken)
+>>>>>>> Stashed changes
                 {
                     // Check for an initializer.
                     if (this.CurrentToken.Kind == SyntaxKind.OpenBraceToken)
-                if (this.CurrentToken.Kind == SyntaxKind.OpenBraceToken || this.CurrentToken.Kind == SyntaxKind.IndentInToken)
                     {
                         initializer = this.ParseArrayInitializer();
                     }
@@ -11719,12 +11978,17 @@ tryAgain:
         {
             var openBrace = this.EatToken(SyntaxKind.OpenBraceToken);
 
+<<<<<<< Updated upstream
             var list = _pool.AllocateSeparated<ExpressionSyntax>();
             if (CurrentToken.Kind != SyntaxKind.CloseBraceToken)
             {
                 bool foundStart = true;
                 // Skip bad starting tokens until we find a valid start, if possible
                 while (!IsPossibleExpression() && CurrentToken.Kind != SyntaxKind.CommaToken)
+=======
+                InitializerExpressionSyntax initializer = null;
+                if (this.CurrentToken.Kind == SyntaxKind.OpenBraceToken || this.CurrentToken.Kind == SyntaxKind.IndentInToken)
+>>>>>>> Stashed changes
                 {
                     if (SkipBadInitializerListTokens(ref openBrace, list, SyntaxKind.IdentifierToken) == PostSkipAction.Abort)
                     {
@@ -12229,8 +12493,11 @@ tryAgain:
         {
             return this.SkipBadSeparatedListTokensWithExpectedKind(ref openBrace, list,
                 p => p.CurrentToken.Kind != SyntaxKind.CommaToken && !p.IsPossibleVariableInitializer(),
+<<<<<<< Updated upstream
                 p => p.CurrentToken.Kind == SyntaxKind.CloseBraceToken || p.IsTerminator(),
+=======
                 p => this.CurrentToken.Kind == SyntaxKind.CloseBraceToken || this.CurrentToken.Kind == SyntaxKind.IndentOutToken || this.IsTerminator(),
+>>>>>>> Stashed changes
                 expected);
         }
 
@@ -12314,6 +12581,7 @@ tryAgain:
                     parameterList = this.ParseParenthesizedParameterList();
                 }
 
+<<<<<<< Updated upstream
                 // In mismatched braces cases (missing a }) it is possible for delegate declarations to be
                 // parsed as delegate statement expressions.  When this situation occurs all subsequent 
                 // delegate declarations will also be parsed as delegate statement expressions.  In a file with
@@ -12323,11 +12591,9 @@ tryAgain:
                 // To help avoid this problem we don't recursively descend into a delegate expression unless 
                 // { } are actually present.  This keeps the stack pressure lower in bad code scenarios.
                 if (this.CurrentToken.Kind != SyntaxKind.OpenBraceToken)
-            if (this.CurrentToken.Kind != SyntaxKind.OpenBraceToken && this.CurrentToken.Kind != SyntaxKind.IndentInToken)
                 {
                     // There's a special error code for a missing token after an accessor keyword
                     var openBrace = this.EatToken(SyntaxKind.OpenBraceToken);
-                var openBrace = this.EatToken(this.CurrentToken.Kind == SyntaxKind.IndentInToken ? SyntaxKind.IndentInToken : SyntaxKind.OpenBraceToken);
                     return _syntaxFactory.AnonymousMethodExpression(
                         modifiers,
                         @delegate,
@@ -12341,6 +12607,20 @@ tryAgain:
                 }
 
                 var body = this.ParseBlock(attributes: default);
+=======
+            // In mismatched braces cases (missing a }) it is possible for delegate declarations to be
+            // parsed as delegate statement expressions.  When this situation occurs all subsequent 
+            // delegate declarations will also be parsed as delegate statement expressions.  In a file with
+            // a sufficient number of delegates, common in generated code, it will put considerable 
+            // stack pressure on the parser.  
+            //
+            // To help avoid this problem we don't recursively descend into a delegate expression unless 
+            // { } are actually present.  This keeps the stack pressure lower in bad code scenarios.
+            if (this.CurrentToken.Kind != SyntaxKind.OpenBraceToken && this.CurrentToken.Kind != SyntaxKind.IndentInToken)
+            {
+                // There's a special error code for a missing token after an accessor keyword
+                var openBrace = this.EatToken(this.CurrentToken.Kind == SyntaxKind.IndentInToken ? SyntaxKind.IndentInToken : SyntaxKind.OpenBraceToken);
+>>>>>>> Stashed changes
                 return _syntaxFactory.AnonymousMethodExpression(
                     modifiers, @delegate, parameterList, body, expressionBody: null);
             }
@@ -12420,9 +12700,15 @@ tryAgain:
         }
 
         private (BlockSyntax, ExpressionSyntax) ParseLambdaBody()
-            => CurrentToken.Kind == SyntaxKind.OpenBraceToken || CurrentToken.Kind == SyntaxKind.IndentInToken
+<<<<<<< Updated upstream
+            => CurrentToken.Kind == SyntaxKind.OpenBraceToken
                 ? (ParseBlock(attributes: default), (ExpressionSyntax)null)
                 : ((BlockSyntax)null, ParsePossibleRefExpression());
+=======
+            => CurrentToken.Kind == SyntaxKind.OpenBraceToken || CurrentToken.Kind == SyntaxKind.IndentInToken
+                ? (ParseBlock(), default(ExpressionSyntax))
+                : (default(BlockSyntax), ParsePossibleRefExpression());
+>>>>>>> Stashed changes
 
         private ParameterListSyntax ParseLambdaParameterList()
         {

@@ -310,7 +310,9 @@ namespace Microsoft.CodeAnalysis.CSharp.UnitTests
         [Fact]
         public void TestSyntaxTreeForFactoryGenerated()
         {
-            var node = SyntaxFactory.ClassDeclaration("Class1");
+            var node = SyntaxFactory.ClassDeclaration("Class1"
+                , openBraceToken: SyntaxFactory.Token(SyntaxKind.IndentInToken)
+                , closeBraceToken: SyntaxFactory.Token(SyntaxKind.IndentOutToken));
             Assert.NotNull(node.SyntaxTree);
             Assert.False(node.SyntaxTree.HasCompilationUnitRoot, "how did we get a CompilationUnit root?");
             Assert.Same(node, node.SyntaxTree.GetRoot());
@@ -790,7 +792,9 @@ class C { }
             public override SyntaxNode VisitClassDeclaration(ClassDeclarationSyntax node)
             {
                 // This is garbage...the identifier can't be "class"...
-                return SyntaxFactory.ClassDeclaration(SyntaxFactory.Identifier("class"));
+                return SyntaxFactory.ClassDeclaration(SyntaxFactory.Identifier("class")
+                , openBraceToken: SyntaxFactory.Token(SyntaxKind.IndentInToken)
+                , closeBraceToken: SyntaxFactory.Token(SyntaxKind.IndentOutToken));
             }
         }
 

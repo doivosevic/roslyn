@@ -68,8 +68,13 @@ class B
                             SyntaxFactory.SingletonSeparatedList<BaseTypeSyntax>(
                                 SyntaxFactory.SimpleBaseType(SyntaxFactory.ParseTypeName("System.Attribute")))),
                                 default,
-                                default),
-                    SyntaxFactory.ClassDeclaration("A"),
+                                SyntaxFactory.Token(SyntaxKind.IndentInToken),
+                
+                                default(SyntaxList<MemberDeclarationSyntax>), closeBraceToken: SyntaxFactory.Token(SyntaxKind.IndentOutToken)
+                        ),
+                    SyntaxFactory.ClassDeclaration("A"
+                , openBraceToken: SyntaxFactory.Token(SyntaxKind.IndentInToken)
+                , closeBraceToken: SyntaxFactory.Token(SyntaxKind.IndentOutToken)),
                     SyntaxFactory.ClassDeclaration(
                         attributeLists: SyntaxFactory.SingletonList<AttributeListSyntax>(
                             SyntaxFactory.AttributeList(
@@ -81,7 +86,9 @@ class B
                         typeParameterList: null,
                         baseList: null,
                         constraintClauses: default,
-                        members: default)
+                        members: default(SyntaxList<MemberDeclarationSyntax>)
+                , openBraceToken: SyntaxFactory.Token(SyntaxKind.IndentInToken)
+                , closeBraceToken: SyntaxFactory.Token(SyntaxKind.IndentOutToken))
                 }));
 
             Assert.NotNull(compilation);
@@ -184,7 +191,9 @@ public class SomeAttribute : System.Attribute { }
                             {
                                 property,
                                 property
-                            }))
+                            })
+                , openBraceToken: SyntaxFactory.Token(SyntaxKind.IndentInToken)
+                , closeBraceToken: SyntaxFactory.Token(SyntaxKind.IndentOutToken))
                 }));
 
             Assert.NotNull(compilation);
